@@ -13,8 +13,9 @@ import {
   SelectValue,
   SelectContent,
 } from '@/components/ui/select';
-import { SELF_CHECK_IN } from '@hotellier/shared';
+
 import { SELF_CHECK_IN_OPTIONS } from '@/lib/constants';
+import { SELF_CHECK_IN } from '@/types';
 
 const SelfCheckInPolicy = ({ control, watch }: StepTwoPolicyProps) => {
   const isSelfCheckIn = watch('isSelfCheckIn');

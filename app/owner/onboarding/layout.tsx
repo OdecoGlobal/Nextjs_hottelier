@@ -1,9 +1,9 @@
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
     template: `Onboarding | %s  `,
-    default: "Onboarding",
+    default: 'Onboarding',
   },
 };
 export default function OwnerLayout({
@@ -11,5 +11,7 @@ export default function OwnerLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main>{children}</main>;
+  return (
+    <main className="border border-purple-400 min-h-screen">{children}</main>
+  );
 }

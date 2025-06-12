@@ -1,23 +1,23 @@
-import { axiosInstance } from "../axios";
-import { formatError } from "../utils";
+import { axiosInstance } from '../axios';
+import { formatError } from '../utils';
 import {
   CreateHotelApiResponse,
   HotelBasicInfoData,
   HotelPolicyType,
   IncompleteHotelApiResponse,
-} from "@/types";
+} from '@/types';
 
 export async function createNewHotel(formData: HotelBasicInfoData) {
   try {
     const res = await axiosInstance.post<CreateHotelApiResponse>(
-      "/hotels",
+      '/hotels',
       formData
     );
-    if (!res) throw new Error("An error occured while creating Hotel");
+    if (!res) throw new Error('An error occured while creating Hotel');
 
     return {
       success: true,
-      message: "Hotel basic info updated successfully",
+      message: 'Hotel basic info updated successfully',
       hotel: res.data.data.hotel,
     };
   } catch (error) {
@@ -35,12 +35,12 @@ export async function updateHotelPolicies(
       `/hotels/${hotelId}/policies`,
       formData
     );
-    if (!res) throw new Error("An error occured while updating hotel policy");
+    if (!res) throw new Error('An error occured while updating hotel policy');
     console.log(res);
 
     return {
       success: true,
-      message: "Hotel policies updated successfully",
+      message: 'Hotel policies updated successfully',
     };
   } catch (error) {
     console.log(formatError(error));
@@ -50,16 +50,16 @@ export async function updateHotelPolicies(
 
 export async function getIncompleteHotels(): Promise<IncompleteHotelApiResponse> {
   try {
-    const res = await axiosInstance("hotels/onboard/owner");
+    const res = await axiosInstance('hotels/onboard/incomplete');
     if (res.status !== 200) {
-      throw new Error("Error fetching countries");
+      throw new Error('Error fetching countries');
     }
     return res.data;
   } catch (error) {
     console.log(formatError(error));
     return {
       data: [],
-      status: "error",
+      status: 'error',
     };
   }
 }

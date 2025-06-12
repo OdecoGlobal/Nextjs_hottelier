@@ -8,7 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { SelectTime } from '@/components/select-time';
+
 import { selectTime, timeNextDay } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import YesNoButton from '@/components/yes-no-button';
@@ -19,6 +19,7 @@ import {
 } from '@/lib/constants';
 import RadioForm from '@/components/radio-form';
 import { Input } from '@/components/ui/input';
+import { SelectFieldForm } from '@/components/select-field-form';
 
 const CheckInPolicy = ({ control, watch }: StepTwoPolicyProps) => {
   const isOpen24Hours = watch('isOpen24Hours');
@@ -38,9 +39,9 @@ const CheckInPolicy = ({ control, watch }: StepTwoPolicyProps) => {
               control={control}
               name="checkInStartTime"
               render={({ field }) => (
-                <SelectTime
+                <SelectFieldForm
                   field={field}
-                  selectTime={selectTime}
+                  datas={selectTime}
                   label="From"
                 />
               )}
@@ -49,9 +50,9 @@ const CheckInPolicy = ({ control, watch }: StepTwoPolicyProps) => {
               control={control}
               name="checkInEndTime"
               render={({ field }) => (
-                <SelectTime
+                <SelectFieldForm
                   field={field}
-                  selectTime={timeNextDay}
+                  datas={timeNextDay}
                   label="To"
                   disabled={!!isOpen24Hours}
                 />
@@ -134,9 +135,9 @@ const CheckInPolicy = ({ control, watch }: StepTwoPolicyProps) => {
                       control={control}
                       name="lateCheckInStartTime"
                       render={({ field }) => (
-                        <SelectTime
+                        <SelectFieldForm
                           field={field}
-                          selectTime={selectTime}
+                          datas={selectTime}
                           label="From"
                         />
                       )}
@@ -145,9 +146,9 @@ const CheckInPolicy = ({ control, watch }: StepTwoPolicyProps) => {
                       control={control}
                       name="lateCheckInEndTime"
                       render={({ field }) => (
-                        <SelectTime
+                        <SelectFieldForm
                           field={field}
-                          selectTime={timeNextDay}
+                          datas={timeNextDay}
                           label="To"
                         />
                       )}
@@ -180,9 +181,9 @@ const CheckInPolicy = ({ control, watch }: StepTwoPolicyProps) => {
                       control={control}
                       name="advanceNoticeCheckInTime"
                       render={({ field }) => (
-                        <SelectTime
+                        <SelectFieldForm
                           field={field}
-                          selectTime={selectTime}
+                          datas={selectTime}
                           label="Advanced notice required after"
                         />
                       )}

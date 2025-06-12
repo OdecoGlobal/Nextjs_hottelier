@@ -1,6 +1,6 @@
 import { ControllerRenderProps, FieldValues, Path } from 'react-hook-form';
 import { Button } from './ui/button';
-import { FormDescription, FormItem, FormMessage } from './ui/form';
+import { FormControl, FormDescription, FormItem, FormMessage } from './ui/form';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { Info } from 'lucide-react';
 
@@ -35,34 +35,36 @@ const YesNoButton = <T extends FieldValues>({
           </Tooltip>
         )}
       </div>
-      <div className="flex gap-3">
-        <Button
-          type="button"
-          disabled={disabled}
-          variant={field.value === true ? 'default' : 'outline'}
-          className={`rounded-full ${
-            field.value === true
-              ? 'bg-blue-600 text-gray-100 hover:bg-blue-800'
-              : ''
-          }`}
-          onClick={() => field.onChange(true)}
-        >
-          Yes
-        </Button>
-        <Button
-          type="button"
-          disabled={disabled}
-          variant={field.value === false ? 'default' : 'outline'}
-          className={`rounded-full ${
-            field.value === false
-              ? 'bg-blue-600 text-gray-100 hover:bg-blue-800'
-              : ''
-          }`}
-          onClick={() => field.onChange(false)}
-        >
-          No
-        </Button>
-      </div>
+      <FormControl>
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            disabled={disabled}
+            variant={field.value === true ? 'default' : 'outline'}
+            className={`rounded-full ${
+              field.value === true
+                ? 'bg-blue-600 text-gray-100 hover:bg-blue-800'
+                : ''
+            }`}
+            onClick={() => field.onChange(true)}
+          >
+            Yes
+          </Button>
+          <Button
+            type="button"
+            disabled={disabled}
+            variant={field.value === false ? 'default' : 'outline'}
+            className={`rounded-full ${
+              field.value === false
+                ? 'bg-blue-600 text-gray-100 hover:bg-blue-800'
+                : ''
+            }`}
+            onClick={() => field.onChange(false)}
+          >
+            No
+          </Button>
+        </div>
+      </FormControl>
 
       <FormMessage />
     </FormItem>

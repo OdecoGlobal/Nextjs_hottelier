@@ -15,12 +15,14 @@ interface RadioFormProps<T extends FieldValues> {
   placeholder?: string;
   label?: string;
   data: GeneratedTypes[];
+  isBoolean?: boolean;
 }
 
 const RadioForm = <T extends FieldValues>({
   field,
   data,
   label,
+  isBoolean = false,
 }: RadioFormProps<T>) => {
   return (
     <FormItem>
@@ -29,8 +31,10 @@ const RadioForm = <T extends FieldValues>({
       </FormDescription>
       <FormControl>
         <RadioGroup
-          onValueChange={field.onChange}
-          value={field.value}
+          onValueChange={val =>
+            field.onChange(isBoolean ? val === 'true' : val)
+          }
+          value={isBoolean ? String(field.value) : field.value}
           className="flex items-center gap-2"
         >
           {data.map(option => (

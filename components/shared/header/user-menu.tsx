@@ -1,20 +1,21 @@
-import { auth } from "@/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { auth } from '@/auth';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 
-import { Hotel, LayoutDashboard, UserCircle, UserIcon } from "lucide-react";
-import Link from "next/link";
-import LogoutButton from "./logout-button";
+import { Hotel, LayoutDashboard, UserCircle, UserIcon } from 'lucide-react';
+import Link from 'next/link';
+import LogoutButton from './logout-button';
 
 const UserButton = async () => {
   const session = await auth();
+
   if (!session) {
     return (
       <Button asChild>
@@ -25,7 +26,7 @@ const UserButton = async () => {
     );
   }
 
-  const firstInitial = session.user.userName.charAt(0).toUpperCase() ?? "O";
+  const firstInitial = session.user.userName.charAt(0).toUpperCase() ?? 'O';
 
   return (
     <nav className="flex gap-2 items-center">
@@ -61,17 +62,17 @@ const UserButton = async () => {
             </Link>
           </DropdownMenuItem>
 
-          {session.user.role === "ADMIN" && (
+          {session.user.role === 'ADMIN' && (
             <DropdownMenuItem>
-              <Link href="/admin/overview" className="w-full flex-start gap-2">
+              <Link href="/admin" className="w-full flex-start gap-2">
                 <LayoutDashboard /> Dashboard
               </Link>
             </DropdownMenuItem>
           )}
 
-          {session.user.role === "OWNER" && (
+          {session.user.role === 'OWNER' && (
             <DropdownMenuItem>
-              <Link href="/owner/overview" className="w-full flex-start gap-2">
+              <Link href="/owner" className="w-full flex-start gap-2">
                 <LayoutDashboard /> Dashboard
               </Link>
             </DropdownMenuItem>

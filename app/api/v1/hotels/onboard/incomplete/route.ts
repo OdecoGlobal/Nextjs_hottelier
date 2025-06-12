@@ -1,23 +1,26 @@
-import { prisma } from "@/db/prisma";
-import { formatApiError } from "@/lib/errors";
-import { AuthenticatedRequest } from "@/types/custom";
-import { NextRequest, NextResponse } from "next/server";
+import { prisma } from '@/db/prisma';
+import { formatApiError } from '@/lib/errors';
+import { protect, restrictTo } from '@/middleware/auth';
+import { AuthenticatedRequest } from '@/types/custom';
+import { NextRequest, NextResponse } from 'next/server';
 const validStatuses = [
-  "DRAFT",
-  "IN_PROGRESS",
-  "PENDING_REVIEW",
-  "APPROVED",
-  "REJECTED",
-  "ACTIVE",
-  "INACTIVE",
+  'DRAFT',
+  'IN_PROGRESS',
+  'PENDING_REVIEW',
+  'APPROVED',
+  'REJECTED',
+  'ACTIVE',
+  'INACTIVE',
 ] as const;
 type HotelStatus = (typeof validStatuses)[number];
 
 export const GET = async (req: NextRequest) => {
   try {
+    await protect(req);
+    restrictTo('OWNER', 'ADMIN')(req);
     const authReq = req as AuthenticatedRequest;
     const searchParams = req.nextUrl.searchParams;
-    const status = searchParams.get("status");
+    const status = searchParams.get('status');
     const ownerId = authReq.user.id;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,7 +30,7 @@ export const GET = async (req: NextRequest) => {
 
     if (
       status &&
-      typeof status === "string" &&
+      typeof status === 'string' &&
       validStatuses.includes(status as HotelStatus)
     ) {
       whereClause.status = status as HotelStatus;
@@ -39,14 +42,14 @@ export const GET = async (req: NextRequest) => {
         basicInfo: true,
       },
       orderBy: {
-        updatedAt: "desc",
+        updatedAt: 'desc',
       },
     });
     return NextResponse.json({
-      status: "success",
+      status: 'success',
       data: hotel,
     });
   } catch (error) {
-    formatApiError(error);
+    return formatApiError(error);
   }
 };
