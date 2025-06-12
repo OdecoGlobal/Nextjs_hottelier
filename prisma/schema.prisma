@@ -186,7 +186,7 @@ model HotelPolicy {
 
   lateCheckInStartTime     String?
   lateCheckInEndTime       String?
-  advancedNoticeCheckIn    Boolean? @default(false)
+  isAdvancedNoticeCheckIn  Boolean? @default(false)
   advanceNoticeCheckInTime String?
   checkOutTime             String
 
@@ -215,7 +215,7 @@ model HotelPolicy {
 
   paymentMethods    PaymentMethod[]
   isDepositRequired Boolean         @default(false)
-  depsoitAmount     Decimal?
+  depositAmount     Decimal?
 
   cancellationPolicy       CancellationPolicy
   cancellationFeeType      CancellationFeeType?

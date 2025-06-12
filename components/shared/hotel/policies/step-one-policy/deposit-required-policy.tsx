@@ -26,26 +26,31 @@ const DepositRequiredPolicy = ({
           control={control}
           name="isDepositRequired"
           render={({ field }) => (
-            <YesNoButton field={field} description="Do you require deposits?" />
+            <FormItem>
+              <YesNoButton
+                field={field}
+                description="Do you require deposits?"
+              />
+              {isDepositRequired && (
+                <FormField
+                  control={control}
+                  name="depositAmount"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3 max-w-md">
+                      <FormLabel className="text-muted-foreground">
+                        What&apos;s the deposit amount
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Deposit Amount" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+            </FormItem>
           )}
         />
-        {isDepositRequired && (
-          <FormField
-            control={control}
-            name="depositAmount"
-            render={({ field }) => (
-              <FormItem className="space-y-3 max-w-md">
-                <FormLabel className="text-muted-foreground">
-                  What&apos;s the deposit amount
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Deposit Amount" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
       </CardContent>
     </Card>
   );

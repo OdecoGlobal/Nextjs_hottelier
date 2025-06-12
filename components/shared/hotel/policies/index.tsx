@@ -30,13 +30,13 @@ const MainPolicyForm = ({
   hotelId: string;
   role: AdminOwnerRole;
 }) => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const [formData, setFormData] = useState<z.infer<typeof hotelPolicySchema>>({
-    paymentMethod: [],
+    paymentMethods: [],
     isDepositRequired: false,
     depositAmount: 0,
     isTaxIncludedInRoomRates: false,
@@ -109,15 +109,35 @@ const MainPolicyForm = ({
   };
 
   const handlePrevious = () => setStep(step - 1);
+
   const handleSubmit = async (data: Partial<HotelPolicyType>) => {
     const updatedFormData = { ...formData, ...data };
     const result = hotelPolicyStepThreeSchema.safeParse(updatedFormData);
     if (!result.success) return;
     setFormData(updatedFormData);
 
+    startTransition(async () => {
+      const response = await updateHotelPolicies(formData, hotelId);
+      if (!response?.success) {
+        toast({
+          title: 'Error',
+          variant: 'destructive',
+          description: response.message,
+        });
+      } else {
+        toast({
+          title: 'Success',
+          description: response.message,
+          variant: 'default',
+        });
+      }
+      router.push(`/${role.toLowerCase()}/onboarding/${hotelId}/amenities`);
+    });
+
     console.log('Resuul', result);
     console.log(formData);
   };
+
   return (
     <section className="border">
       <h1 className="text-2xl md:text-4xl font-bold bg-card px-5 py-6 mb-2 md:mb-1">
@@ -157,20 +177,4 @@ const MainPolicyForm = ({
 export default MainPolicyForm;
 
 /*
-    startTransition(async () => {
-      const response = await updateHotelPolicies(formData, hotelId);
-      if (!response?.success) {
-        toast({
-          title: 'Error',
-          variant: 'destructive',
-          description: response.message,
-        });
-      } else {
-        toast({
-          title: 'Success',
-          description: response.message,
-          variant: 'default',
-        });
-      }
-      router.replace(`/${role.toLowerCase()}/onboarding/${hotelId}/policies`);
-    });*/
+    ;*/

@@ -22,7 +22,7 @@ export const hotelBasicInfoStepThreeSchema = hotelBasicInfoSchema.pick({
 
 export const hotelPolicyStepOneSchema = baseHotelPolicySchema
   .pick({
-    paymentMethod: true,
+    paymentMethods: true,
     isDepositRequired: true,
     depositAmount: true,
     isTaxIncludedInRoomRates: true,

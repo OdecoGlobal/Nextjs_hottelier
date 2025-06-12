@@ -29,43 +29,37 @@ const PaymentMethodPolicy = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <FormField
-          control={control}
-          name="paymentMethod"
-          render={() => (
-            <FormItem>
-              {PAYMENT_METHODS_OPTIONS.map(method => (
-                <FormField
-                  key={method.value}
-                  control={control}
-                  name="paymentMethod"
-                  render={({ field }) => {
-                    return (
-                      <FormItem className="flex flex-row items-center gap-4">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(method.value)}
-                            onCheckedChange={checked => {
-                              return checked
-                                ? field.onChange([...field.value, method.value])
-                                : field.onChange(
-                                    field.value?.filter(
-                                      value => value !== method.value
-                                    )
-                                  );
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel>{method.label}</FormLabel>
-                      </FormItem>
-                    );
-                  }}
-                />
-              ))}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <FormItem>
+          {PAYMENT_METHODS_OPTIONS.map(method => (
+            <FormField
+              key={method.value}
+              control={control}
+              name="paymentMethods"
+              render={({ field }) => {
+                return (
+                  <FormItem className="flex flex-row items-center gap-4">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value?.includes(method.value)}
+                        onCheckedChange={checked => {
+                          return checked
+                            ? field.onChange([...field.value, method.value])
+                            : field.onChange(
+                                field.value?.filter(
+                                  value => value !== method.value
+                                )
+                              );
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel>{method.label}</FormLabel>
+                  </FormItem>
+                );
+              }}
+            />
+          ))}
+          <FormMessage />
+        </FormItem>
       </CardContent>
     </Card>
   );

@@ -67,7 +67,7 @@ export const baseHotelSchema = z.object({
 export const hotelBasicInfoSchema = baseHotelSchema;
 
 export const baseHotelPolicySchema = z.object({
-  paymentMethod: z
+  paymentMethods: z
     .array(z.enum(PAYMENT_METHODS))
     .min(1, 'Please select at least one payment method'),
   isDepositRequired: z.boolean(),
