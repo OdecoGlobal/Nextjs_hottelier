@@ -1,14 +1,18 @@
-import { catchAsync } from "@/lib/auth/catch-async";
-import { verifyAndGetUser } from "@/lib/auth/util";
-import { NextRequest, NextResponse } from "next/server";
+import { verifyAndGetUser } from '@/lib/auth/util';
+import { formatApiError } from '@/lib/errors';
+import { NextRequest, NextResponse } from 'next/server';
 
-export const GET = catchAsync(async (req: NextRequest) => {
-  const { token, user } = await verifyAndGetUser(req);
-  return NextResponse.json(
-    {
-      status: "success",
-      data: { token, user },
-    },
-    { status: 200 }
-  );
-});
+export const GET = async (req: NextRequest) => {
+  try {
+    const { token, user } = await verifyAndGetUser(req);
+    return NextResponse.json(
+      {
+        status: 'success',
+        data: { token, user },
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return formatApiError(error);
+  }
+};
