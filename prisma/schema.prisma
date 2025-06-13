@@ -67,7 +67,6 @@ model Hotel {
   basicInfo HotelBasicInfo?
   policies  HotelPolicy?
   rooms     Room[]
-  rates     HotelRate[]
   amenities HotelAmenity[]
   images    HotelImages[]
 
@@ -235,27 +234,42 @@ model HotelPolicy {
   @@map("hotel_policies")
 }
 
+enum BedType {
+  SINGLE_OR_TWIN
+  LARGE_SINGLE_OR_LARGE_TWIN
+  DOUBLE
+  QUEEN
+  KING
+  WATER
+  BUNK
+}
+
+enum PricingModelType {
+  PER_DAY
+  OCCUPANCY_BASE
+}
+
 model Room {
   id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   hotelId String @db.Uuid
   hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
-  name              String   @unique(map: "room_name_idx")
-  description       String?
-  roomType          RoomType
-  size              Float?
-  maxOccupancy      Int
-  bedConfigurations String
+  name         String     @unique(map: "room_name_idx")
+  roomType     RoomType   @unique
+  roomClass    RoomClass? @default(BASIC)
+  maxOccupancy Int
+  bedType      BedType
+  bedTotal     Int        @default(1)
+  totalRooms   Int        @default(1)
+  baseRate     Decimal    @default(0) @db.Decimal(12, 2)
 
-  amenities  RoomAmenity[]
-  images     String[]
-  roomImages RoomImages[]
+  amenities        RoomAmenity[]
+  roomImages       RoomImages[]
+  roomAvailability RoomAvailability[]
+  pricingModel     PricingModelType
 
-  totalRooms  Int     @default(1)
-  isAvailable Boolean @default(true)
-
-  basePrice Decimal @default(0) @db.Decimal(12, 2)
-  currency  String  @default("NGN")
+  // images           String[]
+  // isAvailable Boolean @default(true)
 
   isCompleted Boolean   @default(false)
   completedAt DateTime?
@@ -265,37 +279,6 @@ model Room {
 
   // bookings      Booking[]
   @@map("rooms")
-}
-
-model HotelRate {
-  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  hotelId String @db.Uuid
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
-  name        String
-  description String?
-  rateType    RateType
-
-  baseRate Decimal @default(0) @db.Decimal(12, 2)
-  currency String  @default("NGN")
-
-  validFrom DateTime
-  validTo   DateTime
-
-  minimumStay    Int?
-  maximumStay    Int?
-  advanceBooking Int?
-
-  discountPercent Float? @default(0)
-  markupPercent   Float? @default(0)
-
-  applicableDays Int     @default(127)
-  isActive       Boolean @default(true)
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  @@map("hotel_rates")
 }
 
 model HotelAmenity {
@@ -316,14 +299,96 @@ model HotelAmenity {
   @@map("hotel_amenities")
 }
 
-model RoomAmenity {
-  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  roomId String @db.Uuid
-  room   Room   @relation(fields: [roomId], references: [id])
+enum BathroomType {
+  PRIVATE
+  PARTIALLY_OPEN
+  SHARED
+}
 
-  name     String
-  category String
-  isActive Boolean @default(true)
+enum ShowerType {
+  BATHTUB
+  SEPARATE_BATHTUB_AND_SHOWER
+  SHOWER
+  BATHTUB_OR_SHOWER
+}
+
+enum RoomEssentials {
+  FREE_TOILETRIES
+  SOAP
+  SHAMPOO
+  TOILET_PAPER
+}
+
+enum ClimateControlType {
+  AIR_CONDITIONING
+  HEATING
+}
+
+enum AirConditioningType {
+  AIR_CONDITIONING
+  IN_ROOM_CLIMATE_CONTROL
+}
+
+enum HeatingType {
+  HEATING
+  IN_ROOM_CLIMATE_CONTROL
+}
+
+enum RoomViewType {
+  BAY
+  BEACH
+  DESERT
+  GOLF
+  CITY
+  GARDEN
+  CANAL
+  LAKE
+  OCEAN
+  PARK
+}
+
+enum RoomSizeUnitType {
+  SQUARE_FEET
+  SQUARE_METER
+}
+
+enum OutDoorSpaceType {
+  BALCONY
+  FURNISHED_BALCONY
+  BALCONY_OR_PATIO
+  FURNISHED_BALCONY_OR_PATIO
+  PATIO
+  FURNISHED_PATIO
+  DECK
+}
+
+enum RoomLayoutType {
+  DESK
+  SEPARATE_SITTING_AREA
+  LAPTOP_FRIENDLY_WORK_SPACE
+  PRIVATE_POOL
+}
+
+model RoomAmenity {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roomId          String           @db.Uuid
+  room            Room             @relation(fields: [roomId], references: [id])
+  bathroomType    BathroomType
+  bathroomNumber  Decimal          @default(1)
+  showerType      ShowerType
+  roomEssential   RoomEssentials[]
+  isTowelProvided Boolean
+
+  climateControl   ClimateControlType[] @default([])
+  airConditionType AirConditioningType?
+  heatingType      HeatingType?
+  isRoomView       Boolean
+  roomViewType     RoomViewType?
+  roomSize         Decimal
+  roomSizeUnit     RoomSizeUnitType
+  isOutDoorSpace   Boolean
+  outDoorSpaceType OutDoorSpaceType?
+  rooomLayout      RoomLayoutType?
 
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt @db.Timestamp(6)
@@ -336,8 +401,10 @@ model HotelImages {
   hotelId String @db.Uuid
   hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
-  imageType ImageType
-  imageUrl  String
+  imageType   ImageType
+  imageUrl    String
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
 
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt @db.Timestamp(6)
@@ -356,6 +423,24 @@ model RoomImages {
   updatedAt DateTime @updatedAt @db.Timestamp(6)
 
   @@map("room_images")
+}
+
+model RoomAvailability {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roomId String @db.Uuid
+  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  date        DateTime @db.Date
+  isAvailable Boolean  @default(true)
+  inventory   Int?
+  price       Decimal?
+  currency    String?
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @db.Timestamp(6)
+
+  @@unique([roomId, date])
+  @@map("room_availability")
 }
 
 model Country {
@@ -484,13 +569,23 @@ enum PaymentMethod {
   DIGITAL_WALLET
 }
 
-enum RoomType {
+enum RoomClass {
+  BASIC
   STANDARD
   DELUXE
-  SUITE
+  ECONOMY
   FAMILY
   EXECUTIVE
   PRESIDENTIAL
+}
+
+enum RoomType {
+  DOUBLE_OR_TWIN
+  DOUBLE
+  SINGLE
+  TWIN
+  SUITE
+  STUDIO
 }
 
 enum RateType {

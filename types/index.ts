@@ -28,10 +28,85 @@ export const HOTEL_TYPES = [
   'APARTMENT',
 ] as const;
 export const CURRENCIES = ['NGN', 'USD', 'EUR', 'GBP'] as const;
+
+export const BATHROOM_TYPES = ['PRIVATE', 'PARTIALLY_OPEN', 'SHARED'] as const;
+export const SHOWER_TYPES = [
+  'BATHTUB',
+  'SEPARATE_BATHTUB_AND_SHOWER',
+  'SHOWER',
+  'BATHTUB_OR_SHOWER',
+] as const;
+export const PRICING_MODEL_TYPE = ['PER_DAY', 'OCCUPANCY_BASE'] as const;
+
+export const ROOM_ESSENTIALS_TYPES = [
+  'FREE_TOILETRIES',
+  'SOAP',
+  'SHAMPOO',
+  'TOILET_PAPER',
+] as const;
+
+export const CLIMATE_CONTROL_TYPE = ['AIR_CONDITIONING', 'HEATING'] as const;
+
+export const AIR_CONDITIONING_TYPE = [
+  'AIR_CONDITIONING',
+  'IN_ROOM_CLIMATE_CONTROL',
+] as const;
+export const HEATING_TYPE = ['HEATING', 'IN_ROOM_CLIMATE_CONTROL'] as const;
+
+export const ROOM_VIEW_TYPE = [
+  'BAY',
+  'BEACH',
+  'DESERT',
+  'GOLF',
+  'CITY',
+  'GARDEN',
+  'CANAL',
+  'LAKE',
+  'OCEAN',
+  'PARK',
+] as const;
+
+export const ROOM_SIZE_UNIT_TYPE = ['SQUARE_FEET', 'SQUARE_METER'] as const;
+
+export const OUTDOOR_SPACE_TYPE = [
+  'BALCONY',
+  'FURNISHED_BALCONY',
+  'BALCONY_OR_PATIO',
+  'FURNISHED_BALCONY_OR_PATIO',
+  'PATIO',
+  'FURNISHED_PATIO',
+  'DECK',
+] as const;
+export const ROOM_LAYOUT_TYPES = [
+  'DESK',
+  'SEPARATE_SITTING_AREA',
+  'LAPTOP_FRIENDLY_WORK_SPACE',
+  'PRIVATE_POOL',
+] as const;
+
+export const BED_TYPES = [
+  'SINGLE_OR_TWIN',
+  'LARGE_SINGLE_OR_LARGE_TWIN',
+  'DOUBLE',
+  'QUEEN',
+  'KING',
+  'WATER',
+  'BUNK',
+] as const;
 export const ROOM_TYPES = [
+  'DOUBLE_OR_TWIN',
+  'DOUBLE',
+  'SINGLE',
+  'TWIN',
+  'SUITE',
+  'STUDIO',
+] as const;
+
+export const ROOM_CLASS = [
+  'BASIC',
   'STANDARD',
   'DELUXE',
-  'SUITE',
+  'ECONOMY',
   'FAMILY',
   'EXECUTIVE',
   'PRESIDENTIAL',

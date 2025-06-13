@@ -13,6 +13,18 @@ import {
   PET_RESTRICTION_TYPE,
   PET_FRIENDLY_FEATURES,
   ROOM_TYPES,
+  ROOM_CLASS,
+  BED_TYPES,
+  BATHROOM_TYPES,
+  SHOWER_TYPES,
+  ROOM_ESSENTIALS_TYPES,
+  CLIMATE_CONTROL_TYPE,
+  AIR_CONDITIONING_TYPE,
+  HEATING_TYPE,
+  ROOM_VIEW_TYPE,
+  ROOM_SIZE_UNIT_TYPE,
+  OUTDOOR_SPACE_TYPE,
+  ROOM_LAYOUT_TYPES,
 } from '@/types';
 import z from 'zod';
 
@@ -127,19 +139,37 @@ export const baseHotelPolicySchema = z.object({
 
 export const hotelPolicySchema = baseHotelPolicySchema;
 
+export const baseRoomAmenitiesSchema = z.object({
+  bathroomType: z.enum(BATHROOM_TYPES),
+  bathroomNumber: z.coerce
+    .number()
+    .min(1, 'There should be at least one bathroom in a room'),
+  showerType: z.enum(SHOWER_TYPES),
+  roomEssential: z.array(z.enum(ROOM_ESSENTIALS_TYPES)).optional(),
+  isTowelProvided: z.boolean(),
+  climateControl: z.array(z.enum(CLIMATE_CONTROL_TYPE)),
+  airConditionType: z.enum(AIR_CONDITIONING_TYPE).optional(),
+  heatingType: z.enum(HEATING_TYPE).optional(),
+  isRoomView: z.boolean(),
+  roomViewType: z.enum(ROOM_VIEW_TYPE).optional(),
+  roomSize: z.coerce.number(),
+  roomSizeUnit: z.enum(ROOM_SIZE_UNIT_TYPE),
+  isOutDoorSpace: z.boolean(),
+  outDoorSpaceType: z.enum(OUTDOOR_SPACE_TYPE).optional(),
+  rooomLayout: z.enum(ROOM_LAYOUT_TYPES).optional(),
+});
+
 export const baseRoomSchema = z.object({
   name: z.string().min(3, 'Room name must be at least 3 characters'),
-  description: z.string().optional(),
   roomType: z.enum(ROOM_TYPES),
-  size: z.number().optional(),
+  roomClass: z.enum(ROOM_CLASS).optional(),
   maxOccupancy: z.number().min(1),
-  bedConfigurations: z.string(),
-  // images: z.array(z.string().url()).optional(),
-  totalRooms: z.number().min(1).optional().default(1),
-  isAvailable: z.boolean().optional().default(true),
-
-  basePrice: z.number().nonnegative(),
-  currency: z.string().default('NGN'),
+  bedType: z.enum(BED_TYPES),
+  bedTotal: z.coerce
+    .number()
+    .min(1, 'There should be at least one bed in a room'),
+  totalRooms: z.coerce.number().min(1).optional().default(1),
+  baseRate: z.coerce.number().nonnegative(),
 });
 
 export const addRoomSchema = baseRoomSchema;
@@ -189,4 +219,39 @@ export const insertCitySchema = z.object({
   state_name: z.string().optional(),
   state_id: z.string().min(1, 'State id is required'),
   country_name: z.string().optional(),
+});
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_FILE_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/avif',
+];
+
+export const imageFileSchema = z.instanceof(File).superRefine((file, ctx) => {
+  // Validate file size
+  if (file.size > MAX_FILE_SIZE) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.too_big,
+      type: 'array',
+      maximum: MAX_FILE_SIZE,
+      inclusive: true,
+      message: `File size must be less than ${MAX_FILE_SIZE / 1024 / 1024}MB`,
+    });
+  }
+
+  // Validate file type
+  if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `File must be one of ${ALLOWED_FILE_TYPES.join(', ')}`,
+    });
+  }
+});
+
+export const hotelImageUploadSchema = z.object({
+  hotelImages: z.array(imageFileSchema).min(1, 'Select at least one image'),
+  exterior: z.array(imageFileSchema).min(1, 'Select at least one image'),
+  interior: z.array(imageFileSchema).min(1, 'Select at least one image'),
 });
