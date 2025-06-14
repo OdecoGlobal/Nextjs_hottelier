@@ -130,45 +130,39 @@ const MainPolicyForm = ({
           description: response.message,
           variant: 'default',
         });
+        router.replace(
+          `/${role.toLowerCase()}/onboarding/${hotelId}/amenities`
+        );
       }
-      router.push(`/${role.toLowerCase()}/onboarding/${hotelId}/amenities`);
     });
-
-    console.log('Resuul', result);
-    console.log(formData);
   };
 
   return (
-    <section className="border">
-      <h1 className="text-2xl md:text-4xl font-bold bg-card px-5 py-6 mb-2 md:mb-1">
-        Basic Info
-      </h1>
-      <div className=" flex flex-col md:flex-row md:min-h-screen">
-        <HotelCreationSteps current={1} />
+    <section className="flex flex-col md:flex-row md:min-h-screen">
+      <HotelCreationSteps current={1} />
 
-        <div className=" flex-1 flex justify-center items-center py-10 px-5 w-full">
-          {step === 1 && (
-            <StepOnePolicy
-              defaultValues={formData}
-              onNext={data => handleNext(data, hotelPolicyStepOneSchema, 2)}
-            />
-          )}
-          {step === 2 && (
-            <StepTwoPolicy
-              onNext={data => handleNext(data, hotelPolicyStepTwoSchema, 3)}
-              onPrevious={handlePrevious}
-              defaultValues={formData}
-            />
-          )}
-          {step === 3 && (
-            <StepThreePolicy
-              isPending={isPending}
-              onPrevious={handlePrevious}
-              onSubmit={data => handleSubmit(data)}
-              defaultValues={formData}
-            />
-          )}
-        </div>
+      <div className=" flex-1 flex justify-center items-center py-10 px-5 w-full">
+        {step === 1 && (
+          <StepOnePolicy
+            defaultValues={formData}
+            onNext={data => handleNext(data, hotelPolicyStepOneSchema, 2)}
+          />
+        )}
+        {step === 2 && (
+          <StepTwoPolicy
+            onNext={data => handleNext(data, hotelPolicyStepTwoSchema, 3)}
+            onPrevious={handlePrevious}
+            defaultValues={formData}
+          />
+        )}
+        {step === 3 && (
+          <StepThreePolicy
+            isPending={isPending}
+            onPrevious={handlePrevious}
+            onSubmit={data => handleSubmit(data)}
+            defaultValues={formData}
+          />
+        )}
       </div>
     </section>
   );

@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -7,27 +7,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { currency, hotelTypes } from "@/lib/constants";
-import { hotelBasicInfoStepOneSchema } from "@/lib/schemas/grouped-validators";
+} from '@/components/ui/tooltip';
+import { currency, hotelTypes } from '@/lib/constants';
+import { hotelBasicInfoStepOneSchema } from '@/lib/schemas/grouped-validators';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Info } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Info, } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 type StepOneData = z.infer<typeof hotelBasicInfoStepOneSchema>;
 
@@ -99,7 +99,7 @@ const HotelBasicInfoStepOne = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {hotelTypes.map((type) => (
+                      {hotelTypes.map(type => (
                         <SelectItem key={type.value} value={type.value}>
                           {type.text}
                         </SelectItem>
@@ -153,7 +153,7 @@ const HotelBasicInfoStepOne = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {currency.map((type) => (
+                      {currency.map(type => (
                         <SelectItem key={type.value} value={type.value}>
                           {type.text}
                         </SelectItem>

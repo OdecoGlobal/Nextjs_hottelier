@@ -71,58 +71,47 @@ const MainBasicInfoPage = ({ role }: { role: AdminOwnerRole }) => {
           description: response.message,
           variant: 'default',
         });
+        router.replace(
+          `/${role.toLowerCase()}/onboarding/${response.hotel?.id}/policies`
+        );
       }
-      router.replace(
-        `/${role.toLowerCase()}/onboarding/${response.hotel?.id}/policies`
-      );
     });
-
-    console.log(formData);
   };
 
   return (
-    <section>
-      <h1 className="text-2xl md:text-4xl font-bold bg-card px-5 py-6 mb-3">
-        Basic Info
-      </h1>
-      <div className="flex flex-col md:flex-row space-y-3  min-h-screen">
-        <HotelCreationSteps current={0} />
+    <section className="flex flex-col md:flex-row space-y-3  min-h-screen">
+      <HotelCreationSteps current={0} />
 
-        <div className="flex-1 flex flex-col justify-center space-y-7  ">
-          <section className="w-full max-w-sm md:max-w-md self-center">
-            {step === 1 && (
-              <HotelBasicInfoStepOne
-                defaultValues={formData}
-                onNext={data =>
-                  handleNext(data, hotelBasicInfoStepOneSchema, 2)
-                }
-              />
-            )}
+      <div className="flex-1 flex flex-col justify-center space-y-7  ">
+        <section className="w-full max-w-sm md:max-w-md self-center">
+          {step === 1 && (
+            <HotelBasicInfoStepOne
+              defaultValues={formData}
+              onNext={data => handleNext(data, hotelBasicInfoStepOneSchema, 2)}
+            />
+          )}
 
-            {step === 2 && (
-              <HotelBasicInfoStepTwo
-                defaultValues={formData}
-                onNext={data =>
-                  handleNext(data, hotelBasicInfoStepTwoSchema, 3)
-                }
-                onPrevious={handleBack}
-              />
-            )}
+          {step === 2 && (
+            <HotelBasicInfoStepTwo
+              defaultValues={formData}
+              onNext={data => handleNext(data, hotelBasicInfoStepTwoSchema, 3)}
+              onPrevious={handleBack}
+            />
+          )}
 
-            {step === 3 && (
-              <HotelBasicInfoStepThree
-                lat={formData.lat}
-                lng={formData.lng}
-                onPrevious={handleBack}
-                onSubmit={handleSubmit}
-                isPending={isPending}
-                onSelect={(lat, lng) =>
-                  setFormData(prev => ({ ...prev, lat, lng }))
-                }
-              />
-            )}
-          </section>
-        </div>
+          {step === 3 && (
+            <HotelBasicInfoStepThree
+              lat={formData.lat}
+              lng={formData.lng}
+              onPrevious={handleBack}
+              onSubmit={handleSubmit}
+              isPending={isPending}
+              onSelect={(lat, lng) =>
+                setFormData(prev => ({ ...prev, lat, lng }))
+              }
+            />
+          )}
+        </section>
       </div>
     </section>
   );

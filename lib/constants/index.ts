@@ -65,9 +65,9 @@ export const currency = [
 export const steps = [
   'Basic Info',
   'Policies',
+  'Amenities',
   'Photos',
   'Rooms and Rates',
-  'Amenities',
   'Review',
 ];
 

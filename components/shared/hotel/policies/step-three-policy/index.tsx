@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import YesNoButton from '@/components/yes-no-button';
-import { PawPrint } from 'lucide-react';
+import { Loader, PawPrint } from 'lucide-react';
 
 import PetSurcharge from './pet-surcharge';
 import {
@@ -139,7 +139,11 @@ const StepThreePolicy = ({
                 Previous
               </Button>
               <Button type="submit" disabled={isPending}>
-                Next
+                {isPending ? (
+                  <Loader className="w-4 h-4 animate-spin" />
+                ) : (
+                  'Next'
+                )}
               </Button>
             </div>
           </form>

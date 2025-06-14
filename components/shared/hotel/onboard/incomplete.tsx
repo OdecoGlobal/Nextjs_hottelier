@@ -1,5 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import DeleteDialog from '@/components/delete.dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -7,13 +8,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
+import { deletHotel } from '@/lib/actions/hotel.action';
 import {
   formatDateTime,
   generateSlug,
   getHotelCompletionProgress,
-} from "@/lib/utils";
-import { AdminOwnerRole, HotelItem } from "@/types";
+} from '@/lib/utils';
+import { AdminOwnerRole, HotelItem } from '@/types';
 import {
   ArrowRight,
   Building2,
@@ -21,8 +23,8 @@ import {
   Clock,
   MapPin,
   Plus,
-} from "lucide-react";
-import Link from "next/link";
+} from 'lucide-react';
+import Link from 'next/link';
 
 const IncompleteHotelComponent = ({
   incompleteHotels,
@@ -36,7 +38,7 @@ const IncompleteHotelComponent = ({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {incompleteHotels.map((hotel) => {
+        {incompleteHotels.map(hotel => {
           const progress = getHotelCompletionProgress(hotel.completionSteps);
           const nextStep = getStepName(hotel.currentStep);
           const basicInfo = hotel.basicInfo;
@@ -49,7 +51,7 @@ const IncompleteHotelComponent = ({
               <CardHeader className="pb-4">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
-                    <CardTitle>{basicInfo.name || "Unnamed Hotel"}</CardTitle>
+                    <CardTitle>{basicInfo.name || 'Unnamed Hotel'}</CardTitle>
 
                     {basicInfo.address && (
                       <CardDescription className="flex items-center">
@@ -62,12 +64,12 @@ const IncompleteHotelComponent = ({
                   </div>
                   <Badge
                     className={`${
-                      hotel.status === "IN_PROGRESS"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-gray-100 text-gray-800"
+                      hotel.status === 'IN_PROGRESS'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-gray-100 text-gray-800'
                     }`}
                   >
-                    {hotel.status.replace("_", " ")}
+                    {hotel.status.replace('_', ' ')}
                   </Badge>
                 </div>
               </CardHeader>
@@ -110,6 +112,7 @@ const IncompleteHotelComponent = ({
                     className="ml-2 group-hover:translate-x-1 transition-transform"
                   />
                 </Button>
+                <DeleteDialog action={deletHotel} id={hotel.id} />
               </CardFooter>
             </Card>
           );

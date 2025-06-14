@@ -1,3 +1,4 @@
+'use server';
 import { axiosInstance } from '../axios';
 import { formatError } from '../utils';
 import {
@@ -44,6 +45,33 @@ export async function updateHotelPolicies(
     };
   } catch (error) {
     console.log(formatError(error));
+    return { success: false, message: formatError(error) };
+  }
+}
+export async function addHotelImages(formData: FormData, hotelId: string) {
+  try {
+    const res = await axiosInstance.post(`/hotels/${hotelId}/photos`, formData);
+    if (!res) throw new Error('An error occured while updating hotel images');
+
+    return {
+      success: true,
+      message: 'Hotel images updated successfully',
+    };
+  } catch (error) {
+    console.log(formatError(error));
+    return { success: false, message: formatError(error) };
+  }
+}
+
+export async function deletHotel(hotelId: string) {
+  try {
+    const res = await axiosInstance.delete(`hotels/${hotelId}`);
+    if (!res) throw new Error('An error occured while updating hotel images');
+    return {
+      success: true,
+      message: 'Hotel images updated successfully',
+    };
+  } catch (error) {
     return { success: false, message: formatError(error) };
   }
 }

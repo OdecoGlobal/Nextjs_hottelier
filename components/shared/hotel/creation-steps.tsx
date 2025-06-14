@@ -3,10 +3,22 @@ import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
 import React from 'react';
 
-const HotelCreationSteps = ({ current = 0 }) => {
+const HotelCreationSteps = ({
+  current = 0,
+  stepName,
+}: {
+  stepName?: string;
+  current: number;
+}) => {
+  const currentStepName = stepName || steps[current];
   return (
     <aside>
-      <div className="hidden md:flex flex-col gap-10 py-6 w-fit px-20 h-full bg-sidebar border-r-2">
+      <nav className=" md:hidden mb-2 border-b bg-card px-6 py-4">
+        <h2 className="text-xl font-semibold text-muted-foreground">
+          {currentStepName}
+        </h2>
+      </nav>
+      <nav className="hidden md:flex flex-col gap-10 py-6 w-fit px-20 h-full bg-sidebar border-r-2">
         {steps.map((step, i) => {
           const isCompleted = i < current;
           const isCurrent = i === current;
@@ -34,7 +46,7 @@ const HotelCreationSteps = ({ current = 0 }) => {
             </div>
           );
         })}
-      </div>
+      </nav>
       {/* MOBILE */}
       <div className="flex  md:hidden justify-around px-3 items-center py-6  w-full  bg-sidebar border-b-2">
         {steps.map((step, i) => {
