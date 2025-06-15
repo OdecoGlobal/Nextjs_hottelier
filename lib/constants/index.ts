@@ -70,6 +70,8 @@ export const steps = [
   'Rooms and Rates',
   'Review',
 ];
+export const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
 
 export const PAYMENT_METHODS_OPTIONS = createObjectOptions(PAYMENT_METHODS);
 export const CANCELLATION_POLICIES_OPTIONS = createObjectOptions(

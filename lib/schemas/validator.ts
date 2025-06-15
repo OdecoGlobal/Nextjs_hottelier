@@ -25,18 +25,25 @@ import {
   ROOM_SIZE_UNIT_TYPE,
   OUTDOOR_SPACE_TYPE,
   ROOM_LAYOUT_TYPES,
+  ALLOWED_FILE_TYPES,
+  BREAKFAST_SCHEDULE_TYPE,
+  HOTEL_AMENITY_CHARGE_TYPE,
+  WIFI_SURCHARGE_DURATION_TYPE,
+  WIFI_SPEED_TYPE,
+  WIFI_AREA_TYPE,
 } from '@/types';
 import z from 'zod';
+import { MAX_FILE_SIZE } from '../constants';
 
 export const userSchema = z.object({
   id: z.string().min(1, 'Id is required'),
   email: z.string().email('invalid email address'),
+  emailVerified: z.date().nullable(),
   userName: z.string().min(3, 'User name must be at least 3 characters'),
-  password: z.string().min(8, 'Password must be at least 8 digits').optional(),
-  passwordConfirm: z
-    .string()
-    .min(8, 'Password must be at least 8 digits')
-    .optional(),
+  password: z.string().min(8, 'Password must be at least 8 digits').nullish(),
+  image: z.string().nullish(),
+  passwordChangedAt: z.date().nullish(),
+  paymentMethod: z.enum(PAYMENT_METHODS).nullish(),
   role: z.enum(['USER', 'OWNER', 'ADMIN']),
 });
 
@@ -139,6 +146,24 @@ export const baseHotelPolicySchema = z.object({
 
 export const hotelPolicySchema = baseHotelPolicySchema;
 
+export const baseHotelAmenitiesSchema = z.object({
+  isWifi: z.boolean(),
+  wifiArea: z.enum(WIFI_AREA_TYPE).optional(),
+  wifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),
+  wifiSpeed: z.enum(WIFI_SPEED_TYPE).optional(),
+  wifiSurchargeAmout: z.coerce.number().optional(),
+  wifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).optional(),
+  isDeviceLimited: z.boolean().optional(),
+  deviceLimitNumber: z.coerce.number().optional(),
+
+  isBreakfast: z.boolean(),
+  breakfastChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),
+  breakfastSurchargeAmount: z.coerce.number().optional(),
+  breakfastSchedule: z.enum(BREAKFAST_SCHEDULE_TYPE).optional(),
+  breakfastStartTime: z.string().optional(),
+  breakfastEndTime: z.string().optional(),
+});
+
 export const baseRoomAmenitiesSchema = z.object({
   bathroomType: z.enum(BATHROOM_TYPES),
   bathroomNumber: z.coerce
@@ -178,19 +203,6 @@ export const updateHotelSchema = baseHotelSchema.partial().extend({
   slug: z.string().min(3, 'Slug must be at least 3 characters').optional(),
 });
 
-export const insertHotelServicesTypeSchema = z.object({
-  name: z.string().min(3, 'Name must be at least 3 characters'),
-  questions: z
-    .string()
-    .min(4, 'Queation must be at least 4 characters')
-    .array(),
-  icon: z.string().min(4, 'Icon must be at least 4 characters').optional(),
-});
-export const updateHotelServiceTypeSchema =
-  insertHotelServicesTypeSchema.extend({
-    id: z.string().min(1, 'Id id required'),
-  });
-
 export const insertCountrySchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Country name is required'),
@@ -220,14 +232,6 @@ export const insertCitySchema = z.object({
   state_id: z.string().min(1, 'State id is required'),
   country_name: z.string().optional(),
 });
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ALLOWED_FILE_TYPES = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-  'image/avif',
-];
 
 export const imageFileSchema = z.instanceof(File).superRefine((file, ctx) => {
   // Validate file size

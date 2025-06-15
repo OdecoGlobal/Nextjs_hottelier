@@ -26,19 +26,18 @@ datasource db {
 }
 
 model User {
-  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userName          String    @default("NO_NAME")
-  email             String    @unique(map: "user_email_idx")
-  emailVerified     DateTime? @db.Timestamp(6)
+  id                String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userName          String         @default("NO_NAME")
+  email             String         @unique(map: "user_email_idx")
+  emailVerified     DateTime?      @db.Timestamp(6)
   image             String?
   password          String?
   passwordChangedAt DateTime?
-  role              Role      @default(USER)
-  address           Json?     @db.Json
-  paymentMethod     String?
-  createdAt         DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt         DateTime  @updatedAt
-  hotels            Hotel[]   @relation("OwnerHotels")
+  role              Role           @default(USER)
+  paymentMethod     PaymentMethod?
+  createdAt         DateTime       @default(now()) @db.Timestamp(6)
+  updatedAt         DateTime       @updatedAt
+  hotels            Hotel[]        @relation("OwnerHotels")
 
   // bookings  Booking[]
   // reviews   Review[]
@@ -281,17 +280,59 @@ model Room {
   @@map("rooms")
 }
 
+enum WifiAreaType {
+  IN_PUBLIC_AREA
+  IN_GUEST_ROOM
+}
+
+enum HotelAmenityChargeType {
+  FREE
+  SURCHARGE
+}
+
+enum WifiSpeedType {
+  MBPS_25
+  MBPS_50
+  MBPS_100
+  MBPS_200
+}
+
+enum WifiSurchargeDuration {
+  PER_STAY
+  PER_HOUR
+  PER_NIGHT
+  PER_DAY
+  PER_WEEK
+}
+
+enum BreakfastSchedule {
+  DAILY
+  WEEKDAYS
+  WEEKENDS
+}
+
 model HotelAmenity {
   id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  hotelId String @db.Uuid
+  hotelId String @unique @db.Uuid
   hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
-  amenityType  AmenityType
-  name         String
-  description  String?
-  isChargeable Boolean     @default(false)
-  charge       Float?
-  isActive     Boolean     @default(true)
+  isWifi                Boolean
+  wifiArea              WifiAreaType?
+  wifiChargeType        HotelAmenityChargeType?
+  wifiSpeed             WifiSpeedType?
+  wifiSurchargeAmout    Decimal?
+  wifiSurchargeDuration WifiSurchargeDuration?
+  isDeviceLimited       Boolean?
+  deviceLimitNumber     Int?
+
+  isBreakfast              Boolean
+  breakfastChargeType      HotelAmenityChargeType?
+  breakfastSurchargeAmount Decimal?
+  breakfastSchedule        BreakfastSchedule?
+  breakfastStartTime       String?
+  breakfastEndTime         String?
+  isCompleted              Boolean                 @default(false)
+  completedAt              DateTime?
 
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt @db.Timestamp(6)
@@ -595,16 +636,6 @@ enum RateType {
   PROMOTIONAL
   CORPORATE
   GROUP
-}
-
-enum AmenityType {
-  DINING
-  RECREATION
-  BUSINESS
-  WELLNESS
-  TRANSPORTATION
-  CONNECTIVITY
-  SERVICES
 }
 
 enum BookingStatus {

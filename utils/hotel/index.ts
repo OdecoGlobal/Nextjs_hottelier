@@ -3,10 +3,11 @@ import { prisma } from '@/db/prisma';
 type StepKey =
   | 'step1_basic_info'
   | 'step2_policies'
-  | ' step3_amenities'
+  | 'step3_amenities'
   | 'step4_hotel_images'
-  | 'step4_rooms'
-  | 'step5_review';
+  | 'step5_rooms'
+  | 'step6_rate_and_availabilty'
+  | 'step7_review';
 
 export async function updateHotelProgress(
   hotelId: string,
@@ -52,7 +53,8 @@ function calculateCurrentStep(
     'step3_amenities',
     'step4_hotel_images',
     'step5_rooms',
-    'step5_review',
+    'step6_rate_and_availabilty',
+    'step7_review',
     // 'step7_contract',
   ];
 

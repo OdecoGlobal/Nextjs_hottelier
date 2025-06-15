@@ -29,6 +29,7 @@ export const HOTEL_TYPES = [
 ] as const;
 export const CURRENCIES = ['NGN', 'USD', 'EUR', 'GBP'] as const;
 
+// ROOMS
 export const BATHROOM_TYPES = ['PRIVATE', 'PARTIALLY_OPEN', 'SHARED'] as const;
 export const SHOWER_TYPES = [
   'BATHTUB',
@@ -112,6 +113,7 @@ export const ROOM_CLASS = [
   'PRESIDENTIAL',
 ] as const;
 
+// POLICIES
 export const CANCELLATION_FEE_TYPE = [
   'FIRST_NIGHT_PLUS_TAX',
   'AMOUNT_50',
@@ -192,6 +194,38 @@ export const PET_FRIENDLY_FEATURES = [
   'PET_GROOMING_SERVICES',
 ] as const;
 
+// HOTEL AMENITIES
+export const WIFI_AREA_TYPE = ['IN_PUBLIC_AREA', 'IN_GUEST_ROOM'] as const;
+
+export const HOTEL_AMENITY_CHARGE_TYPE = ['FREE', 'SURCHARGE'] as const;
+
+export const WIFI_SPEED_TYPE = [
+  'MBPS_25',
+  'MBPS_50',
+  'MBPS_100',
+  'MBPS_200',
+] as const;
+
+export const WIFI_SURCHARGE_DURATION_TYPE = [
+  'PER_STAY',
+  'PER_HOUR',
+  'PER_NIGHT',
+  'PER_DAY',
+  'PER_WEEK',
+] as const;
+
+export const BREAKFAST_SCHEDULE_TYPE = [
+  'DAILY',
+  'WEEKDAYS',
+  'WEEKENDS',
+] as const;
+
+export const ALLOWED_FILE_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/avif',
+];
 export type User = z.infer<typeof userSchema>;
 export type signUpInput = z.infer<typeof signUpFormSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
