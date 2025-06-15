@@ -1,8 +1,28 @@
 import { cookies } from 'next/headers';
-import { ApiSessionResponse, Session } from './types';
+import { Session } from './types';
+import { verifyTokenForEdge } from './lib/auth/verify';
+import { prisma } from './db/prisma';
 
+export async function auth(): Promise<Session | null> {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('jwt')?.value;
+    if (!token) throw new Error('Not authenticated');
+    const decoded = await verifyTokenForEdge(token);
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+    });
+    if (!user) throw new Error('Invalid token');
+    return { user, token };
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+/*
 import { API_URL } from './lib/constants';
-
+import { formatApiError } from './lib/errors';
 export async function auth(): Promise<Session | null> {
   try {
     const cookieStore = await cookies();
@@ -32,21 +52,4 @@ export async function auth(): Promise<Session | null> {
     console.error('Auth verification failed:', error);
     return null;
   }
-}
-
-// export async function auth() {
-//   try {
-//     const cookieStore = await cookies();
-//     const token = cookieStore.get('jwt')?.value;
-//     if (!token) throw new Error('Not authenticated');
-//     const decoded = await verifyToken(token, process.env.JWT_SECRET!);
-//     const user = await prisma.user.findUnique({
-//       where: { id: decoded.id },
-//     });
-//     if (!user) throw new Error('Invalid token');
-//     return { success: true, session: { user, token } };
-//   } catch (error) {
-//     console.log(error);
-//     return { success: false, session: null, error: formatApiError(error) };
-//   }
-// }
+}*/

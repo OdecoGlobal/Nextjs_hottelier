@@ -12,6 +12,9 @@ import {
 import { createObjectOptions } from '../utils';
 
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Hotellier';
+export const JWT_SECRET = process.env.JWT_SECRET!;
+export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
+
 export const APP_DESCRIPTION =
   process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
   'Modern Hotel listing web app built with Next.js';
@@ -71,7 +74,6 @@ export const steps = [
   'Review',
 ];
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
 
 export const PAYMENT_METHODS_OPTIONS = createObjectOptions(PAYMENT_METHODS);
 export const CANCELLATION_POLICIES_OPTIONS = createObjectOptions(
