@@ -8,6 +8,10 @@ import {
   PET_SURCHARGE_TYPE,
   PET_FEE_DURATION,
   PET_FRIENDLY_FEATURES,
+  WIFI_AREA_TYPE,
+  HOTEL_AMENITY_CHARGE_TYPE,
+  WIFI_SPEED_TYPE,
+  WIFI_SURCHARGE_DURATION_TYPE,
 } from '@/types';
 import { createObjectOptions } from '../utils';
 
@@ -75,6 +79,12 @@ export const steps = [
 ];
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
+export const WIFI_AREA_OPTIONS = createObjectOptions(WIFI_AREA_TYPE);
+export const HOTEL_AMENITY_CHARGE_OPTION = createObjectOptions(
+  HOTEL_AMENITY_CHARGE_TYPE
+);
+export const WIFI_SPEED_OPTIONS = createObjectOptions(WIFI_SPEED_TYPE);
+
 export const PAYMENT_METHODS_OPTIONS = createObjectOptions(PAYMENT_METHODS);
 export const CANCELLATION_POLICIES_OPTIONS = createObjectOptions(
   CANCELLATION_POLICIES
@@ -97,6 +107,15 @@ export const PET_FRIENDLY_FEATURES_OPTIONS = createObjectOptions(
 
 export const GENERATED_NUMBERS = createObjectOptions(
   Array.from({ length: 10 }, (_, i) => (i + 1).toString())
+);
+
+export function generateNumbers(count: number) {
+  return createObjectOptions(
+    Array.from({ length: count }, (_, i) => (i + 1).toString())
+  );
+}
+export const WIFI_SURCHARGE_DURATION_OPTIONS = createObjectOptions(
+  WIFI_SURCHARGE_DURATION_TYPE
 );
 
 export const SELF_CHECK_IN_OPTIONS = {

@@ -148,13 +148,20 @@ export const hotelPolicySchema = baseHotelPolicySchema;
 
 export const baseHotelAmenitiesSchema = z.object({
   isWifi: z.boolean(),
-  wifiArea: z.enum(WIFI_AREA_TYPE).optional(),
-  wifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),
-  wifiSpeed: z.enum(WIFI_SPEED_TYPE).optional(),
-  wifiSurchargeAmout: z.coerce.number().optional(),
-  wifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).optional(),
-  isDeviceLimited: z.boolean().optional(),
-  deviceLimitNumber: z.coerce.number().optional(),
+  wifiArea: z.array(z.enum(WIFI_AREA_TYPE)).optional(),
+  roomWifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),
+  roomWifiSpeed: z.enum(WIFI_SPEED_TYPE).optional(),
+  roomWifiSurchargeAmout: z.coerce.number().optional(),
+  roomWifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).optional(),
+  roomDeviceLimited: z.boolean().optional(),
+  roomDeviceLimitNumber: z.coerce.number().optional(),
+
+  publicWifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),
+  publicWifiSpeed: z.enum(WIFI_SPEED_TYPE).optional(),
+  publicWifiSurchargeAmout: z.coerce.number().optional(),
+  publicWifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).optional(),
+  publicDeviceLimited: z.boolean().optional(),
+  publicDeviceLimitNumber: z.coerce.number().optional(),
 
   isBreakfast: z.boolean(),
   breakfastChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),

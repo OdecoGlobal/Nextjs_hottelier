@@ -1,5 +1,9 @@
 import { z } from 'zod';
-import { hotelBasicInfoSchema, baseHotelPolicySchema } from './validator';
+import {
+  hotelBasicInfoSchema,
+  baseHotelPolicySchema,
+  baseHotelAmenitiesSchema,
+} from './validator';
 
 export const hotelBasicInfoStepOneSchema = hotelBasicInfoSchema.pick({
   name: true,
@@ -362,6 +366,8 @@ export const hotelItemSchema = z.object({
   ownerId: z.string().uuid(),
   basicInfo: basicInfoSchema,
 });
+
+export const hotelAmenitiesSchema = baseHotelAmenitiesSchema;
 
 export const createHotelApiResponseSchema = z.object({
   status: z.enum(['success', 'error', 'fail']),

@@ -3,6 +3,7 @@ import { Button } from './ui/button';
 import { FormControl, FormDescription, FormItem, FormMessage } from './ui/form';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { Info } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface YesNoButtonProps<T extends FieldValues> {
   field: ControllerRenderProps<T, Path<T>>;
@@ -10,6 +11,7 @@ interface YesNoButtonProps<T extends FieldValues> {
   info?: boolean;
   infoText?: string;
   disabled?: boolean;
+  className?: string;
 }
 const YesNoButton = <T extends FieldValues>({
   field,
@@ -17,6 +19,7 @@ const YesNoButton = <T extends FieldValues>({
   info,
   infoText,
   disabled,
+  className,
 }: YesNoButtonProps<T>) => {
   return (
     <FormItem>
@@ -41,11 +44,12 @@ const YesNoButton = <T extends FieldValues>({
             type="button"
             disabled={disabled}
             variant={field.value === true ? 'default' : 'outline'}
-            className={`rounded-full ${
+            className={cn(
               field.value === true
                 ? 'bg-blue-600 text-gray-100 hover:bg-blue-800'
-                : ''
-            }`}
+                : '',
+              className
+            )}
             onClick={() => field.onChange(true)}
           >
             Yes
@@ -54,11 +58,12 @@ const YesNoButton = <T extends FieldValues>({
             type="button"
             disabled={disabled}
             variant={field.value === false ? 'default' : 'outline'}
-            className={`rounded-full ${
-              field.value === false
+            className={cn(
+              field.value === true
                 ? 'bg-blue-600 text-gray-100 hover:bg-blue-800'
-                : ''
-            }`}
+                : '',
+              className
+            )}
             onClick={() => field.onChange(false)}
           >
             No

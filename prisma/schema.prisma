@@ -316,14 +316,21 @@ model HotelAmenity {
   hotelId String @unique @db.Uuid
   hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
-  isWifi                Boolean
-  wifiArea              WifiAreaType?
-  wifiChargeType        HotelAmenityChargeType?
-  wifiSpeed             WifiSpeedType?
-  wifiSurchargeAmout    Decimal?
-  wifiSurchargeDuration WifiSurchargeDuration?
-  isDeviceLimited       Boolean?
-  deviceLimitNumber     Int?
+  isWifi                    Boolean
+  wifiArea                  WifiAreaType[]
+  roomWifiChargeType        HotelAmenityChargeType?
+  roomWifiSpeed             WifiSpeedType?
+  roomWifiSurchargeAmout    Decimal?
+  isRoomDeviceLimited       Boolean?
+  roomWifiSurchargeDuration WifiSurchargeDuration?
+  roomDeviceLimitNumber     Int?
+
+  publicWifiSurchargeAmout    Decimal?
+  publicWifiChargeType        HotelAmenityChargeType?
+  publicWifiSpeed             WifiSpeedType?
+  publicWifiSurchargeDuration WifiSurchargeDuration?
+  isPublicDeviceLimited       Boolean?
+  publicDeviceLimitNumber     Int?
 
   isBreakfast              Boolean
   breakfastChargeType      HotelAmenityChargeType?

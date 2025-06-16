@@ -1,9 +1,11 @@
+import MainAmenitiesForm from '@/components/shared/hotel/amenities';
+
 const OwnersAmenitiesPage = async ({
   params,
 }: {
   params: Promise<{ hotelId: string }>;
 }) => {
   const { hotelId } = await params;
-  return <>{hotelId}</>;
+  return <MainAmenitiesForm hotelId={hotelId} />;
 };
 export default OwnersAmenitiesPage;

@@ -7,6 +7,7 @@ import {
   hotelItemSchema,
   createHotelApiResponseSchema,
   incompleteHotelApiResponseSchema,
+  hotelAmenitiesSchema,
 } from '@/lib/schemas/grouped-validators';
 import {
   userSchema,
@@ -195,7 +196,7 @@ export const PET_FRIENDLY_FEATURES = [
 ] as const;
 
 // HOTEL AMENITIES
-export const WIFI_AREA_TYPE = ['IN_PUBLIC_AREA', 'IN_GUEST_ROOM'] as const;
+export const WIFI_AREA_TYPE = ['IN_GUEST_ROOM', 'IN_PUBLIC_AREA'] as const;
 
 export const HOTEL_AMENITY_CHARGE_TYPE = ['FREE', 'SURCHARGE'] as const;
 
@@ -233,6 +234,7 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export type CountryData = z.infer<typeof insertCountrySchema>;
 export type StateData = z.infer<typeof insertStateSchema>;
 export type CityData = z.infer<typeof insertCitySchema>;
+export type HotelAmenitiesType = z.infer<typeof hotelAmenitiesSchema>;
 
 export type AdminOwnerRole = 'ADMIN' | 'OWNER';
 export type ApiSessionResponse = {

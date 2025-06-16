@@ -6,10 +6,10 @@ export const metadata: Metadata = {
     default: 'Onboarding',
   },
 };
-export default function OwnerOnboardingLayout({
+export default function MainOwnerLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main className="min-h-screen">{children}</main>;
+  return <main>{children}</main>;
 }

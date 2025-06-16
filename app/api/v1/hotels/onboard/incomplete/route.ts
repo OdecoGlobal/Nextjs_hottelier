@@ -41,6 +41,10 @@ export const GET = async (req: NextRequest) => {
       where: whereClause,
       include: {
         basicInfo: true,
+        policies: true,
+        amenities: true,
+        images: true,
+        rooms: { include: { roomAvailability: true, roomImages: true } },
       },
       orderBy: {
         updatedAt: 'desc',

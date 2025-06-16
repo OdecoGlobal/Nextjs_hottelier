@@ -1,15 +1,8 @@
 import AppError from '@/lib/errors/app-error';
-import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/db/prisma';
 import { User } from '@prisma/client';
-
-interface DecodedToken extends JwtPayload {
-  id: string;
-}
-
-const secret = process.env.JWT_SECRET;
-const expiresIn = process.env.JWT_EXPIRES_IN;
+import { verifyTokenForEdge } from './verify';
 
 export function changedPasswordAfter(
   user: User,
@@ -25,6 +18,36 @@ export function changedPasswordAfter(
   return false;
 }
 
+export const verifyAndGetUser = async (req: NextRequest) => {
+  let token: string | undefined;
+
+  const authHeader = req.headers.get('authorization');
+
+  if (authHeader?.startsWith('Bearer')) {
+    token = authHeader.split(' ')[1];
+  } else {
+    token = req.cookies.get('jwt')?.value;
+  }
+
+  if (!token) throw new AppError('Not authenticated', 401);
+
+  const decoded = await verifyTokenForEdge(token);
+  const user = await prisma.user.findUnique({
+    where: { id: decoded.id },
+  });
+
+  if (!user) throw new AppError('User no longer exists', 401);
+  if (!decoded.iat) throw new Error(' Invalid Token');
+  if (changedPasswordAfter(user, decoded.iat))
+    throw new AppError('User recently changed password!!, Login again', 401);
+
+  return { token, user };
+};
+
+/*
+interface DecodedToken extends JwtPayload {
+  id: string;
+}
 export const verifyToken = (
   token: string,
   secret: string
@@ -45,14 +68,14 @@ export const verifyToken = (
 };
 
 const signToken = (id: string, role?: string) => {
-  if (!secret || !expiresIn) {
+  if (!JWT_SECRET || !JWT_EXPIRES_IN) {
     throw new Error(
       'JWT_SECRET or JWT_EXPIRES_IN is not defined in environment variables'
     );
   }
 
-  return jwt.sign({ id, role }, secret, {
-    expiresIn,
+  return jwt.sign({ id, role }, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN
   } as SignOptions);
 };
 
@@ -61,7 +84,6 @@ const cookieOptions = {
     Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * 24 * 60 * 60 * 1000
   ),
 };
-
 export const createSendToken = (user: User, statusCode: number) => {
   const token = signToken(user.id, user.role);
   console.log('API', token);
@@ -82,29 +104,4 @@ export const createSendToken = (user: User, statusCode: number) => {
   response.cookies.set('jwt', token, cookieOptions);
   return response;
 };
-
-export const verifyAndGetUser = async (req: NextRequest) => {
-  let token: string | undefined;
-
-  const authHeader = req.headers.get('authorization');
-
-  if (authHeader?.startsWith('Bearer')) {
-    token = authHeader.split(' ')[1];
-  } else {
-    token = req.cookies.get('jwt')?.value;
-  }
-
-  if (!token) throw new AppError('Not authenticated', 401);
-
-  const decoded = await verifyToken(token, process.env.JWT_SECRET!);
-  const user = await prisma.user.findUnique({
-    where: { id: decoded.id },
-  });
-
-  if (!user) throw new AppError('User no longer exists', 401);
-  if (!decoded.iat) throw new Error(' Invalid Token');
-  if (changedPasswordAfter(user, decoded.iat))
-    throw new AppError('User recently changed password!!, Login again', 401);
-
-  return { token, user };
-};
+*/

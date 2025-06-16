@@ -1,15 +1,14 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { EllipsisVertical, Hotel } from "lucide-react";
-import Link from "next/link";
-import UserButton from "./user-menu";
-import { getCurrentUser } from "@/auth-guard";
+} from '@/components/ui/sheet';
+import { EllipsisVertical, Hotel } from 'lucide-react';
+import Link from 'next/link';
+import { getCurrentUser } from '@/auth-guard';
 
 const Menu = async () => {
   const user = await getCurrentUser();
@@ -20,14 +19,13 @@ const Menu = async () => {
         <Button asChild variant="ghost">
           <Link
             href={`${
-              !user || user.role !== "OWNER" ? "/signup-owner" : "/owner"
+              !user || user.role !== 'OWNER' ? '/signup-owner' : '/owner'
             }`}
           >
             <Hotel />
             List Your Hotel
           </Link>
         </Button>
-        <UserButton />
       </nav>
 
       {/* Mobile */}
@@ -41,14 +39,13 @@ const Menu = async () => {
             <Button asChild variant="ghost">
               <Link
                 href={`${
-                  !user || user.role !== "OWNER" ? "/signup-owner" : "/owner"
+                  !user || user.role !== 'OWNER' ? '/signup-owner' : '/owner'
                 }`}
               >
                 <Hotel />
                 List Your Hotel
               </Link>
             </Button>
-            <UserButton />
 
             <SheetDescription></SheetDescription>
           </SheetContent>

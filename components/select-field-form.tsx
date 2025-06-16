@@ -8,12 +8,14 @@ import {
 } from './ui/select';
 import { ControllerRenderProps, FieldValues, Path } from 'react-hook-form';
 import { GeneratedTypes } from '@/types';
+import { cn } from '@/lib/utils';
 
 interface SelectFieldProps<T extends FieldValues> {
   field: ControllerRenderProps<T, Path<T>>;
   disabled?: boolean;
   placeholder?: string;
   label?: string;
+  className?: string;
   datas: GeneratedTypes[];
 }
 
@@ -22,10 +24,11 @@ export const SelectFieldForm = <T extends FieldValues>({
   disabled,
   datas,
   label,
+  className,
   placeholder = '--select--',
 }: SelectFieldProps<T>) => {
   return (
-    <FormItem className="w-full max-w-md">
+    <FormItem className={cn(className, 'max-w-md')}>
       <Select
         onValueChange={field.onChange}
         disabled={disabled}
