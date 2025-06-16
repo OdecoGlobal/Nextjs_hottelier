@@ -27,13 +27,14 @@ const MainAmenitiesForm = ({ hotelId }: { hotelId: string }) => {
     <section className="flex flex-col md:flex-row md:min-h-screen">
       <HotelCreationSteps current={2} />
 
-      <div className=" flex-1 py-10 px-5 w-full">
+      <div className=" flex-1 py-10 px-5 max-w-[700px] mx-auto">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4  ">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
             <WifiAmenities control={control} watch={watch} />
             <BreakfastAmenities control={control} watch={watch} />
-
-            <Button type="submit">Submit</Button>
+            <div className="flex justify-end  md:px-10">
+              <Button type="submit">Submit</Button>
+            </div>
           </form>
         </Form>
       </div>

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { requireOwner } from '@/auth-guard';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';

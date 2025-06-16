@@ -12,6 +12,7 @@ import {
   HOTEL_AMENITY_CHARGE_TYPE,
   WIFI_SPEED_TYPE,
   WIFI_SURCHARGE_DURATION_TYPE,
+  BREAKFAST_SCHEDULE_TYPE,
 } from '@/types';
 import { createObjectOptions } from '../utils';
 
@@ -116,6 +117,9 @@ export function generateNumbers(count: number) {
 }
 export const WIFI_SURCHARGE_DURATION_OPTIONS = createObjectOptions(
   WIFI_SURCHARGE_DURATION_TYPE
+);
+export const BREAKFAST_SCHEDULE_OPTIONS = createObjectOptions(
+  BREAKFAST_SCHEDULE_TYPE
 );
 
 export const SELF_CHECK_IN_OPTIONS = {

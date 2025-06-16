@@ -1,11 +1,12 @@
-import { requireOwner } from "@/auth-guard";
-import MainPolicyForm from "@/components/shared/hotel/policies";
+export const dynamic = 'force-dynamic';
+import { requireOwner } from '@/auth-guard';
+import MainPolicyForm from '@/components/shared/hotel/policies';
 
-import { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: "Polices",
+  title: 'Polices',
 };
 const OwnerPoliciesOnboardingPage = async ({
   params,
@@ -13,9 +14,9 @@ const OwnerPoliciesOnboardingPage = async ({
   params: Promise<{ hotelId: string }>;
 }) => {
   const owner = await requireOwner();
-  if (!owner) redirect("/unauthorized");
+  if (!owner) redirect('/unauthorized');
   const { hotelId } = await params;
-  return <MainPolicyForm hotelId={hotelId} role={owner.user.role as "OWNER"} />;
+  return <MainPolicyForm hotelId={hotelId} role={owner.user.role as 'OWNER'} />;
 };
 
 export default OwnerPoliciesOnboardingPage;

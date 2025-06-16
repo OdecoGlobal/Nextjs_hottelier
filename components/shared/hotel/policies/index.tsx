@@ -99,13 +99,11 @@ const MainPolicyForm = ({
   ) => {
     const result = schema.safeParse(data);
     if (!result.success) {
-      console.error(result.error.format());
       return;
     }
     setFormData(prev => ({ ...prev, ...data }));
     console.log(result);
     setStep(nextStep);
-    console.log(formData);
   };
 
   const handlePrevious = () => setStep(step - 1);

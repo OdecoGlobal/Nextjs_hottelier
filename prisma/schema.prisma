@@ -321,7 +321,7 @@ model HotelAmenity {
   roomWifiChargeType        HotelAmenityChargeType?
   roomWifiSpeed             WifiSpeedType?
   roomWifiSurchargeAmout    Decimal?
-  isRoomDeviceLimited       Boolean?
+  roomDeviceLimited         Boolean?
   roomWifiSurchargeDuration WifiSurchargeDuration?
   roomDeviceLimitNumber     Int?
 
@@ -329,7 +329,7 @@ model HotelAmenity {
   publicWifiChargeType        HotelAmenityChargeType?
   publicWifiSpeed             WifiSpeedType?
   publicWifiSurchargeDuration WifiSurchargeDuration?
-  isPublicDeviceLimited       Boolean?
+  publicDeviceLimited         Boolean?
   publicDeviceLimitNumber     Int?
 
   isBreakfast              Boolean

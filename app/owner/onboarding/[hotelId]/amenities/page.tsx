@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import MainAmenitiesForm from '@/components/shared/hotel/amenities';
 
 const OwnersAmenitiesPage = async ({

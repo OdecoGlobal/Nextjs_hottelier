@@ -8,6 +8,7 @@ import {
 import { RadioGroupItem, RadioGroup } from './ui/radio-group';
 import { ControllerRenderProps, FieldValues, Path } from 'react-hook-form';
 import { GeneratedTypes } from '@/types';
+import { cn } from '@/lib/utils';
 
 interface RadioFormProps<T extends FieldValues> {
   field: ControllerRenderProps<T, Path<T>>;
@@ -16,12 +17,14 @@ interface RadioFormProps<T extends FieldValues> {
   label?: string;
   data: GeneratedTypes[];
   isBoolean?: boolean;
+  className?: string;
 }
 
 const RadioForm = <T extends FieldValues>({
   field,
   data,
   label,
+  className,
   isBoolean = false,
 }: RadioFormProps<T>) => {
   return (
@@ -35,7 +38,7 @@ const RadioForm = <T extends FieldValues>({
             field.onChange(isBoolean ? val === 'true' : val)
           }
           value={isBoolean ? String(field.value) : field.value}
-          className="flex items-center gap-2"
+          className={cn('flex items-center gap-2', className)}
         >
           {data.map(option => (
             <FormItem key={option.value} className="flex items-center gap-3">

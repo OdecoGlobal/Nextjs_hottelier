@@ -5,7 +5,7 @@ import { getIncompleteHotels } from '@/lib/actions/hotel.action';
 
 import { steps } from '@/lib/constants';
 import Link from 'next/link';
-
+export const dynamic = 'force-dynamic';
 const OnboardingPage = async () => {
   const owner = await requireOwner();
 

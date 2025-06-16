@@ -59,7 +59,7 @@ const YesNoButton = <T extends FieldValues>({
             disabled={disabled}
             variant={field.value === false ? 'default' : 'outline'}
             className={cn(
-              field.value === true
+              field.value === false
                 ? 'bg-blue-600 text-gray-100 hover:bg-blue-800'
                 : '',
               className

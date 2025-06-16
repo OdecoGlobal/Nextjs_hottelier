@@ -32,6 +32,21 @@ CREATE TYPE "BedType" AS ENUM ('SINGLE_OR_TWIN', 'LARGE_SINGLE_OR_LARGE_TWIN', '
 CREATE TYPE "PricingModelType" AS ENUM ('PER_DAY', 'OCCUPANCY_BASE');
 
 -- CreateEnum
+CREATE TYPE "WifiAreaType" AS ENUM ('IN_PUBLIC_AREA', 'IN_GUEST_ROOM');
+
+-- CreateEnum
+CREATE TYPE "HotelAmenityChargeType" AS ENUM ('FREE', 'SURCHARGE');
+
+-- CreateEnum
+CREATE TYPE "WifiSpeedType" AS ENUM ('MBPS_25', 'MBPS_50', 'MBPS_100', 'MBPS_200');
+
+-- CreateEnum
+CREATE TYPE "WifiSurchargeDuration" AS ENUM ('PER_STAY', 'PER_HOUR', 'PER_NIGHT', 'PER_DAY', 'PER_WEEK');
+
+-- CreateEnum
+CREATE TYPE "BreakfastSchedule" AS ENUM ('DAILY', 'WEEKDAYS', 'WEEKENDS');
+
+-- CreateEnum
 CREATE TYPE "BathroomType" AS ENUM ('PRIVATE', 'PARTIALLY_OPEN', 'SHARED');
 
 -- CreateEnum
@@ -104,9 +119,6 @@ CREATE TYPE "RoomType" AS ENUM ('DOUBLE_OR_TWIN', 'DOUBLE', 'SINGLE', 'TWIN', 'S
 CREATE TYPE "RateType" AS ENUM ('STANDARD', 'WEEKEND', 'SEASONAL', 'PROMOTIONAL', 'CORPORATE', 'GROUP');
 
 -- CreateEnum
-CREATE TYPE "AmenityType" AS ENUM ('DINING', 'RECREATION', 'BUSINESS', 'WELLNESS', 'TRANSPORTATION', 'CONNECTIVITY', 'SERVICES');
-
--- CreateEnum
 CREATE TYPE "BookingStatus" AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED');
 
 -- CreateTable
@@ -119,8 +131,7 @@ CREATE TABLE "User" (
     "password" TEXT,
     "passwordChangedAt" TIMESTAMP(3),
     "role" "Role" NOT NULL DEFAULT 'USER',
-    "address" JSON,
-    "paymentMethod" TEXT,
+    "paymentMethod" "PaymentMethod",
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -254,12 +265,28 @@ CREATE TABLE "rooms" (
 CREATE TABLE "hotel_amenities" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "hotelId" UUID NOT NULL,
-    "amenityType" "AmenityType" NOT NULL,
-    "name" TEXT NOT NULL,
-    "description" TEXT,
-    "isChargeable" BOOLEAN NOT NULL DEFAULT false,
-    "charge" DOUBLE PRECISION,
-    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "isWifi" BOOLEAN NOT NULL,
+    "wifiArea" "WifiAreaType"[],
+    "roomWifiChargeType" "HotelAmenityChargeType",
+    "roomWifiSpeed" "WifiSpeedType",
+    "roomWifiSurchargeAmout" DECIMAL(65,30),
+    "roomDeviceLimited" BOOLEAN,
+    "roomWifiSurchargeDuration" "WifiSurchargeDuration",
+    "roomDeviceLimitNumber" INTEGER,
+    "publicWifiSurchargeAmout" DECIMAL(65,30),
+    "publicWifiChargeType" "HotelAmenityChargeType",
+    "publicWifiSpeed" "WifiSpeedType",
+    "publicWifiSurchargeDuration" "WifiSurchargeDuration",
+    "publicDeviceLimited" BOOLEAN,
+    "publicDeviceLimitNumber" INTEGER,
+    "isBreakfast" BOOLEAN NOT NULL,
+    "breakfastChargeType" "HotelAmenityChargeType",
+    "breakfastSurchargeAmount" DECIMAL(65,30),
+    "breakfastSchedule" "BreakfastSchedule",
+    "breakfastStartTime" TEXT,
+    "breakfastEndTime" TEXT,
+    "isCompleted" BOOLEAN NOT NULL DEFAULT false,
+    "completedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(6) NOT NULL,
 
@@ -394,6 +421,9 @@ CREATE UNIQUE INDEX "room_name_idx" ON "rooms"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "rooms_roomType_key" ON "rooms"("roomType");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "hotel_amenities_hotelId_key" ON "hotel_amenities"("hotelId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "room_availability_roomId_date_key" ON "room_availability"("roomId", "date");

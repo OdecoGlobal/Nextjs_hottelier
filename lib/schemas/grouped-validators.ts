@@ -367,7 +367,58 @@ export const hotelItemSchema = z.object({
   basicInfo: basicInfoSchema,
 });
 
-export const hotelAmenitiesSchema = baseHotelAmenitiesSchema;
+export const hotelAmenitiesSchema = baseHotelAmenitiesSchema.transform(data => {
+  if (!data.isWifi) {
+    data.wifiArea = undefined;
+    data.roomWifiChargeType = undefined;
+    data.roomWifiSpeed = undefined;
+    data.roomWifiSurchargeAmout = undefined;
+    data.roomWifiSurchargeDuration = undefined;
+    data.roomDeviceLimited = undefined;
+    data.roomDeviceLimitNumber = undefined;
+    data.publicWifiChargeType = undefined;
+    data.publicWifiSpeed = undefined;
+    data.publicWifiSurchargeAmout = undefined;
+    data.publicWifiSurchargeDuration = undefined;
+    data.publicDeviceLimited = undefined;
+    data.publicDeviceLimitNumber = undefined;
+  }
+
+  if (!data.wifiArea?.includes('IN_GUEST_ROOM')) {
+    data.roomWifiChargeType = undefined;
+    data.roomWifiSpeed = undefined;
+    data.roomWifiSurchargeAmout = undefined;
+    data.roomWifiSurchargeDuration = undefined;
+    data.roomDeviceLimited = undefined;
+    data.roomDeviceLimitNumber = undefined;
+  }
+  if (!data.wifiArea?.includes('IN_PUBLIC_AREA')) {
+    data.publicWifiChargeType = undefined;
+    data.publicWifiSpeed = undefined;
+    data.publicWifiSurchargeAmout = undefined;
+    data.publicWifiSurchargeDuration = undefined;
+    data.publicDeviceLimited = undefined;
+    data.publicDeviceLimitNumber = undefined;
+  }
+  if (data.roomDeviceLimited === false) {
+    data.roomDeviceLimitNumber = undefined;
+  }
+  if (data.publicDeviceLimited === false) {
+    data.publicDeviceLimitNumber = undefined;
+  }
+  if (data.isBreakfast === false) {
+    data.breakfastChargeType = undefined;
+    data.breakfastSurchargeAmount = undefined;
+    data.breakfastSchedule = undefined;
+    data.breakfastStartTime = undefined;
+    data.breakfastEndTime = undefined;
+  }
+  if (data.breakfastChargeType !== 'SURCHARGE') {
+    data.breakfastSurchargeAmount = undefined;
+  }
+
+  return data;
+});
 
 export const createHotelApiResponseSchema = z.object({
   status: z.enum(['success', 'error', 'fail']),

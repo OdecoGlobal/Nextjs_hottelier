@@ -148,27 +148,27 @@ export const hotelPolicySchema = baseHotelPolicySchema;
 
 export const baseHotelAmenitiesSchema = z.object({
   isWifi: z.boolean(),
-  wifiArea: z.array(z.enum(WIFI_AREA_TYPE)).optional(),
-  roomWifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),
-  roomWifiSpeed: z.enum(WIFI_SPEED_TYPE).optional(),
+  wifiArea: z.array(z.enum(WIFI_AREA_TYPE)).nullish(),
+  roomWifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).nullish(),
+  roomWifiSpeed: z.enum(WIFI_SPEED_TYPE).nullish(),
   roomWifiSurchargeAmout: z.coerce.number().optional(),
-  roomWifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).optional(),
+  roomWifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).nullish(),
   roomDeviceLimited: z.boolean().optional(),
-  roomDeviceLimitNumber: z.coerce.number().optional(),
+  roomDeviceLimitNumber: z.coerce.number().nullish(),
 
-  publicWifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),
-  publicWifiSpeed: z.enum(WIFI_SPEED_TYPE).optional(),
+  publicWifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).nullish(),
+  publicWifiSpeed: z.enum(WIFI_SPEED_TYPE).nullish(),
   publicWifiSurchargeAmout: z.coerce.number().optional(),
-  publicWifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).optional(),
+  publicWifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).nullish(),
   publicDeviceLimited: z.boolean().optional(),
-  publicDeviceLimitNumber: z.coerce.number().optional(),
+  publicDeviceLimitNumber: z.coerce.number().nullish(),
 
   isBreakfast: z.boolean(),
-  breakfastChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),
+  breakfastChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).nullish(),
   breakfastSurchargeAmount: z.coerce.number().optional(),
-  breakfastSchedule: z.enum(BREAKFAST_SCHEDULE_TYPE).optional(),
-  breakfastStartTime: z.string().optional(),
-  breakfastEndTime: z.string().optional(),
+  breakfastSchedule: z.enum(BREAKFAST_SCHEDULE_TYPE).nullish(),
+  breakfastStartTime: z.string().nullish(),
+  breakfastEndTime: z.string().nullish(),
 });
 
 export const baseRoomAmenitiesSchema = z.object({

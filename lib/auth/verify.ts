@@ -43,7 +43,6 @@ export const createSendToken = async (user: User, statusCode: number) => {
     id: user.id,
     role: user.role,
   });
-  console.log('Token:', token);
   const cookiesStore = await cookies();
   cookiesStore.set('jwt', token, cookieOptions);
 

@@ -1,7 +1,8 @@
-import { Metadata } from "next";
+import { Metadata } from 'next';
 export const metadata: Metadata = {
-  title: "Home",
+  title: 'Home',
 };
+export const dynamic = 'force-dynamic';
 export default function Home() {
   return <div>Home</div>;
 }
