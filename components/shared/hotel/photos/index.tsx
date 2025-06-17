@@ -20,10 +20,20 @@ import HotelCreationSteps from '../creation-steps';
 import { addHotelImages } from '@/lib/actions/hotel.action';
 import { Loader } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { AdminOwnerRole } from '@/types';
+import { useRouter } from 'next/navigation';
 
 export type hotelImageUploadType = z.infer<typeof hotelImageUploadSchema>;
 
-const UploadHotelPhotoForm = ({ hotelId }: { hotelId: string }) => {
+const UploadHotelPhotoForm = ({
+  hotelId,
+  role,
+}: {
+  hotelId: string;
+  role: AdminOwnerRole;
+}) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof hotelImageUploadSchema>>({
     resolver: zodResolver(hotelImageUploadSchema),
     defaultValues: {
@@ -32,14 +42,12 @@ const UploadHotelPhotoForm = ({ hotelId }: { hotelId: string }) => {
       interior: [],
     },
   });
-  const { control } = form;
+  const { control, formState } = form;
   const { toast } = useToast();
   const hotelImageResetRef = useRef<() => void | null>(null);
   const exteriorResetRef = useRef<() => void | null>(null);
   const interiorResetRef = useRef<() => void | null>(null);
   const onSubmit = async (values: hotelImageUploadType) => {
-    console.log(values, hotelId);
-
     const formData = new FormData();
     values.hotelImages.forEach(file => {
       formData.append('hotelImages', file);
@@ -64,6 +72,7 @@ const UploadHotelPhotoForm = ({ hotelId }: { hotelId: string }) => {
         description: res.message,
         variant: 'default',
       });
+      router.replace(`/${role.toLowerCase()}/onboarding/${hotelId}/photos`);
     }
     form.reset();
     if (exteriorResetRef.current) exteriorResetRef.current();
@@ -71,18 +80,18 @@ const UploadHotelPhotoForm = ({ hotelId }: { hotelId: string }) => {
     if (interiorResetRef.current) interiorResetRef.current();
   };
 
-  const isPending = form.formState.isSubmitting;
+  const isPending = formState.isSubmitting;
 
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
       <HotelCreationSteps current={3} />
-      <div className=" flex-1 flex justify-center items-center py-10 px-5 w-full">
-        <Card>
+      <div className=" flex-1 py-10  px-5 w-full">
+        <Card className="max-w-md mx-auto bg-transparent">
           <CardHeader>
             <CardTitle>Hotel Photos</CardTitle>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -148,14 +157,15 @@ const UploadHotelPhotoForm = ({ hotelId }: { hotelId: string }) => {
                     )}
                   />
                 </Card>
-
-                <Button type="submit" disabled={isPending}>
-                  {isPending ? (
-                    <Loader className="w-4 h-4 animate-spin" />
-                  ) : (
-                    'Submit'
-                  )}
-                </Button>
+                <div className="flex justify-end">
+                  <Button type="submit" disabled={isPending}>
+                    {isPending ? (
+                      <Loader className="w-4 h-4 animate-spin" />
+                    ) : (
+                      'Submit'
+                    )}
+                  </Button>
+                </div>
               </form>
             </Form>
           </CardContent>

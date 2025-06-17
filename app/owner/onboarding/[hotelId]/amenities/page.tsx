@@ -1,5 +1,7 @@
 export const dynamic = 'force-dynamic';
+import { requireOwner } from '@/auth-guard';
 import MainAmenitiesForm from '@/components/shared/hotel/amenities';
+import { redirect } from 'next/navigation';
 
 const OwnersAmenitiesPage = async ({
   params,
@@ -7,6 +9,10 @@ const OwnersAmenitiesPage = async ({
   params: Promise<{ hotelId: string }>;
 }) => {
   const { hotelId } = await params;
-  return <MainAmenitiesForm hotelId={hotelId} />;
+  const owner = await requireOwner();
+  if (!owner) redirect('/unauthorized');
+  return (
+    <MainAmenitiesForm hotelId={hotelId} role={owner.user.role as 'OWNER'} />
+  );
 };
 export default OwnersAmenitiesPage;

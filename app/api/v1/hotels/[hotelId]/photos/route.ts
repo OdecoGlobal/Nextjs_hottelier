@@ -81,21 +81,25 @@ export const POST = async (
       });
     }
 
-    const images = await prisma.hotelImages.createMany({
-      data: imageUploadResults.map(img => ({
-        hotelId,
-        imageType: img.imageType,
-        imageUrl: img.imageUrl,
-        isCompleted: true,
-        completedAt: new Date(),
-      })),
+    const result = await prisma.$transaction(async tx => {
+      const images = await tx.hotelImages.createMany({
+        data: imageUploadResults.map(img => ({
+          hotelId,
+          imageType: img.imageType,
+          imageUrl: img.imageUrl,
+          isCompleted: true,
+          completedAt: new Date(),
+        })),
+      });
+      return images;
     });
-    await updateHotelProgress(hotelId, 'step4_hotel_images', images.count > 0);
+
+    await updateHotelProgress(hotelId, 'step4_hotel_images', result.count > 0);
 
     return NextResponse.json(
       {
         status: 'success',
-        data: images,
+        data: result.count,
       },
       { status: 200 }
     );

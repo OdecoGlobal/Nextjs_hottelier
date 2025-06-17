@@ -84,7 +84,17 @@ export const WIFI_AREA_OPTIONS = createObjectOptions(WIFI_AREA_TYPE);
 export const HOTEL_AMENITY_CHARGE_OPTION = createObjectOptions(
   HOTEL_AMENITY_CHARGE_TYPE
 );
-export const WIFI_SPEED_OPTIONS = createObjectOptions(WIFI_SPEED_TYPE);
+export const WIFI_SPEED_OPTIONS = createObjectOptions(WIFI_SPEED_TYPE).map(
+  option => {
+    const speed = option.value.split('_')[1];
+    return {
+      ...option,
+      label: `${speed}+ Mbps`,
+    };
+  }
+);
+
+// const wifiSpeedOptions = createObjectOptions(WIFI_SPEED_TYPE);
 
 export const PAYMENT_METHODS_OPTIONS = createObjectOptions(PAYMENT_METHODS);
 export const CANCELLATION_POLICIES_OPTIONS = createObjectOptions(

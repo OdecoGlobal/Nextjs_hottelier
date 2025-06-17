@@ -3,6 +3,7 @@ import { axiosInstance } from '../axios';
 import { formatError } from '../utils';
 import {
   CreateHotelApiResponse,
+  HotelAmenitiesType,
   HotelBasicInfoData,
   HotelPolicyType,
   IncompleteHotelApiResponse,
@@ -37,7 +38,6 @@ export async function updateHotelPolicies(
       formData
     );
     if (!res) throw new Error('An error occured while updating hotel policy');
-    console.log(res);
 
     return {
       success: true,
@@ -48,6 +48,28 @@ export async function updateHotelPolicies(
     return { success: false, message: formatError(error) };
   }
 }
+export async function updateHotelAmenities(
+  formData: HotelAmenitiesType,
+  hotelId: string
+) {
+  try {
+    const res = await axiosInstance.put(
+      `/hotels/${hotelId}/amenities`,
+      formData
+    );
+    if (!res)
+      throw new Error('An error occured while updating hotel amenities');
+
+    return {
+      success: true,
+      message: 'Hotel amenities updated successfully',
+    };
+  } catch (error) {
+    console.log(formatError(error));
+    return { success: false, message: formatError(error) };
+  }
+}
+
 export async function addHotelImages(formData: FormData, hotelId: string) {
   try {
     const res = await axiosInstance.post(`/hotels/${hotelId}/photos`, formData);

@@ -148,7 +148,7 @@ export const hotelPolicySchema = baseHotelPolicySchema;
 
 export const baseHotelAmenitiesSchema = z.object({
   isWifi: z.boolean(),
-  wifiArea: z.array(z.enum(WIFI_AREA_TYPE)).nullish(),
+  wifiArea: z.array(z.enum(WIFI_AREA_TYPE)).optional(),
   roomWifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).nullish(),
   roomWifiSpeed: z.enum(WIFI_SPEED_TYPE).nullish(),
   roomWifiSurchargeAmout: z.coerce.number().optional(),
