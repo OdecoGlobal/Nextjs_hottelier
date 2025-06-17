@@ -1,23 +1,22 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Form } from "@/components/ui/form";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import PaymentMethodPolicy from "./payment-method-policy";
-import DepositRequiredPolicy from "./deposit-required-policy";
-import CancellationPolicy from "./cancellation-policy";
-import AdditionalFieldPolicy from "./additional-field-policy";
-import SmokingFieldPolicy from "./smoking-field-policy";
-import HotelTaxPolicy from "./hotel-tax-policy";
-import { StepOnePolicyType } from "@/types";
-import { hotelPolicyStepOneSchema } from "@/lib/schemas/grouped-validators";
+} from '@/components/ui/card';
+import { Form } from '@/components/ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import PaymentMethodPolicy from './payment-method-policy';
+import DepositRequiredPolicy from './deposit-required-policy';
+import CancellationPolicy from './cancellation-policy';
+import AdditionalFieldPolicy from './additional-field-policy';
+import SmokingFieldPolicy from './smoking-field-policy';
+import HotelTaxPolicy from './hotel-tax-policy';
+import { StepOnePolicyType } from '@/types';
+import { hotelPolicyStepOneSchema } from '@/lib/schemas/grouped-validators';
+import SubmitFormButton from '@/components/submit-form-button';
 
 const StepOnePolicy = ({
   onNext,
@@ -30,7 +29,9 @@ const StepOnePolicy = ({
     resolver: zodResolver(hotelPolicyStepOneSchema),
     defaultValues,
   });
-  const { control, watch } = form;
+  const { control, watch, formState } = form;
+
+  const isPending = formState.isSubmitting;
 
   return (
     <Card>
@@ -51,8 +52,11 @@ const StepOnePolicy = ({
             <HotelTaxPolicy control={control} />
             <SmokingFieldPolicy control={control} />
             <AdditionalFieldPolicy control={control} watch={watch} />
-
-            <Button type="submit">Next</Button>
+            <SubmitFormButton
+              isPending={isPending}
+              action="Next"
+              className="flex justify-end"
+            />
           </form>
         </Form>
       </CardContent>

@@ -13,6 +13,7 @@ import {
   WIFI_SPEED_TYPE,
   WIFI_SURCHARGE_DURATION_TYPE,
   BREAKFAST_SCHEDULE_TYPE,
+  ALLOWED_PET_TYPE,
 } from '@/types';
 import { createObjectOptions } from '../utils';
 
@@ -79,7 +80,7 @@ export const steps = [
   'Review',
 ];
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
+export const ALLOWED_PET_OPTIONS = createObjectOptions(ALLOWED_PET_TYPE);
 export const WIFI_AREA_OPTIONS = createObjectOptions(WIFI_AREA_TYPE);
 export const HOTEL_AMENITY_CHARGE_OPTION = createObjectOptions(
   HOTEL_AMENITY_CHARGE_TYPE

@@ -367,58 +367,238 @@ export const hotelItemSchema = z.object({
   basicInfo: basicInfoSchema,
 });
 
-export const hotelAmenitiesSchema = baseHotelAmenitiesSchema.transform(data => {
-  if (!data.isWifi) {
-    data.wifiArea = undefined;
-    data.roomWifiChargeType = undefined;
-    data.roomWifiSpeed = undefined;
-    data.roomWifiSurchargeAmout = undefined;
-    data.roomWifiSurchargeDuration = undefined;
-    data.roomDeviceLimited = undefined;
-    data.roomDeviceLimitNumber = undefined;
-    data.publicWifiChargeType = undefined;
-    data.publicWifiSpeed = undefined;
-    data.publicWifiSurchargeAmout = undefined;
-    data.publicWifiSurchargeDuration = undefined;
-    data.publicDeviceLimited = undefined;
-    data.publicDeviceLimitNumber = undefined;
-  }
+export const hotelAmenitiesSchema = baseHotelAmenitiesSchema
+  .transform(data => {
+    if (!data.isWifi) {
+      data.wifiArea = undefined;
+      data.roomWifiChargeType = undefined;
+      data.roomWifiSpeed = undefined;
+      data.roomWifiSurchargeAmout = undefined;
+      data.roomWifiSurchargeDuration = undefined;
+      data.roomDeviceLimited = undefined;
+      data.roomDeviceLimitNumber = undefined;
+      data.publicWifiChargeType = undefined;
+      data.publicWifiSpeed = undefined;
+      data.publicWifiSurchargeAmout = undefined;
+      data.publicWifiSurchargeDuration = undefined;
+      data.publicDeviceLimited = undefined;
+      data.publicDeviceLimitNumber = undefined;
+    }
 
-  if (!data.wifiArea?.includes('IN_GUEST_ROOM')) {
-    data.roomWifiChargeType = undefined;
-    data.roomWifiSpeed = undefined;
-    data.roomWifiSurchargeAmout = undefined;
-    data.roomWifiSurchargeDuration = undefined;
-    data.roomDeviceLimited = undefined;
-    data.roomDeviceLimitNumber = undefined;
-  }
-  if (!data.wifiArea?.includes('IN_PUBLIC_AREA')) {
-    data.publicWifiChargeType = undefined;
-    data.publicWifiSpeed = undefined;
-    data.publicWifiSurchargeAmout = undefined;
-    data.publicWifiSurchargeDuration = undefined;
-    data.publicDeviceLimited = undefined;
-    data.publicDeviceLimitNumber = undefined;
-  }
-  if (data.roomDeviceLimited === false) {
-    data.roomDeviceLimitNumber = undefined;
-  }
-  if (data.publicDeviceLimited === false) {
-    data.publicDeviceLimitNumber = undefined;
-  }
-  if (data.isBreakfast === false) {
-    data.breakfastChargeType = undefined;
-    data.breakfastSurchargeAmount = undefined;
-    data.breakfastSchedule = undefined;
-    data.breakfastStartTime = undefined;
-    data.breakfastEndTime = undefined;
-  }
-  if (data.breakfastChargeType !== 'SURCHARGE') {
-    data.breakfastSurchargeAmount = undefined;
-  }
+    if (!data.wifiArea?.includes('IN_GUEST_ROOM')) {
+      data.roomWifiChargeType = undefined;
+      data.roomWifiSpeed = undefined;
+      data.roomWifiSurchargeAmout = undefined;
+      data.roomWifiSurchargeDuration = undefined;
+      data.roomDeviceLimited = undefined;
+      data.roomDeviceLimitNumber = undefined;
+    }
+    if (!data.wifiArea?.includes('IN_PUBLIC_AREA')) {
+      data.publicWifiChargeType = undefined;
+      data.publicWifiSpeed = undefined;
+      data.publicWifiSurchargeAmout = undefined;
+      data.publicWifiSurchargeDuration = undefined;
+      data.publicDeviceLimited = undefined;
+      data.publicDeviceLimitNumber = undefined;
+    }
+    if (data.roomDeviceLimited === false) {
+      data.roomDeviceLimitNumber = undefined;
+    }
+    if (data.publicDeviceLimited === false) {
+      data.publicDeviceLimitNumber = undefined;
+    }
+    if (data.isBreakfast === false) {
+      data.breakfastChargeType = undefined;
+      data.breakfastSurchargeAmount = undefined;
+      data.breakfastSchedule = undefined;
+      data.breakfastStartTime = undefined;
+      data.breakfastEndTime = undefined;
+    }
+    if (data.breakfastChargeType !== 'SURCHARGE') {
+      data.breakfastSurchargeAmount = undefined;
+    }
 
-  return data;
-});
+    return data;
+  })
+  .superRefine((data, ctx) => {
+    if (data.isWifi) {
+      if (data.wifiArea === undefined || data.wifiArea.length === 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['wifiArea'],
+          message: 'Select at least one option',
+        });
+      }
+      if (data.wifiArea && data.wifiArea.length > 0) {
+        if (data.wifiArea.includes('IN_GUEST_ROOM')) {
+          if (
+            data.roomWifiChargeType === undefined ||
+            data.roomWifiChargeType === null
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['roomWifiChargeType'],
+              message: 'Select your charge type',
+            });
+          }
+          if (data.roomWifiChargeType === 'SURCHARGE') {
+            if (
+              data.roomWifiSurchargeAmout === undefined ||
+              data.roomWifiSurchargeAmout <= 0
+            ) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['roomWifiSurchargeAmout'],
+                message: 'Input a valid amount',
+              });
+            }
+
+            if (
+              data.roomWifiSurchargeDuration === null ||
+              data.roomWifiSurchargeDuration === undefined
+            ) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['roomWifiSurchargeDuration'],
+                message: 'Select a valid duration',
+              });
+            }
+          }
+
+          if (data.roomWifiSpeed === undefined || data.roomWifiSpeed === null) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['roomWifiSpeed'],
+              message: 'Select the minimum wifi speed',
+            });
+          }
+          if (
+            data.roomDeviceLimited &&
+            (data.roomDeviceLimitNumber === undefined ||
+              data.roomDeviceLimitNumber === null ||
+              data.roomDeviceLimitNumber <= 0)
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['roomDeviceLimitNumber'],
+              message: 'Select a valid device limit',
+            });
+          }
+        }
+        if (data.wifiArea.includes('IN_PUBLIC_AREA')) {
+          if (
+            data.publicWifiChargeType === undefined ||
+            data.publicWifiChargeType === null
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['publicWifiChargeType'],
+              message: 'Select your charge type',
+            });
+          }
+          if (data.publicWifiChargeType === 'SURCHARGE') {
+            if (
+              data.publicWifiSurchargeAmout === undefined ||
+              data.publicWifiSurchargeAmout <= 0
+            ) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['publicWifiSurchargeAmout'],
+                message: 'Input a valid amount',
+              });
+            }
+
+            if (
+              data.publicWifiSurchargeDuration === null ||
+              data.publicWifiSurchargeDuration === undefined
+            ) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['publicWifiSurchargeDuration'],
+                message: 'Select a valid duration',
+              });
+            }
+          }
+
+          if (
+            data.publicWifiSpeed === undefined ||
+            data.publicWifiSpeed === null
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['publicWifiSpeed'],
+              message: 'Select the minimum wifi speed',
+            });
+          }
+          if (
+            data.publicDeviceLimited &&
+            (data.publicDeviceLimitNumber === undefined ||
+              data.publicDeviceLimitNumber === null ||
+              data.publicDeviceLimitNumber <= 0)
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['publicDeviceLimitNumber'],
+              message: 'Select a valid device limit',
+            });
+          }
+        }
+      }
+    }
+    if (data.isBreakfast) {
+      if (
+        data.breakfastChargeType === null ||
+        data.breakfastChargeType === undefined
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Select a valid charge type',
+          path: ['breakfastChargeType'],
+        });
+      }
+      if (
+        data.breakfastChargeType === 'SURCHARGE' &&
+        (data.breakfastSurchargeAmount === undefined ||
+          data.breakfastSurchargeAmount <= 0)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Input a valid amount',
+          path: ['breakfastSurchargeAmount'],
+        });
+      }
+      if (
+        data.breakfastSchedule === undefined ||
+        data.breakfastSchedule === null
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Select a valid schedule',
+          path: ['breakfastChargeType'],
+        });
+      }
+      if (
+        data.breakfastStartTime === null ||
+        data.breakfastStartTime === undefined
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Select an option',
+          path: ['breakfastStartTime'],
+        });
+      }
+      if (
+        data.breakfastEndTime === null ||
+        data.breakfastEndTime === undefined
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Select an option',
+          path: ['breakfastEndTime'],
+        });
+      }
+    }
+  });
 
 export const createHotelApiResponseSchema = z.object({
   status: z.enum(['success', 'error', 'fail']),

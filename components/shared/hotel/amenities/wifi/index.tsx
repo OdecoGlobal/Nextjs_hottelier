@@ -30,72 +30,78 @@ const WifiAmenities = ({ control, watch }: HotelAmenitiesProps) => {
           <Wifi className="w-4 h-4" /> Is Internet Available?
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <FormField
           name="isWifi"
           control={control}
-          render={({ field }) => (
-            <div className="space-y-4">
-              <FormItem>
-                <FormControl>
-                  <YesNoButton field={field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-              {isWifi && (
-                <FormItem className="space-y-4">
+          render={({ field }) => <YesNoButton field={field} />}
+        />
+        {isWifi && (
+          <FormItem className="space-y-4">
+            <FormField
+              control={control}
+              name="wifiArea"
+              render={({ field }) => (
+                <FormItem>
+                  <FormMessage />
                   {WIFI_AREA_OPTIONS.map(option => (
-                    <FormField
-                      key={option.value}
-                      control={control}
-                      name="wifiArea"
-                      render={({ field }) => (
-                        <div>
-                          <FormItem className="flex items-center gap-3">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(option.value)}
-                                onCheckedChange={checked => {
-                                  const checkedValue = field.value || [];
-                                  return checked
-                                    ? field.onChange([
-                                        ...checkedValue,
-                                        option.value,
-                                      ])
-                                    : field.onChange(
-                                        checkedValue.filter(
-                                          value => value !== option.value
-                                        )
-                                      );
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel>{option.label}</FormLabel>
-                          </FormItem>
-                          {wifiArea?.includes(option.value) && (
-                            <WifiTypeComponent
-                              control={control}
-                              watch={watch}
-                              prefix={
-                                option.value === 'IN_GUEST_ROOM'
-                                  ? 'room'
-                                  : 'public'
-                              }
-                            />
-                          )}
+                    <div key={option.value} className="space-y-4 ">
+                      <FormItem className="flex items-center gap-3">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(option.value)}
+                            onCheckedChange={checked => {
+                              const checkedValue = field.value || [];
+                              return checked
+                                ? field.onChange([
+                                    ...checkedValue,
+                                    option.value,
+                                  ])
+                                : field.onChange(
+                                    checkedValue.filter(
+                                      value => value !== option.value
+                                    )
+                                  );
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel>{option.label}</FormLabel>
+                      </FormItem>
+                      {wifiArea?.includes(option.value) && (
+                        <div className="ml-7">
+                          <WifiTypeComponent
+                            control={control}
+                            watch={watch}
+                            prefix={
+                              option.value === 'IN_GUEST_ROOM'
+                                ? 'room'
+                                : 'public'
+                            }
+                          />
                         </div>
                       )}
-                    />
+                    </div>
                   ))}
-                  <FormMessage />
                 </FormItem>
               )}
-            </div>
-          )}
-        />
+            />
+          </FormItem>
+        )}
       </CardContent>
     </Card>
   );
 };
 
 export default WifiAmenities;
+/*
+     {wifiArea?.includes('IN_GUEST_ROOM') && (
+          <WifiTypeComponent control={control} watch={watch} prefix={'room'} />
+        )}
+        {wifiArea?.includes('IN_PUBLIC_AREA') && (
+          <WifiTypeComponent
+            control={control}
+            watch={watch}
+            prefix={'public'}
+          />
+        )}
+*/

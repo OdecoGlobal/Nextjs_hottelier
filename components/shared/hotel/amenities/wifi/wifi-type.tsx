@@ -68,7 +68,7 @@ const WifiTypeComponent = ({ control, watch, prefix }: WifiComponentProps) => {
                 render={({ field }) => (
                   <SelectFieldForm
                     field={field}
-                    label="Select surcharge duration"
+                    label="Surcharge duration"
                     datas={WIFI_SURCHARGE_DURATION_OPTIONS}
                   />
                 )}

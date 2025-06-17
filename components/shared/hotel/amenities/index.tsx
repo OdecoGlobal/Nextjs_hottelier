@@ -7,11 +7,10 @@ import { hotelAmenitiesSchema } from '@/lib/schemas/grouped-validators';
 import { Form } from '@/components/ui/form';
 import WifiAmenities from './wifi';
 import BreakfastAmenities from './breakfast';
-import { Button } from '@/components/ui/button';
 import { updateHotelAmenities } from '@/lib/actions/hotel.action';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { Loader } from 'lucide-react';
+import SubmitFormButton from '@/components/submit-form-button';
 export type HotelAmenitiesProps = {
   control: Control<HotelAmenitiesType>;
   watch: UseFormWatch<HotelAmenitiesType>;
@@ -78,23 +77,19 @@ const MainAmenitiesForm = ({
     <section className="flex flex-col md:flex-row md:min-h-screen">
       <HotelCreationSteps current={2} />
 
-      <div className=" flex-1 py-10 px-5 max-w-[700px] mx-auto">
+      <div className=" flex-1 py-10 px-5">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 max-w-md"
+            className="space-y-4 max-w-md mx-auto"
           >
             <WifiAmenities control={control} watch={watch} />
             <BreakfastAmenities control={control} watch={watch} />
-            <div className="flex justify-end ">
-              <Button type="submit" disabled={isPending}>
-                {isPending ? (
-                  <Loader className="w-4 h-4 animate-spin" />
-                ) : (
-                  'Submit'
-                )}
-              </Button>
-            </div>
+            <SubmitFormButton
+              isPending={isPending}
+              action="Submit"
+              className="flex justify-end"
+            />
           </form>
         </Form>
       </div>

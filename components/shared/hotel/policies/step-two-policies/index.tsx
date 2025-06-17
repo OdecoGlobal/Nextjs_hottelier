@@ -1,21 +1,22 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Form } from "@/components/ui/form";
+} from '@/components/ui/card';
+import { Form } from '@/components/ui/form';
 
-import { StepTwoPolicyType } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Control, useForm, UseFormWatch } from "react-hook-form";
-import FrontDeskPolicy from "./front-desk-policy";
-import CheckOutPolicy from "./check-out-policy";
-import AgeRestrictionPolicy from "./age-restriction-policy";
-import CheckInPolicy from "./check-in-policy";
-import { hotelPolicyStepTwoSchema } from "@/lib/schemas/grouped-validators";
+import { StepTwoPolicyType } from '@/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Control, useForm, UseFormWatch } from 'react-hook-form';
+import FrontDeskPolicy from './front-desk-policy';
+import CheckOutPolicy from './check-out-policy';
+import AgeRestrictionPolicy from './age-restriction-policy';
+import CheckInPolicy from './check-in-policy';
+import { hotelPolicyStepTwoSchema } from '@/lib/schemas/grouped-validators';
+import SubmitFormButton from '@/components/submit-form-button';
 
 export type StepTwoPolicyProps = {
   control: Control<StepTwoPolicyType>;
@@ -34,7 +35,8 @@ const StepTwoPolicy = ({
     resolver: zodResolver(hotelPolicyStepTwoSchema),
     defaultValues: defaultValues,
   });
-  const { control, watch } = form;
+  const { control, watch, formState } = form;
+  const isPending = formState.isSubmitting;
 
   return (
     <Card>
@@ -57,7 +59,7 @@ const StepTwoPolicy = ({
               <Button type="button" onClick={onPrevious}>
                 Previous
               </Button>
-              <Button type="submit">Next</Button>
+              <SubmitFormButton isPending={isPending} action="Next" />
             </div>
           </form>
         </Form>
