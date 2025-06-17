@@ -266,3 +266,37 @@ export const hotelImageUploadSchema = z.object({
   exterior: z.array(imageFileSchema).min(1, 'Select at least one image'),
   interior: z.array(imageFileSchema).min(1, 'Select at least one image'),
 });
+
+export const ImageType = z.enum(['COVER', 'EXTERIOR', 'INTERIOR']);
+
+export const ImageUrlSchema = z
+  .string()
+  .url('Invalid URL format')
+  .min(1, 'URL cannot be empty')
+  .refine(url => {
+    // Additional validation for image URLs (optional)
+    const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
+    const cloudinaryPattern = /cloudinary\.com/;
+    return cloudinaryPattern.test(url) || imageExtensions.test(url);
+  }, 'URL must be a valid image URL');
+
+export const ImageArraySchema = z
+  .array(ImageUrlSchema)
+  .optional()
+  .transform(arr => arr?.filter(Boolean) || []);
+
+export const HotelImageUploadBodySchema = z
+  .object({
+    coverImages: ImageArraySchema,
+    exteriorImages: ImageArraySchema,
+    interiorImages: ImageArraySchema,
+  })
+  .refine(data => {
+    const totalImages = [
+      ...data.coverImages,
+      ...(data.exteriorImages || []),
+      ...(data.interiorImages || []),
+    ].length;
+
+    return totalImages > 0;
+  }, 'At least one image URL must be provided');

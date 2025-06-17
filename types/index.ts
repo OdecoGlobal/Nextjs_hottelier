@@ -18,6 +18,7 @@ import {
   insertCitySchema,
   hotelBasicInfoSchema,
   hotelPolicySchema,
+  HotelImageUploadBodySchema,
 } from '@/lib/schemas/validator';
 import { z } from 'zod';
 
@@ -264,9 +265,4 @@ export type IncompleteHotelApiResponse = z.infer<
 >;
 
 export type HotelBasicInfoData = z.infer<typeof hotelBasicInfoSchema>;
-
-// export const getCountryData = insertCountrySchema.extend({
-//   id: z.string(),
-// });
-
-// export type CountryData = z.infer<typeof getCountryData>;
+export type HotelImageUploadBody = z.infer<typeof HotelImageUploadBodySchema>;

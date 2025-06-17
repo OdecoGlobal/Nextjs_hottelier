@@ -5,6 +5,7 @@ import {
   CreateHotelApiResponse,
   HotelAmenitiesType,
   HotelBasicInfoData,
+  HotelImageUploadBody,
   HotelPolicyType,
   IncompleteHotelApiResponse,
 } from '@/types';
@@ -70,9 +71,12 @@ export async function updateHotelAmenities(
   }
 }
 
-export async function addHotelImages(formData: FormData, hotelId: string) {
+export async function addHotelImages(
+  formData: HotelImageUploadBody,
+  hotelId: string
+) {
   try {
-    const res = await axiosInstance.post(`/hotels/${hotelId}/photos`, formData);
+    const res = await axiosInstance.post(`/hotels/${hotelId}/images`, formData);
     if (!res) throw new Error('An error occured while updating hotel images');
 
     return {

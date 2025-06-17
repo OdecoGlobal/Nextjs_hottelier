@@ -1,5 +1,4 @@
 'use client';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,38 +7,40 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Form, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { hotelImageUploadSchema } from '@/lib/schemas/validator';
+import { HotelImageUploadBodySchema } from '@/lib/schemas/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useForm } from 'react-hook-form';
 import z from 'zod';
-import UploadInputButton from '../../images/upload-input-button';
-import ImageUploadComponent from '../../images/image-upload';
 import { useRef } from 'react';
 import HotelCreationSteps from '../creation-steps';
 import { addHotelImages } from '@/lib/actions/hotel.action';
-import { Loader } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { AdminOwnerRole } from '@/types';
 import { useRouter } from 'next/navigation';
+import CloudinaryImageUploader from '../../images/cloud-image-upload';
+import SmallCloudinaryUploadButton from '../../images/cloud-small-upload-button';
+import SubmitFormButton from '@/components/submit-form-button';
 
-export type hotelImageUploadType = z.infer<typeof hotelImageUploadSchema>;
+export type hotelImageUploadType = z.infer<typeof HotelImageUploadBodySchema>;
 
 const UploadHotelPhotoForm = ({
   hotelId,
   role,
+  userName,
 }: {
   hotelId: string;
+  userName: string;
   role: AdminOwnerRole;
 }) => {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof hotelImageUploadSchema>>({
-    resolver: zodResolver(hotelImageUploadSchema),
+  const form = useForm({
+    resolver: zodResolver(HotelImageUploadBodySchema),
     defaultValues: {
-      hotelImages: [],
-      exterior: [],
-      interior: [],
+      coverImages: [],
+      exteriorImages: [],
+      interiorImages: [],
     },
   });
   const { control, formState } = form;
@@ -47,19 +48,10 @@ const UploadHotelPhotoForm = ({
   const hotelImageResetRef = useRef<() => void | null>(null);
   const exteriorResetRef = useRef<() => void | null>(null);
   const interiorResetRef = useRef<() => void | null>(null);
-  const onSubmit = async (values: hotelImageUploadType) => {
-    const formData = new FormData();
-    values.hotelImages.forEach(file => {
-      formData.append('hotelImages', file);
-    });
-    values.exterior.forEach(file => {
-      formData.append('exterior', file);
-    });
-    values.interior.forEach(file => {
-      formData.append('interior', file);
-    });
 
-    const res = await addHotelImages(formData, hotelId);
+  const onSubmit = async (values: hotelImageUploadType) => {
+    console.log(values);
+    const res = await addHotelImages(values, hotelId);
     if (!res?.success) {
       toast({
         title: 'Error',
@@ -72,7 +64,9 @@ const UploadHotelPhotoForm = ({
         description: res.message,
         variant: 'default',
       });
-      router.replace(`/${role.toLowerCase()}/onboarding/${hotelId}/photos`);
+      router.replace(
+        `/${role.toLowerCase()}/onboarding/${hotelId}/rooms-and-rates`
+      );
     }
     form.reset();
     if (exteriorResetRef.current) exteriorResetRef.current();
@@ -81,6 +75,7 @@ const UploadHotelPhotoForm = ({
   };
 
   const isPending = formState.isSubmitting;
+  const baseFolder = `/hotellier/${userName}/${hotelId}`;
 
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
@@ -99,15 +94,16 @@ const UploadHotelPhotoForm = ({
               >
                 <FormField
                   control={control}
-                  name="hotelImages"
+                  name="coverImages"
                   render={() => (
-                    <ImageUploadComponent
+                    <CloudinaryImageUploader
                       form={form}
-                      fieldName="hotelImages"
+                      fieldName="coverImages"
                       maxImages={5}
                       maxSize={5}
                       labelText="hotel"
                       onResetRef={hotelImageResetRef}
+                      folder={`${baseFolder}/cover`}
                     />
                   )}
                 />
@@ -125,16 +121,17 @@ const UploadHotelPhotoForm = ({
 
                   <FormField
                     control={control}
-                    name="exterior"
+                    name="exteriorImages"
                     render={() => (
                       <FormItem className="space-y-1">
                         <FormLabel className="inline-block px-4 text-base">
                           Exterior
                         </FormLabel>
-                        <UploadInputButton
+                        <SmallCloudinaryUploadButton
                           form={form}
-                          fieldName="exterior"
+                          fieldName="exteriorImages"
                           onResetRef={exteriorResetRef}
+                          folder={`${baseFolder}/exterior`}
                         />
                       </FormItem>
                     )}
@@ -142,30 +139,27 @@ const UploadHotelPhotoForm = ({
 
                   <FormField
                     control={control}
-                    name="interior"
+                    name="interiorImages"
                     render={() => (
                       <FormItem className="space-y-1">
                         <FormLabel className="inline-block px-4 text-base">
                           Interior
                         </FormLabel>
-                        <UploadInputButton
+                        <SmallCloudinaryUploadButton
                           form={form}
-                          fieldName="interior"
+                          fieldName="interiorImages"
                           onResetRef={interiorResetRef}
+                          folder={`${baseFolder}/interior`}
                         />
                       </FormItem>
                     )}
                   />
                 </Card>
-                <div className="flex justify-end">
-                  <Button type="submit" disabled={isPending}>
-                    {isPending ? (
-                      <Loader className="w-4 h-4 animate-spin" />
-                    ) : (
-                      'Submit'
-                    )}
-                  </Button>
-                </div>
+                <SubmitFormButton
+                  isPending={isPending}
+                  action="Submit"
+                  className="flex justify-end"
+                />
               </form>
             </Form>
           </CardContent>

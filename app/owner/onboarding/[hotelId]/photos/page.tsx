@@ -12,7 +12,11 @@ const AddPhotosPage = async ({
   if (!owner) redirect('/unauthorized');
   const { hotelId } = await params;
   return (
-    <UploadHotelPhotoForm hotelId={hotelId} role={owner.user.role as 'OWNER'} />
+    <UploadHotelPhotoForm
+      hotelId={hotelId}
+      role={owner.user.role as 'OWNER'}
+      userName={owner.user.userName}
+    />
   );
 };
 
