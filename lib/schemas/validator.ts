@@ -31,6 +31,7 @@ import {
   WIFI_SURCHARGE_DURATION_TYPE,
   WIFI_SPEED_TYPE,
   WIFI_AREA_TYPE,
+  PRICING_MODEL_TYPE,
 } from '@/types';
 import z from 'zod';
 import { MAX_FILE_SIZE } from '../constants';
@@ -171,6 +172,37 @@ export const baseHotelAmenitiesSchema = z.object({
   breakfastEndTime: z.string().nullish(),
 });
 
+export const ImageUrlSchema = z
+  .string()
+  .url('Invalid URL format')
+  .min(1, 'URL cannot be empty')
+  .refine(url => {
+    // Additional validation for image URLs (optional)
+    const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
+    const cloudinaryPattern = /cloudinary\.com/;
+    return cloudinaryPattern.test(url) || imageExtensions.test(url);
+  }, 'URL must be a valid image URL');
+
+export const ImageArraySchema = z
+  .array(ImageUrlSchema)
+  .transform(arr => arr?.filter(Boolean));
+
+export const HotelImageUploadBodySchema = z
+  .object({
+    coverImages: ImageArraySchema,
+    exteriorImages: ImageArraySchema,
+    interiorImages: ImageArraySchema,
+  })
+  .refine(data => {
+    const totalImages = [
+      ...data.coverImages,
+      ...data.exteriorImages,
+      ...data.interiorImages,
+    ].length;
+
+    return totalImages > 0;
+  }, 'At least one image URL must be provided');
+
 export const baseRoomAmenitiesSchema = z.object({
   bathroomType: z.enum(BATHROOM_TYPES),
   bathroomNumber: z.coerce
@@ -195,17 +227,19 @@ export const baseRoomSchema = z.object({
   name: z.string().min(3, 'Room name must be at least 3 characters'),
   roomType: z.enum(ROOM_TYPES),
   roomClass: z.enum(ROOM_CLASS).optional(),
-  maxOccupancy: z.number().min(1),
+  maxOccupancy: z.coerce.number().min(1, 'SHould be greater than one'),
   bedType: z.enum(BED_TYPES),
   bedTotal: z.coerce
     .number()
     .min(1, 'There should be at least one bed in a room'),
-  totalRooms: z.coerce.number().min(1).optional().default(1),
+  totalRooms: z.coerce.number().min(1, 'SHould be greater than one'),
   baseRate: z.coerce.number().nonnegative(),
+  peopleInBaseRate: z.coerce.number().min(1, 'SHould be greater than one'),
+  pricingModel: z.enum(PRICING_MODEL_TYPE),
+  roomImages: ImageArraySchema,
 });
 
-export const addRoomSchema = baseRoomSchema;
-
+export const completeRoomSchema = baseRoomSchema.merge(baseRoomAmenitiesSchema);
 export const updateHotelSchema = baseHotelSchema.partial().extend({
   slug: z.string().min(3, 'Slug must be at least 3 characters').optional(),
 });
@@ -266,37 +300,3 @@ export const hotelImageUploadSchema = z.object({
   exterior: z.array(imageFileSchema).min(1, 'Select at least one image'),
   interior: z.array(imageFileSchema).min(1, 'Select at least one image'),
 });
-
-export const ImageType = z.enum(['COVER', 'EXTERIOR', 'INTERIOR']);
-
-export const ImageUrlSchema = z
-  .string()
-  .url('Invalid URL format')
-  .min(1, 'URL cannot be empty')
-  .refine(url => {
-    // Additional validation for image URLs (optional)
-    const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
-    const cloudinaryPattern = /cloudinary\.com/;
-    return cloudinaryPattern.test(url) || imageExtensions.test(url);
-  }, 'URL must be a valid image URL');
-
-export const ImageArraySchema = z
-  .array(ImageUrlSchema)
-  .optional()
-  .transform(arr => arr?.filter(Boolean) || []);
-
-export const HotelImageUploadBodySchema = z
-  .object({
-    coverImages: ImageArraySchema,
-    exteriorImages: ImageArraySchema,
-    interiorImages: ImageArraySchema,
-  })
-  .refine(data => {
-    const totalImages = [
-      ...data.coverImages,
-      ...(data.exteriorImages || []),
-      ...(data.interiorImages || []),
-    ].length;
-
-    return totalImages > 0;
-  }, 'At least one image URL must be provided');

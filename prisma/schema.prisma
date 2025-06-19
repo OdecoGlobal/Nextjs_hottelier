@@ -233,82 +233,20 @@ model HotelPolicy {
   @@map("hotel_policies")
 }
 
-enum BedType {
-  SINGLE_OR_TWIN
-  LARGE_SINGLE_OR_LARGE_TWIN
-  DOUBLE
-  QUEEN
-  KING
-  WATER
-  BUNK
-}
-
-enum PricingModelType {
-  PER_DAY
-  OCCUPANCY_BASE
-}
-
-model Room {
+model HotelImages {
   id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   hotelId String @db.Uuid
   hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
-  name         String     @unique(map: "room_name_idx")
-  roomType     RoomType   @unique
-  roomClass    RoomClass? @default(BASIC)
-  maxOccupancy Int
-  bedType      BedType
-  bedTotal     Int        @default(1)
-  totalRooms   Int        @default(1)
-  baseRate     Decimal    @default(0) @db.Decimal(12, 2)
-
-  amenities        RoomAmenity[]
-  roomImages       RoomImages[]
-  roomAvailability RoomAvailability[]
-  pricingModel     PricingModelType
-
-  // images           String[]
-  // isAvailable Boolean @default(true)
-
+  imageType   ImageType
+  imageUrl    String
   isCompleted Boolean   @default(false)
   completedAt DateTime?
 
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt @db.Timestamp(6)
 
-  // bookings      Booking[]
-  @@map("rooms")
-}
-
-enum WifiAreaType {
-  IN_PUBLIC_AREA
-  IN_GUEST_ROOM
-}
-
-enum HotelAmenityChargeType {
-  FREE
-  SURCHARGE
-}
-
-enum WifiSpeedType {
-  MBPS_25
-  MBPS_50
-  MBPS_100
-  MBPS_200
-}
-
-enum WifiSurchargeDuration {
-  PER_STAY
-  PER_HOUR
-  PER_NIGHT
-  PER_DAY
-  PER_WEEK
-}
-
-enum BreakfastSchedule {
-  DAILY
-  WEEKDAYS
-  WEEKENDS
+  @@map("hotel_images")
 }
 
 model HotelAmenity {
@@ -345,6 +283,91 @@ model HotelAmenity {
   updatedAt DateTime @updatedAt @db.Timestamp(6)
 
   @@map("hotel_amenities")
+}
+
+enum BedType {
+  SINGLE_OR_TWIN
+  LARGE_SINGLE_OR_LARGE_TWIN
+  DOUBLE
+  QUEEN
+  KING
+  WATER
+  BUNK
+}
+
+enum PricingModelType {
+  PER_DAY
+  OCCUPANCY_BASE
+}
+
+model Room {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  hotelId String @db.Uuid
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  name             String     @unique(map: "room_name_idx")
+  roomType         RoomType   @unique
+  roomClass        RoomClass?
+  maxOccupancy     Int
+  bedType          BedType
+  bedTotal         Int        @default(1)
+  totalRooms       Int        @default(1)
+  peopleInBaseRate Int        @default(1)
+  baseRate         Decimal    @default(0) @db.Decimal(12, 2)
+
+  amenities        RoomAmenity[]
+  roomImages       RoomImages[]
+  roomAvailability RoomAvailability[]
+  pricingModel     PricingModelType
+
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @db.Timestamp(6)
+
+  // bookings      Booking[]
+  @@map("rooms")
+}
+
+model RoomAmenity {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roomId          String           @db.Uuid
+  room            Room             @relation(fields: [roomId], references: [id])
+  bathroomType    BathroomType
+  bathroomNumber  Decimal          @default(1)
+  showerType      ShowerType
+  roomEssential   RoomEssentials[]
+  isTowelProvided Boolean
+
+  climateControl   ClimateControlType[] @default([])
+  airConditionType AirConditioningType?
+  heatingType      HeatingType?
+  isRoomView       Boolean
+  roomViewType     RoomViewType?
+  roomSize         Decimal
+  roomSizeUnit     RoomSizeUnitType
+  isOutDoorSpace   Boolean
+  outDoorSpaceType OutDoorSpaceType?
+  rooomLayout      RoomLayoutType?
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @db.Timestamp(6)
+
+  @@map("room_amenities")
+}
+
+model RoomImages {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roomId String @db.Uuid
+  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  imageUrl String
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @db.Timestamp(6)
+
+  @@map("room_images")
 }
 
 enum BathroomType {
@@ -415,62 +438,6 @@ enum RoomLayoutType {
   SEPARATE_SITTING_AREA
   LAPTOP_FRIENDLY_WORK_SPACE
   PRIVATE_POOL
-}
-
-model RoomAmenity {
-  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  roomId          String           @db.Uuid
-  room            Room             @relation(fields: [roomId], references: [id])
-  bathroomType    BathroomType
-  bathroomNumber  Decimal          @default(1)
-  showerType      ShowerType
-  roomEssential   RoomEssentials[]
-  isTowelProvided Boolean
-
-  climateControl   ClimateControlType[] @default([])
-  airConditionType AirConditioningType?
-  heatingType      HeatingType?
-  isRoomView       Boolean
-  roomViewType     RoomViewType?
-  roomSize         Decimal
-  roomSizeUnit     RoomSizeUnitType
-  isOutDoorSpace   Boolean
-  outDoorSpaceType OutDoorSpaceType?
-  rooomLayout      RoomLayoutType?
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  @@map("room_amenities")
-}
-
-model HotelImages {
-  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  hotelId String @db.Uuid
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
-  imageType   ImageType
-  imageUrl    String
-  isCompleted Boolean   @default(false)
-  completedAt DateTime?
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  @@map("hotel_images")
-}
-
-model RoomImages {
-  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  roomId String @db.Uuid
-  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
-
-  imageUrl String
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  @@map("room_images")
 }
 
 model RoomAvailability {
@@ -558,6 +525,37 @@ enum Currency {
   USD
   EUR
   GBP
+}
+
+enum WifiAreaType {
+  IN_PUBLIC_AREA
+  IN_GUEST_ROOM
+}
+
+enum HotelAmenityChargeType {
+  FREE
+  SURCHARGE
+}
+
+enum WifiSpeedType {
+  MBPS_25
+  MBPS_50
+  MBPS_100
+  MBPS_200
+}
+
+enum WifiSurchargeDuration {
+  PER_STAY
+  PER_HOUR
+  PER_NIGHT
+  PER_DAY
+  PER_WEEK
+}
+
+enum BreakfastSchedule {
+  DAILY
+  WEEKDAYS
+  WEEKENDS
 }
 
 enum HotelType {

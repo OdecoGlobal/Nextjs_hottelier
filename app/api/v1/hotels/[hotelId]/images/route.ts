@@ -1,10 +1,12 @@
 import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
 import AppError from '@/lib/errors/app-error';
-import { ImageType, HotelImageUploadBodySchema } from '@/lib/schemas/validator';
+import { HotelImageUploadBodySchema } from '@/lib/schemas/validator';
+import { protect, restrictTo, validateHotelAcces } from '@/middleware/auth';
 import { updateHotelProgress } from '@/utils/hotel';
 import { NextRequest, NextResponse } from 'next/server';
 import z from 'zod';
+export const ImageType = z.enum(['COVER', 'EXTERIOR', 'INTERIOR']);
 
 type ImageType = z.infer<typeof ImageType>;
 
@@ -28,6 +30,10 @@ export const POST = async (
   { params }: { params: Promise<{ hotelId: string }> }
 ) => {
   try {
+    await protect(req);
+    restrictTo('ADMIN', 'OWNER')(req);
+    validateHotelAcces();
+
     const { hotelId } = await params;
     if (!hotelId) throw new AppError('ID is required too upload images', 400);
 
@@ -35,6 +41,7 @@ export const POST = async (
       where: { hotelId },
       select: { hotelId: true },
     });
+
     if (!hotel) throw new AppError('Hotel not found', 400);
 
     const body = await req.json();

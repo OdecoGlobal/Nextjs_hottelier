@@ -8,6 +8,7 @@ import {
   createHotelApiResponseSchema,
   incompleteHotelApiResponseSchema,
   hotelAmenitiesSchema,
+  StepOneAddRoomSchema,
 } from '@/lib/schemas/grouped-validators';
 import {
   userSchema,
@@ -19,6 +20,7 @@ import {
   hotelBasicInfoSchema,
   hotelPolicySchema,
   HotelImageUploadBodySchema,
+  completeRoomSchema,
 } from '@/lib/schemas/validator';
 import { z } from 'zod';
 
@@ -254,6 +256,9 @@ export type HotelPolicyType = z.infer<typeof hotelPolicySchema>;
 export type StepOnePolicyType = z.infer<typeof hotelPolicyStepOneSchema>;
 export type StepTwoPolicyType = z.infer<typeof hotelPolicyStepTwoSchema>;
 export type StepThreePolicyType = z.infer<typeof hotelPolicyStepThreeSchema>;
+
+export type AddRoomType = z.infer<typeof completeRoomSchema>;
+export type StepOneAddRoomType = z.infer<typeof StepOneAddRoomSchema>;
 
 export type CompletionSteps = z.infer<typeof completionStepsSchema>;
 export type HotelItem = z.infer<typeof hotelItemSchema>;

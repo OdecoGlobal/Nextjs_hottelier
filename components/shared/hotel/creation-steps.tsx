@@ -30,9 +30,9 @@ const HotelCreationSteps = ({
                   className={cn(
                     'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold',
                     isCompleted
-                      ? 'bg-blue-700'
+                      ? 'bg-blue-700 text-white'
                       : isCurrent
-                      ? 'bg-blue-700'
+                      ? 'bg-blue-700 text-white'
                       : 'border border-blue-700'
                   )}
                 >
@@ -59,13 +59,13 @@ const HotelCreationSteps = ({
                 className={cn(
                   'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold',
                   isCompleted
-                    ? 'bg-blue-700'
+                    ? 'bg-blue-700 text-white'
                     : isCurrent
-                    ? 'bg-blue-700'
+                    ? 'bg-blue-700 text-white'
                     : 'border border-blue-700'
                 )}
               >
-                {isCompleted ? <Check /> : i + 1}
+                {isCompleted ? <Check className="" /> : i + 1}
               </div>
               {!isLast && (
                 <hr className="flex-1 border-t border-muted-foreground mx-1" />

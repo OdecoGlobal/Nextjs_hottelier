@@ -3,6 +3,7 @@ import {
   hotelBasicInfoSchema,
   baseHotelPolicySchema,
   baseHotelAmenitiesSchema,
+  completeRoomSchema,
 } from './validator';
 
 export const hotelBasicInfoStepOneSchema = hotelBasicInfoSchema.pick({
@@ -610,4 +611,19 @@ export const createHotelApiResponseSchema = z.object({
 export const incompleteHotelApiResponseSchema = z.object({
   status: z.enum(['success', 'error', 'fail']),
   data: z.array(hotelItemSchema),
+});
+
+export const StepOneAddRoomSchema = completeRoomSchema.pick({
+  roomType: true,
+  roomClass: true,
+  maxOccupancy: true,
+  bedType: true,
+  bedTotal: true,
+  totalRooms: true,
+  baseRate: true,
+  peopleInBaseRate: true,
+});
+
+export const StepTwoAddRoomSchema = completeRoomSchema.pick({
+  name: true,
 });

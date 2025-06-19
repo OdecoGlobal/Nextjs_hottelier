@@ -14,6 +14,9 @@ import {
   WIFI_SURCHARGE_DURATION_TYPE,
   BREAKFAST_SCHEDULE_TYPE,
   ALLOWED_PET_TYPE,
+  ROOM_TYPES,
+  ROOM_CLASS,
+  BED_TYPES,
 } from '@/types';
 import { createObjectOptions } from '../utils';
 
@@ -77,6 +80,7 @@ export const steps = [
   'Amenities',
   'Photos',
   'Rooms and Rates',
+  'Rates and Availablity',
   'Review',
 ];
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -132,6 +136,20 @@ export const WIFI_SURCHARGE_DURATION_OPTIONS = createObjectOptions(
 export const BREAKFAST_SCHEDULE_OPTIONS = createObjectOptions(
   BREAKFAST_SCHEDULE_TYPE
 );
+
+export const ROOM_TYPES_OPTIONS = createObjectOptions(ROOM_TYPES);
+export const ROOM_CLASS_OPTIONS = createObjectOptions(ROOM_CLASS);
+export function getRoomTypeLabel(value: string): string {
+  const option = ROOM_TYPES_OPTIONS.find(opt => opt.value === value);
+  return option?.label || value;
+}
+
+export function getRoomClassLabel(value?: string): string {
+  if (!value) return '';
+  const option = ROOM_CLASS_OPTIONS.find(opt => opt.value === value);
+  return option?.label || value;
+}
+export const BED_TYPES_OPTIONS = createObjectOptions(BED_TYPES);
 
 export const SELF_CHECK_IN_OPTIONS = {
   ACCESS_CODE: {

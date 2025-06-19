@@ -22,13 +22,14 @@ export const POST = async (req: NextRequest) => {
           completionSteps: {
             step1_basic_info: true,
             step2_policies: false,
+            step3_amenities: false,
             step3_hotel_images: false,
-            step4_rooms: false,
-            step5_rates: false,
-            step6_amenities: false,
+            step5_rooms: false,
+            step6_rates_and_availabilty: false,
+            step7_review: false,
           },
           currentStep: 2,
-          totalSteps: 6,
+          totalSteps: 7,
         },
       });
 
