@@ -28,7 +28,7 @@ export const SelectFieldForm = <T extends FieldValues>({
   placeholder = '--select--',
 }: SelectFieldProps<T>) => {
   return (
-    <FormItem className={cn(className, 'max-w-md')}>
+    <FormItem className={cn(className)}>
       <Select
         onValueChange={field.onChange}
         disabled={disabled}

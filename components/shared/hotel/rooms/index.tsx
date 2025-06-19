@@ -2,27 +2,37 @@
 import { AddRoomType, StepOneAddRoomType } from '@/types';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import z from 'zod';
 import HotelCreationSteps from '../creation-steps';
 import StepOneRoom from './step-one-room';
 import {
+  StepFourAddRoomSchema,
   StepOneAddRoomSchema,
+  StepThreeAddRoomSchema,
   StepTwoAddRoomSchema,
 } from '@/lib/schemas/grouped-validators';
 import { Control, UseFormWatch } from 'react-hook-form';
 import StepTwoAddRoom from './step-two-room';
+import AddRooomImages from './step-four-room';
+import StepThreeAddRoom from './step-three-room';
 
 export type StepOneAddRoomProp = {
   control: Control<StepOneAddRoomType>;
   watch: UseFormWatch<StepOneAddRoomType>;
 };
 
-const AddRoomComponent = ({ hotelId }: { hotelId: string }) => {
-  const [step, setStep] = useState(1);
+const AddRoomComponent = ({
+  hotelId,
+  userName,
+}: {
+  hotelId: string;
+  userName: string;
+}) => {
+  const [step, setStep] = useState(3);
   //   const { toast } = useToast();
   //   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
+  //   const router = useRouter();
 
   const [formData, setFormData] = useState<AddRoomType>({
     name: '',
@@ -37,7 +47,7 @@ const AddRoomComponent = ({ hotelId }: { hotelId: string }) => {
     bedTotal: 1,
     bedType: 'BUNK',
     bathroomType: 'PRIVATE',
-    bathroomNumber: 0,
+    bathroomNumber: 1,
     showerType: 'SHOWER',
     isTowelProvided: false,
     climateControl: [],
@@ -64,7 +74,7 @@ const AddRoomComponent = ({ hotelId }: { hotelId: string }) => {
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
       <HotelCreationSteps current={4} />
-      <div className=" flex-1 mt-5 px-5">
+      <div className="flex-1 my-5 px-5 max-w-3xl mx-auto">
         {step === 1 && (
           <StepOneRoom
             defaultValues={formData}
@@ -73,10 +83,24 @@ const AddRoomComponent = ({ hotelId }: { hotelId: string }) => {
         )}
         {step === 2 && (
           <StepTwoAddRoom
-            defaultValues={formData}
             onNext={data => handleNext(data, StepTwoAddRoomSchema, 3)}
             onPrevious={handlePrevious}
             stepOneValues={formData}
+          />
+        )}
+        {step === 3 && (
+          <StepThreeAddRoom
+            onNext={data => handleNext(data, StepThreeAddRoomSchema, 4)}
+            onPrevious={handlePrevious}
+            defaultValues={formData}
+          />
+        )}
+        {step === 4 && (
+          <AddRooomImages
+            onNext={data => handleNext(data, StepFourAddRoomSchema, 5)}
+            onPrevious={handlePrevious}
+            hotelId={hotelId}
+            userName={userName}
           />
         )}
       </div>

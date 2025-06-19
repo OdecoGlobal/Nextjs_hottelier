@@ -349,7 +349,7 @@ model RoomAmenity {
   roomSizeUnit     RoomSizeUnitType
   isOutDoorSpace   Boolean
   outDoorSpaceType OutDoorSpaceType?
-  rooomLayout      RoomLayoutType?
+  roomLayout       RoomLayoutType?
 
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt @db.Timestamp(6)
@@ -388,6 +388,7 @@ enum RoomEssentials {
   SOAP
   SHAMPOO
   TOILET_PAPER
+  HAIR_DRYER
 }
 
 enum ClimateControlType {

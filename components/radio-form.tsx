@@ -9,6 +9,7 @@ import { RadioGroupItem, RadioGroup } from './ui/radio-group';
 import { ControllerRenderProps, FieldValues, Path } from 'react-hook-form';
 import { GeneratedTypes } from '@/types';
 import { cn } from '@/lib/utils';
+import React from 'react';
 
 interface RadioFormProps<T extends FieldValues> {
   field: ControllerRenderProps<T, Path<T>>;
@@ -18,6 +19,8 @@ interface RadioFormProps<T extends FieldValues> {
   data: GeneratedTypes[];
   isBoolean?: boolean;
   className?: string;
+  nestedOnValue?: string;
+  nestedElement?: React.ReactNode;
 }
 
 const RadioForm = <T extends FieldValues>({
@@ -26,10 +29,13 @@ const RadioForm = <T extends FieldValues>({
   label,
   className,
   isBoolean = false,
+  nestedOnValue,
+  nestedElement,
 }: RadioFormProps<T>) => {
+  const selectedValue = isBoolean ? String(field.value) : field.value;
   return (
     <FormItem>
-      <FormDescription className="font-semibold text-base">
+      <FormDescription className="font-semibold text-base md:text-xl">
         {label}
       </FormDescription>
       <FormControl>
@@ -37,16 +43,22 @@ const RadioForm = <T extends FieldValues>({
           onValueChange={val =>
             field.onChange(isBoolean ? val === 'true' : val)
           }
-          value={isBoolean ? String(field.value) : field.value}
+          value={selectedValue}
           className={cn('flex items-center gap-2', className)}
         >
           {data.map(option => (
-            <FormItem key={option.value} className="flex items-center gap-3">
-              <FormControl>
-                <RadioGroupItem value={option.value} />
-              </FormControl>
-              <FormLabel>{option.label}</FormLabel>
-            </FormItem>
+            <div key={option.value} className="w-full">
+              <FormItem className="flex items-center gap-3">
+                <FormControl>
+                  <RadioGroupItem value={option.value} />
+                </FormControl>
+                <FormLabel>{option.label}</FormLabel>
+              </FormItem>
+              {option.value === nestedOnValue &&
+                selectedValue === nestedOnValue && (
+                  <div className="pl-6 pt-2">{nestedElement}</div>
+                )}
+            </div>
           ))}
         </RadioGroup>
       </FormControl>

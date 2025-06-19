@@ -12,6 +12,7 @@ import { SelectFieldForm } from '@/components/select-field-form';
 import {
   PET_FEE_DURATION_OPTIONS,
   PET_SURCHARGE_TYPE_OPTIONS,
+  RADIO_BOOLEAN,
 } from '@/lib/constants';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -33,16 +34,7 @@ const PetSurcharge = ({ control, watch }: StepThreePolicyProp) => {
                     field={field}
                     label="Do you have a surcharge for pets?"
                     isBoolean={true}
-                    data={[
-                      {
-                        label: 'Yes',
-                        value: 'true',
-                      },
-                      {
-                        label: 'No',
-                        value: 'false',
-                      },
-                    ]}
+                    data={RADIO_BOOLEAN}
                   />
                 </FormControl>
                 <FormMessage />

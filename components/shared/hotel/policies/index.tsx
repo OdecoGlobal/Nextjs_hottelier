@@ -139,7 +139,7 @@ const MainPolicyForm = ({
     <section className="flex flex-col md:flex-row md:min-h-screen">
       <HotelCreationSteps current={1} />
 
-      <div className=" flex-1 flex justify-center items-center py-10 px-5 w-full">
+      <div className="flex-1 my-5 px-5 max-w-3xl mx-auto">
         {step === 1 && (
           <StepOnePolicy
             defaultValues={formData}

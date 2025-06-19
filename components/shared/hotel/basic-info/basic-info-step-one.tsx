@@ -1,3 +1,4 @@
+import SubmitFormButton from '@/components/submit-form-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -25,7 +26,7 @@ import { currency, hotelTypes } from '@/lib/constants';
 import { hotelBasicInfoStepOneSchema } from '@/lib/schemas/grouped-validators';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Info, } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -165,9 +166,10 @@ const HotelBasicInfoStepOne = ({
               )}
             />
 
-            <div className="flex justify-end">
-              <Button type="submit">Next</Button>
-            </div>
+            <SubmitFormButton
+              action="Next"
+              isPending={form.formState.isSubmitting}
+            />
           </form>
         </Form>
       </CardContent>

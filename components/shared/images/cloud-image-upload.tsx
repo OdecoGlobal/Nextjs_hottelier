@@ -50,7 +50,7 @@ const CloudinaryImageUploader = <T extends FieldValues>({
                   Or drag and drop images here
                 </p>
                 <p className="text-muted-foreground text-xs">
-                  Maximum {maxImages} images, {maxSize} each
+                  Maximum {maxImages} images, {maxSize} MB each
                 </p>
               </div>
             </CardContent>

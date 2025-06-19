@@ -7,12 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { FormField } from '@/components/ui/form';
 import { BED_TYPES_OPTIONS } from '@/lib/constants';
 import { StepOneAddRoomType } from '@/types';
 import { Control } from 'react-hook-form';
@@ -38,13 +33,10 @@ const BedSpace = ({ control }: { control: Control<StepOneAddRoomType> }) => {
             control={control}
             name="bedTotal"
             render={({ field }) => (
-              <FormItem className="flex items-center gap-2">
-                <FormLabel className="text-muted-foreground text-base flex-wrap  tracking-tight">
-                  How many of these beds?
-                </FormLabel>
-                <NumberIncrementButton field={field} />
-                <FormMessage />
-              </FormItem>
+              <NumberIncrementButton
+                field={field}
+                label=" How many of these beds?"
+              />
             )}
           />
         </CardContent>

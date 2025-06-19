@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardHeader,
-  CardDescription,
-  CardTitle,
-  CardContent,
-} from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { hotelPolicyStepThreeSchema } from '@/lib/schemas/grouped-validators';
 import { StepThreePolicyType } from '@/types';
 import { useForm } from 'react-hook-form';
@@ -16,7 +10,6 @@ import {
   FormItem,
   FormLabel,
 } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
 import YesNoButton from '@/components/yes-no-button';
 import { PawPrint } from 'lucide-react';
 import PetSurcharge from './pet-surcharge';
@@ -49,9 +42,6 @@ const StepThreePolicy = ({
   return (
     <Card className="max-w-lg flex-1">
       <CardHeader>
-        <CardDescription className="font-semibold text-xl">
-          Step 3 of 3
-        </CardDescription>
         <CardTitle className="text-xl md:text-2xl font-bold">
           Pet Policies
         </CardTitle>
@@ -92,12 +82,15 @@ const StepThreePolicy = ({
               </>
             )}
 
-            <div className="flex justify-between">
-              <Button type="button" onClick={onPrevious}>
-                Previous
-              </Button>
-              <SubmitFormButton isPending={isPending} action="Submit" />
-            </div>
+            <SubmitFormButton
+              isPending={isPending}
+              action="Submit"
+              showPrevious={true}
+              onPrevious={onPrevious}
+              showSteps={true}
+              currentStep={3}
+              totalSteps={3}
+            />
           </form>
         </Form>
       </CardContent>

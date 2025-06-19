@@ -85,11 +85,7 @@ const MainAmenitiesForm = ({
           >
             <WifiAmenities control={control} watch={watch} />
             <BreakfastAmenities control={control} watch={watch} />
-            <SubmitFormButton
-              isPending={isPending}
-              action="Submit"
-              className="flex justify-end"
-            />
+            <SubmitFormButton isPending={isPending} action="Submit" />
           </form>
         </Form>
       </div>

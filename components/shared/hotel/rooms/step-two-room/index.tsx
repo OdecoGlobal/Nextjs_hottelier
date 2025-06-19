@@ -21,7 +21,7 @@ import { StepTwoAddRoomSchema } from '@/lib/schemas/grouped-validators';
 import { StepOneAddRoomType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Check, Info, Pencil, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 
@@ -29,14 +29,12 @@ export type StepTwoAddRoomType = z.infer<typeof StepTwoAddRoomSchema>;
 
 interface StepTwoProps {
   stepOneValues: StepOneAddRoomType;
-  defaultValues?: StepTwoAddRoomType;
   onNext: (data: StepTwoAddRoomType) => void;
   onPrevious: () => void;
 }
 
 const StepTwoAddRoom = ({
   stepOneValues,
-  defaultValues,
   onNext,
   onPrevious,
 }: StepTwoProps) => {
@@ -52,9 +50,11 @@ const StepTwoAddRoom = ({
     resolver: zodResolver(StepTwoAddRoomSchema),
     defaultValues: {
       name: generatedName,
-      ...defaultValues,
     },
   });
+  useEffect(() => {
+    form.setValue('name', generatedName);
+  }, [generatedName, form]);
 
   const { control, handleSubmit, formState, reset } = form;
   const isPending = formState.isSubmitting;
@@ -153,7 +153,7 @@ const StepTwoAddRoom = ({
                 </FormItem>
               )}
             />
-            <div className="bg-accent p-5 rounded-2xl">
+            <div className="bg-accent p-5 rounded-2xl text-sm md:text-base">
               <h3 className="text-sm font-semibold flex items-center gap-3">
                 <Info className="w-4 h-4" /> A quick note
               </h3>
@@ -162,7 +162,6 @@ const StepTwoAddRoom = ({
                 It&lsquo;s created based on of infromation you gave us
               </li>
               <li className=" list-disc">
-                {' '}
                 It&lsquo;s consistent across the site, making it easier for
                 travlelers to find and compare rooms{' '}
               </li>

@@ -48,6 +48,7 @@ export const ROOM_ESSENTIALS_TYPES = [
   'SOAP',
   'SHAMPOO',
   'TOILET_PAPER',
+  'HAIR_DRYER',
 ] as const;
 
 export const CLIMATE_CONTROL_TYPE = ['AIR_CONDITIONING', 'HEATING'] as const;

@@ -48,7 +48,7 @@ const SubmitFormButton = ({
       <Button
         type="submit"
         disabled={isPending}
-        className="rounded-full bg-blue-600 text-slate-50"
+        className="rounded-full bg-blue-600 text-slate-50 hover:text-slate-100 hover:bg-blue-700"
       >
         {isPending ? <Loader className="w-4 h-4 animate-spin" /> : action}
       </Button>

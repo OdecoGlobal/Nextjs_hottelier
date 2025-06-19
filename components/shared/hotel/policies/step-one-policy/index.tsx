@@ -1,10 +1,3 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -34,33 +27,24 @@ const StepOnePolicy = ({
   const isPending = formState.isSubmitting;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardDescription className="font-semibold text-xl">
-          Step 1 of 3
-        </CardDescription>
-        <CardTitle className="text-xl md:text-2xl font-bold">
-          Basic Hotel Policies
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onNext)} className="space-y-6">
-            <PaymentMethodPolicy control={control} />
-            <DepositRequiredPolicy control={control} watch={watch} />
-            <CancellationPolicy control={control} />
-            <HotelTaxPolicy control={control} />
-            <SmokingFieldPolicy control={control} />
-            <AdditionalFieldPolicy control={control} watch={watch} />
-            <SubmitFormButton
-              isPending={isPending}
-              action="Next"
-              className="flex justify-end"
-            />
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onNext)} className="space-y-6">
+        <h1 className="text-xl md:text-2xl font-bold">Basic Hotel Policies</h1>
+        <PaymentMethodPolicy control={control} />
+        <DepositRequiredPolicy control={control} watch={watch} />
+        <CancellationPolicy control={control} />
+        <HotelTaxPolicy control={control} />
+        <SmokingFieldPolicy control={control} />
+        <AdditionalFieldPolicy control={control} watch={watch} />
+        <SubmitFormButton
+          isPending={isPending}
+          action="Next"
+          showSteps={true}
+          currentStep={1}
+          totalSteps={3}
+        />
+      </form>
+    </Form>
   );
 };
 

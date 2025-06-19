@@ -4,6 +4,7 @@ import {
   baseHotelPolicySchema,
   baseHotelAmenitiesSchema,
   completeRoomSchema,
+  baseRoomAmenitiesSchema,
 } from './validator';
 
 export const hotelBasicInfoStepOneSchema = hotelBasicInfoSchema.pick({
@@ -627,3 +628,8 @@ export const StepOneAddRoomSchema = completeRoomSchema.pick({
 export const StepTwoAddRoomSchema = completeRoomSchema.pick({
   name: true,
 });
+export const StepFourAddRoomSchema = completeRoomSchema.pick({
+  roomImages: true,
+});
+
+export const StepThreeAddRoomSchema = baseRoomAmenitiesSchema;

@@ -17,6 +17,13 @@ import {
   ROOM_TYPES,
   ROOM_CLASS,
   BED_TYPES,
+  BATHROOM_TYPES,
+  SHOWER_TYPES,
+  ROOM_ESSENTIALS_TYPES,
+  ROOM_LAYOUT_TYPES,
+  ROOM_SIZE_UNIT_TYPE,
+  ROOM_VIEW_TYPE,
+  OUTDOOR_SPACE_TYPE,
 } from '@/types';
 import { createObjectOptions } from '../utils';
 
@@ -121,10 +128,31 @@ export const PET_FRIENDLY_FEATURES_OPTIONS = createObjectOptions(
   PET_FRIENDLY_FEATURES
 );
 
+export const BATHROOM_OPTIONS = createObjectOptions(BATHROOM_TYPES);
+export const SHOWER_OPTIONS = createObjectOptions(SHOWER_TYPES);
+export const ROOM_ESSENTIALS_OPTIONS = createObjectOptions(
+  ROOM_ESSENTIALS_TYPES
+);
+
+export const ROOM_LAYOUT_OPTIONS = createObjectOptions(ROOM_LAYOUT_TYPES);
+export const ROOM_SIZE_UNIT_OPTIONS = createObjectOptions(ROOM_SIZE_UNIT_TYPE);
+export const ROOM_VIEW_OPTION = createObjectOptions(ROOM_VIEW_TYPE);
+export const OUTDOOR_SPACE_OPTIONS = createObjectOptions(OUTDOOR_SPACE_TYPE);
+
 export const GENERATED_NUMBERS = createObjectOptions(
   Array.from({ length: 10 }, (_, i) => (i + 1).toString())
 );
 
+export const RADIO_BOOLEAN = [
+  {
+    label: 'Yes',
+    value: 'true',
+  },
+  {
+    label: 'No',
+    value: 'false',
+  },
+];
 export function generateNumbers(count: number) {
   return createObjectOptions(
     Array.from({ length: count }, (_, i) => (i + 1).toString())
@@ -133,6 +161,7 @@ export function generateNumbers(count: number) {
 export const WIFI_SURCHARGE_DURATION_OPTIONS = createObjectOptions(
   WIFI_SURCHARGE_DURATION_TYPE
 );
+
 export const BREAKFAST_SCHEDULE_OPTIONS = createObjectOptions(
   BREAKFAST_SCHEDULE_TYPE
 );
