@@ -24,14 +24,9 @@ import {
   CANCELLATION_FEE_TYPE_OPTIONS,
   CANCELLATION_POLICIES_OPTIONS,
 } from '@/lib/constants';
-import { StepOnePolicyType } from '@/types';
-import { Control } from 'react-hook-form';
+import { StepOnePolicyControl } from '.';
 
-const CancellationPolicy = ({
-  control,
-}: {
-  control: Control<StepOnePolicyType>;
-}) => {
+const CancellationPolicy = ({ control }: StepOnePolicyControl) => {
   return (
     <Card>
       <CardHeader>

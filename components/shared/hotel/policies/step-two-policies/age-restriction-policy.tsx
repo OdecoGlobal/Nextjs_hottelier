@@ -12,14 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { StepTwoPolicyType } from '@/types';
-import { Control } from 'react-hook-form';
+import { StepTwoPolicyControl } from '.';
 
-const AgeRestrictionPolicy = ({
-  control,
-}: {
-  control: Control<StepTwoPolicyType>;
-}) => {
+const AgeRestrictionPolicy = ({ control }: StepTwoPolicyControl) => {
   return (
     <Card>
       <CardHeader>

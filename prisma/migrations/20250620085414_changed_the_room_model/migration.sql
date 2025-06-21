@@ -32,28 +32,13 @@ CREATE TYPE "BedType" AS ENUM ('SINGLE_OR_TWIN', 'LARGE_SINGLE_OR_LARGE_TWIN', '
 CREATE TYPE "PricingModelType" AS ENUM ('PER_DAY', 'OCCUPANCY_BASE');
 
 -- CreateEnum
-CREATE TYPE "WifiAreaType" AS ENUM ('IN_PUBLIC_AREA', 'IN_GUEST_ROOM');
-
--- CreateEnum
-CREATE TYPE "HotelAmenityChargeType" AS ENUM ('FREE', 'SURCHARGE');
-
--- CreateEnum
-CREATE TYPE "WifiSpeedType" AS ENUM ('MBPS_25', 'MBPS_50', 'MBPS_100', 'MBPS_200');
-
--- CreateEnum
-CREATE TYPE "WifiSurchargeDuration" AS ENUM ('PER_STAY', 'PER_HOUR', 'PER_NIGHT', 'PER_DAY', 'PER_WEEK');
-
--- CreateEnum
-CREATE TYPE "BreakfastSchedule" AS ENUM ('DAILY', 'WEEKDAYS', 'WEEKENDS');
-
--- CreateEnum
 CREATE TYPE "BathroomType" AS ENUM ('PRIVATE', 'PARTIALLY_OPEN', 'SHARED');
 
 -- CreateEnum
 CREATE TYPE "ShowerType" AS ENUM ('BATHTUB', 'SEPARATE_BATHTUB_AND_SHOWER', 'SHOWER', 'BATHTUB_OR_SHOWER');
 
 -- CreateEnum
-CREATE TYPE "RoomEssentials" AS ENUM ('FREE_TOILETRIES', 'SOAP', 'SHAMPOO', 'TOILET_PAPER');
+CREATE TYPE "RoomEssentials" AS ENUM ('FREE_TOILETRIES', 'SOAP', 'SHAMPOO', 'TOILET_PAPER', 'HAIR_DRYER');
 
 -- CreateEnum
 CREATE TYPE "ClimateControlType" AS ENUM ('AIR_CONDITIONING', 'HEATING');
@@ -84,6 +69,21 @@ CREATE TYPE "Days" AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDA
 
 -- CreateEnum
 CREATE TYPE "Currency" AS ENUM ('NGN', 'USD', 'EUR', 'GBP');
+
+-- CreateEnum
+CREATE TYPE "WifiAreaType" AS ENUM ('IN_PUBLIC_AREA', 'IN_GUEST_ROOM');
+
+-- CreateEnum
+CREATE TYPE "HotelAmenityChargeType" AS ENUM ('FREE', 'SURCHARGE');
+
+-- CreateEnum
+CREATE TYPE "WifiSpeedType" AS ENUM ('MBPS_25', 'MBPS_50', 'MBPS_100', 'MBPS_200');
+
+-- CreateEnum
+CREATE TYPE "WifiSurchargeDuration" AS ENUM ('PER_STAY', 'PER_HOUR', 'PER_NIGHT', 'PER_DAY', 'PER_WEEK');
+
+-- CreateEnum
+CREATE TYPE "BreakfastSchedule" AS ENUM ('DAILY', 'WEEKDAYS', 'WEEKENDS');
 
 -- CreateEnum
 CREATE TYPE "HotelType" AS ENUM ('HOTEL', 'MOTEL', 'GUESTHOUSE', 'INN', 'APARTMENT');
@@ -241,24 +241,17 @@ CREATE TABLE "hotel_policies" (
 );
 
 -- CreateTable
-CREATE TABLE "rooms" (
+CREATE TABLE "hotel_images" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "hotelId" UUID NOT NULL,
-    "name" TEXT NOT NULL,
-    "roomType" "RoomType" NOT NULL,
-    "roomClass" "RoomClass" DEFAULT 'BASIC',
-    "maxOccupancy" INTEGER NOT NULL,
-    "bedType" "BedType" NOT NULL,
-    "bedTotal" INTEGER NOT NULL DEFAULT 1,
-    "totalRooms" INTEGER NOT NULL DEFAULT 1,
-    "baseRate" DECIMAL(12,2) NOT NULL DEFAULT 0,
-    "pricingModel" "PricingModelType" NOT NULL,
+    "imageType" "ImageType" NOT NULL,
+    "imageUrl" TEXT NOT NULL,
     "isCompleted" BOOLEAN NOT NULL DEFAULT false,
     "completedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(6) NOT NULL,
 
-    CONSTRAINT "rooms_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "hotel_images_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -294,6 +287,28 @@ CREATE TABLE "hotel_amenities" (
 );
 
 -- CreateTable
+CREATE TABLE "rooms" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "hotelId" UUID NOT NULL,
+    "name" TEXT NOT NULL,
+    "roomType" "RoomType" NOT NULL,
+    "roomClass" "RoomClass",
+    "maxOccupancy" INTEGER NOT NULL,
+    "bedType" "BedType" NOT NULL,
+    "bedTotal" INTEGER NOT NULL DEFAULT 1,
+    "totalRooms" INTEGER NOT NULL DEFAULT 1,
+    "peopleInBaseRate" INTEGER NOT NULL DEFAULT 1,
+    "baseRate" DECIMAL(12,2) NOT NULL DEFAULT 0,
+    "pricingModel" "PricingModelType" NOT NULL,
+    "isCompleted" BOOLEAN NOT NULL DEFAULT false,
+    "completedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(6) NOT NULL,
+
+    CONSTRAINT "rooms_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "room_amenities" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "roomId" UUID NOT NULL,
@@ -311,25 +326,11 @@ CREATE TABLE "room_amenities" (
     "roomSizeUnit" "RoomSizeUnitType" NOT NULL,
     "isOutDoorSpace" BOOLEAN NOT NULL,
     "outDoorSpaceType" "OutDoorSpaceType",
-    "rooomLayout" "RoomLayoutType",
+    "roomLayout" "RoomLayoutType"[] DEFAULT ARRAY[]::"RoomLayoutType"[],
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(6) NOT NULL,
 
     CONSTRAINT "room_amenities_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "hotel_images" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "hotelId" UUID NOT NULL,
-    "imageType" "ImageType" NOT NULL,
-    "imageUrl" TEXT NOT NULL,
-    "isCompleted" BOOLEAN NOT NULL DEFAULT false,
-    "completedAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(6) NOT NULL,
-
-    CONSTRAINT "hotel_images_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -417,13 +418,13 @@ CREATE UNIQUE INDEX "hotel_slug_idx" ON "hotel_basic_info"("slug");
 CREATE UNIQUE INDEX "hotel_policies_hotelId_key" ON "hotel_policies"("hotelId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "hotel_amenities_hotelId_key" ON "hotel_amenities"("hotelId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "room_name_idx" ON "rooms"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "rooms_roomType_key" ON "rooms"("roomType");
-
--- CreateIndex
-CREATE UNIQUE INDEX "hotel_amenities_hotelId_key" ON "hotel_amenities"("hotelId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "room_availability_roomId_date_key" ON "room_availability"("roomId", "date");
@@ -450,16 +451,16 @@ ALTER TABLE "hotel_basic_info" ADD CONSTRAINT "hotel_basic_info_hotelId_fkey" FO
 ALTER TABLE "hotel_policies" ADD CONSTRAINT "hotel_policies_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "hotels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "rooms" ADD CONSTRAINT "rooms_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "hotels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "hotel_images" ADD CONSTRAINT "hotel_images_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "hotels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "hotel_amenities" ADD CONSTRAINT "hotel_amenities_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "hotels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "room_amenities" ADD CONSTRAINT "room_amenities_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "rooms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "rooms" ADD CONSTRAINT "rooms_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "hotels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "hotel_images" ADD CONSTRAINT "hotel_images_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "hotels"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "room_amenities" ADD CONSTRAINT "room_amenities_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "rooms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "room_images" ADD CONSTRAINT "room_images_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "rooms"("id") ON DELETE CASCADE ON UPDATE CASCADE;

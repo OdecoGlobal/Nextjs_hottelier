@@ -15,17 +15,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { StepOnePolicyType } from '@/types';
 import { Plus, X } from 'lucide-react';
-import { Control, useFieldArray, UseFormWatch } from 'react-hook-form';
+import { useFieldArray } from 'react-hook-form';
+import { StepOnePolicyProp } from '.';
 
-const AdditionalFieldPolicy = ({
-  control,
-  watch,
-}: {
-  control: Control<StepOnePolicyType>;
-  watch: UseFormWatch<StepOnePolicyType>;
-}) => {
+const AdditionalFieldPolicy = ({ control, watch }: StepOnePolicyProp) => {
   const hasAdditionalPolicy = watch('hasAdditionalPolicy');
   const { fields, append, remove } = useFieldArray({
     control: control,

@@ -1,27 +1,29 @@
 import { Form } from '@/components/ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { Control, UseFormReturn, UseFormWatch } from 'react-hook-form';
 import PaymentMethodPolicy from './payment-method-policy';
 import DepositRequiredPolicy from './deposit-required-policy';
 import CancellationPolicy from './cancellation-policy';
 import AdditionalFieldPolicy from './additional-field-policy';
 import SmokingFieldPolicy from './smoking-field-policy';
 import HotelTaxPolicy from './hotel-tax-policy';
-import { StepOnePolicyType } from '@/types';
-import { hotelPolicyStepOneSchema } from '@/lib/schemas/grouped-validators';
+import { HotelPolicyType } from '@/types';
 import SubmitFormButton from '@/components/submit-form-button';
+
+export type StepOnePolicyProp = {
+  control: Control<HotelPolicyType>;
+  watch: UseFormWatch<HotelPolicyType>;
+};
+export type StepOnePolicyControl = {
+  control: Control<HotelPolicyType>;
+};
 
 const StepOnePolicy = ({
   onNext,
-  defaultValues,
+  form,
 }: {
-  onNext: (data: StepOnePolicyType) => void;
-  defaultValues: StepOnePolicyType;
+  onNext: () => void;
+  form: UseFormReturn<HotelPolicyType>;
 }) => {
-  const form = useForm<StepOnePolicyType>({
-    resolver: zodResolver(hotelPolicyStepOneSchema),
-    defaultValues,
-  });
   const { control, watch, formState } = form;
 
   const isPending = formState.isSubmitting;

@@ -3,12 +3,9 @@ import { formatApiError } from '@/lib/errors';
 import AppError from '@/lib/errors/app-error';
 import { HotelImageUploadBodySchema } from '@/lib/schemas/validator';
 import { protect, restrictTo, validateHotelAcces } from '@/middleware/auth';
+import { ImageType } from '@/types';
 import { updateHotelProgress } from '@/utils/hotel';
 import { NextRequest, NextResponse } from 'next/server';
-import z from 'zod';
-export const ImageType = z.enum(['COVER', 'EXTERIOR', 'INTERIOR']);
-
-type ImageType = z.infer<typeof ImageType>;
 
 interface ImageUploadResult {
   imageUrl: string;

@@ -6,7 +6,7 @@ import {
   FormMessage,
   FormLabel,
 } from '@/components/ui/form';
-import { StepThreePolicyProp } from '..';
+import { StepThreePolicyProp } from '.';
 import { Input } from '@/components/ui/input';
 import { SelectFieldForm } from '@/components/select-field-form';
 import {
@@ -106,7 +106,10 @@ const PetSurcharge = ({ control, watch }: StepThreePolicyProp) => {
                                   <FormItem>
                                     <FormLabel>Amount in NGN</FormLabel>
                                     <FormControl>
-                                      <Input {...field} />
+                                      <Input
+                                        {...field}
+                                        value={field.value ?? undefined}
+                                      />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>

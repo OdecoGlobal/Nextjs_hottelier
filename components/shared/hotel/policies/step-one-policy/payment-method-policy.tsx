@@ -5,16 +5,13 @@ import {
   CardDescription,
   CardHeader,
 } from '@/components/ui/card';
-import { FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { FormField, FormItem } from '@/components/ui/form';
 import { PAYMENT_METHODS_OPTIONS } from '@/lib/constants';
-import { StepOnePolicyType } from '@/types';
-import { Control } from 'react-hook-form';
+import { StepOnePolicyControl } from '.';
 
 const PaymentMethodPolicy = ({
   control,
-}: {
-  control: Control<StepOnePolicyType>;
-}) => {
+}:StepOnePolicyControl) => {
   return (
     <Card>
       <CardHeader>
@@ -28,7 +25,6 @@ const PaymentMethodPolicy = ({
           control={control}
           render={({ field }) => (
             <FormItem>
-              <FormMessage />
               <CheckboxForm field={field} data={PAYMENT_METHODS_OPTIONS} />
             </FormItem>
           )}

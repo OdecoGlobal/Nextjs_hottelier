@@ -188,7 +188,7 @@ model HotelPolicy {
   advanceNoticeCheckInTime String?
   checkOutTime             String
 
-  minCheckInAgeAllowed Decimal
+  minCheckInAgeAllowed Int
 
   isPetAllowed         Boolean
   isPetSurcharged      Boolean?          @default(false)
@@ -349,7 +349,7 @@ model RoomAmenity {
   roomSizeUnit     RoomSizeUnitType
   isOutDoorSpace   Boolean
   outDoorSpaceType OutDoorSpaceType?
-  roomLayout       RoomLayoutType?
+  roomLayout       RoomLayoutType[]     @default([])
 
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt @db.Timestamp(6)

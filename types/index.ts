@@ -1,14 +1,13 @@
 import {
   basicInfoSchema,
-  hotelPolicyStepOneSchema,
-  hotelPolicyStepTwoSchema,
-  hotelPolicyStepThreeSchema,
   completionStepsSchema,
   hotelItemSchema,
   createHotelApiResponseSchema,
   incompleteHotelApiResponseSchema,
   hotelAmenitiesSchema,
   StepOneAddRoomSchema,
+  StepFiveAddRoomSchema,
+  hotelPolicySchema,
 } from '@/lib/schemas/grouped-validators';
 import {
   userSchema,
@@ -18,7 +17,6 @@ import {
   insertStateSchema,
   insertCitySchema,
   hotelBasicInfoSchema,
-  hotelPolicySchema,
   HotelImageUploadBodySchema,
   completeRoomSchema,
 } from '@/lib/schemas/validator';
@@ -252,14 +250,14 @@ export type GeneratedTypes = {
   label: string;
   value: string;
 };
+export const ImageType = z.enum(['COVER', 'EXTERIOR', 'INTERIOR']);
+
+export type ImageType = z.infer<typeof ImageType>;
 export type BasicInfo = z.infer<typeof basicInfoSchema>;
 export type HotelPolicyType = z.infer<typeof hotelPolicySchema>;
-export type StepOnePolicyType = z.infer<typeof hotelPolicyStepOneSchema>;
-export type StepTwoPolicyType = z.infer<typeof hotelPolicyStepTwoSchema>;
-export type StepThreePolicyType = z.infer<typeof hotelPolicyStepThreeSchema>;
-
 export type AddRoomType = z.infer<typeof completeRoomSchema>;
 export type StepOneAddRoomType = z.infer<typeof StepOneAddRoomSchema>;
+export type StepFiveAddRoomType = z.infer<typeof StepFiveAddRoomSchema>;
 
 export type CompletionSteps = z.infer<typeof completionStepsSchema>;
 export type HotelItem = z.infer<typeof hotelItemSchema>;

@@ -150,6 +150,92 @@ export const createObjectOptions = <T extends readonly string[]>(
   }));
 };
 
+interface PerDayExample {
+  baseOccupancy: string;
+  baseRate: string;
+  extraFeeLabel: string;
+  extraFee: string;
+  additionalRates?: never;
+}
+
+interface OccupancyBaseExample {
+  baseOccupancy: string;
+  additionalRates: Array<{
+    guests: string;
+    rate: string;
+  }>;
+  baseRate?: never;
+  extraFeeLabel?: never;
+  extraFee?: never;
+}
+
+export type PricingExample = PerDayExample | OccupancyBaseExample;
+type PricingOption<T extends string> = {
+  value: T;
+  label: string;
+  description: string;
+  notes: string[];
+
+  example: PricingExample;
+};
+
+export const createPricingOptions = <T extends readonly string[]>(
+  constants: T
+): PricingOption<T[number]>[] => {
+  return constants.map(constant => {
+    const label =
+      constant
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ') + ' Pricing';
+
+    const metadata: Record<
+      string,
+      Omit<PricingOption<T[number]>, 'value' | 'label'>
+    > = {
+      PER_DAY: {
+        description:
+          'You charge a nightly rate for one or two people. Extra charge for additional guests.',
+        notes: [
+          'Recommended if you have only a few people staying in your rooms',
+          'You’ll only have one rate, so it’s easier to manage',
+        ],
+        example: {
+          baseOccupancy: '1 or 2 guests',
+          baseRate: '$100/night',
+          extraFeeLabel: 'Extra person fee',
+          extraFee: '$20/night',
+        } as PerDayExample,
+      },
+      OCCUPANCY_BASE: {
+        description:
+          'Set different nightly rates depending on the number of guests staying.',
+        notes: [
+          'Best for variable guest counts',
+          'You control pricing per occupancy level',
+        ],
+        example: {
+          baseOccupancy: '1 guest - $80/night',
+          additionalRates: [
+            { guests: '2 guests', rate: '$120/night' },
+            { guests: '3 guests', rate: '$150/night' },
+            { guests: '4 guests', rate: '$180/night' },
+          ],
+        } as OccupancyBaseExample,
+      },
+    };
+    const { description, notes, example } = metadata[constant];
+
+    return {
+      value: constant,
+      label,
+      description,
+      notes,
+      example,
+    };
+  });
+};
+
 export const getQueryParams = (req: NextRequest) => {
   const { searchParams } = req.nextUrl;
   const search = searchParams.get('search');

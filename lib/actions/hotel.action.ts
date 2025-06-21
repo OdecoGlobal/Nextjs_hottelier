@@ -28,7 +28,7 @@ export async function createNewHotel(formData: HotelBasicInfoData) {
     return { success: false, message: formatError(error) };
   }
 }
-// /:hotelId/policies
+
 export async function updateHotelPolicies(
   formData: HotelPolicyType,
   hotelId: string
@@ -49,6 +49,25 @@ export async function updateHotelPolicies(
     return { success: false, message: formatError(error) };
   }
 }
+
+export async function getHotelPolicies(
+  hotelId: string
+): Promise<{
+  data: HotelPolicyType | null;
+  success: boolean;
+  message?: string;
+}> {
+  try {
+    const res = await axiosInstance(`/hotels/${hotelId}/policies`);
+    if (!res || res.status !== 200)
+      throw new Error('No response from the server');
+    const data = res.data.data;
+    return { data, success: true };
+  } catch (error) {
+    return { data: null, success: false, message: formatError(error) };
+  }
+}
+
 export async function updateHotelAmenities(
   formData: HotelAmenitiesType,
   hotelId: string

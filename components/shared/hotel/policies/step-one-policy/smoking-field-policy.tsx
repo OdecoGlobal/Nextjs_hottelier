@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   FormControl,
   FormDescription,
@@ -6,17 +6,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { SMOKING_POLICIES, StepOnePolicyType } from "@/types";
+} from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { SMOKING_POLICIES } from '@/types';
 
-import { Control } from "react-hook-form";
+import { StepOnePolicyControl } from '.';
 
-const SmokingFieldPolicy = ({
-  control,
-}: {
-  control: Control<StepOnePolicyType>;
-}) => {
+const SmokingFieldPolicy = ({ control }: StepOnePolicyControl) => {
   return (
     <Card>
       <CardHeader>
@@ -35,9 +31,9 @@ const SmokingFieldPolicy = ({
                   value={field.value}
                   className="space-y-2"
                 >
-                  {SMOKING_POLICIES.map((option) => {
-                    const isAllowed = option === "SMOKING_ALLOWED";
-                    const isDedignated = option === "DESIGNATED_AREAS";
+                  {SMOKING_POLICIES.map(option => {
+                    const isAllowed = option === 'SMOKING_ALLOWED';
+                    const isDedignated = option === 'DESIGNATED_AREAS';
 
                     return (
                       <div key={option} className="space-y-3">
@@ -47,10 +43,10 @@ const SmokingFieldPolicy = ({
                           </FormControl>
                           <FormLabel>
                             {isAllowed
-                              ? "Smoking is Allowed"
+                              ? 'Smoking is Allowed'
                               : isDedignated
-                              ? "Smoking is restricted to designated area"
-                              : "Smoking is not allowed"}
+                              ? 'Smoking is restricted to designated area'
+                              : 'Smoking is not allowed'}
                           </FormLabel>
                           <FormMessage />
                         </FormItem>

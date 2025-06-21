@@ -26,26 +26,17 @@ export const hotelBasicInfoStepThreeSchema = hotelBasicInfoSchema.pick({
   lat: true,
 });
 
-export const hotelPolicyStepOneSchema = baseHotelPolicySchema
-  .pick({
-    paymentMethods: true,
-    isDepositRequired: true,
-    depositAmount: true,
-    isTaxIncludedInRoomRates: true,
-    cancellationPolicy: true,
-    cancellationFeeType: true,
-    smokingPolicy: true,
-    hasAdditionalPolicy: true,
-    additionalPolicy: true,
-  })
-  .superRefine((data, ctx) => {
+export const hotelPolicySchema = baseHotelPolicySchema.superRefine(
+  (data, ctx) => {
     if (
       data.isDepositRequired &&
-      (data.depositAmount === undefined || data.depositAmount <= 0)
+      (data.depositAmount === undefined ||
+        data.depositAmount === null ||
+        data.depositAmount <= 0)
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Deposit amount is required when you select yes',
+        message: 'Input a valid amout',
         path: ['depositAmount'],
       });
     }
@@ -82,37 +73,7 @@ export const hotelPolicyStepOneSchema = baseHotelPolicySchema
         });
       }
     }
-  });
-
-export const hotelPolicyStepTwoSchema = baseHotelPolicySchema
-  .pick({
-    isFrontDesk: true,
-    isFrontDeskEveryDay: true,
-    isFrontDeskOpen24Hours: true,
-    frontDeskScheduleStartDay: true,
-    frontDeskScheduleEndDay: true,
-    frontDeskStartTime: true,
-    frontDeskEndTime: true,
-    isSelfCheckIn: true,
-    selfCheckInType: true,
-
-    checkInStartTime: true,
-    checkInEndTime: true,
-    isOpen24Hours: true,
-    isLateCheckIn: true,
-    lateCheckInType: true,
-    surchargeType: true,
-    surchargeAmount: true,
-
-    lateCheckInStartTime: true,
-    lateCheckInEndTime: true,
-    isAdvancedNoticeCheckIn: true,
-    advanceNoticeCheckInTime: true,
-
-    checkOutTime: true,
-    minCheckInAgeAllowed: true,
-  })
-  .superRefine((data, ctx) => {
+    // /////////////2
     if (data.isFrontDesk) {
       if (
         !data.isFrontDeskOpen24Hours &&
@@ -232,31 +193,8 @@ export const hotelPolicyStepTwoSchema = baseHotelPolicySchema
         }
       }
     }
-  });
 
-export const hotelPolicyStepThreeSchema = baseHotelPolicySchema
-  .pick({
-    isPetAllowed: true,
-    isPetSurcharged: true,
-    petSurchargeAmount: true,
-    petSurchargeType: true,
-    petSurchargeDuration: true,
-    isMaxFeePerStay: true,
-    isPetFeeVaried: true,
-    maxFeePerStayAmount: true,
-    allowedPetType: true,
-    isPetRestricted: true,
-    petRestrictionType: true,
-    isMaxWeightPerPet: true,
-    petMaxWeight: true,
-    isPetDeposit: true,
-    petDepositType: true,
-    petDepositAmount: true,
-    isPetCleaningFee: true,
-    petCleaningFee: true,
-    petFriendlyFeatures: true,
-  })
-  .superRefine((data, ctx) => {
+    ////////////////3
     if (data.isPetAllowed) {
       if (data.isPetSurcharged) {
         if (
@@ -286,6 +224,7 @@ export const hotelPolicyStepThreeSchema = baseHotelPolicySchema
         if (
           data.isMaxFeePerStay &&
           (data.maxFeePerStayAmount === undefined ||
+            data.maxFeePerStayAmount === null ||
             data.maxFeePerStayAmount <= 0)
         ) {
           ctx.addIssue({
@@ -297,7 +236,11 @@ export const hotelPolicyStepThreeSchema = baseHotelPolicySchema
       }
 
       if (data.isPetDeposit) {
-        if (data.petDepositAmount === undefined || data.petDepositAmount <= 0) {
+        if (
+          data.petDepositAmount === undefined ||
+          data.petDepositAmount === null ||
+          data.petDepositAmount <= 0
+        ) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'Set a valid amount',
@@ -314,7 +257,9 @@ export const hotelPolicyStepThreeSchema = baseHotelPolicySchema
       }
       if (
         data.isPetCleaningFee &&
-        (data.petCleaningFee === undefined || data.petCleaningFee <= 0)
+        (data.petCleaningFee === undefined ||
+          data.petCleaningFee === null ||
+          data.petCleaningFee <= 0)
       ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -325,7 +270,9 @@ export const hotelPolicyStepThreeSchema = baseHotelPolicySchema
       if (
         data.isPetRestricted &&
         data.isMaxWeightPerPet &&
-        (data.petMaxWeight === undefined || data.petMaxWeight <= 0)
+        (data.petMaxWeight === undefined ||
+          data.petMaxWeight === null ||
+          data.petMaxWeight <= 0)
       ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -334,7 +281,8 @@ export const hotelPolicyStepThreeSchema = baseHotelPolicySchema
         });
       }
     }
-  });
+  }
+);
 
 export const completionStepsSchema = z.object({
   step4_rooms: z.boolean(),
@@ -633,3 +581,7 @@ export const StepFourAddRoomSchema = completeRoomSchema.pick({
 });
 
 export const StepThreeAddRoomSchema = baseRoomAmenitiesSchema;
+
+export const StepFiveAddRoomSchema = completeRoomSchema.pick({
+  pricingModel: true,
+});

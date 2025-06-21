@@ -5,7 +5,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { StepThreePolicyProp } from '..';
+import { StepThreePolicyProp } from '.';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import PetAllowedAreas from './pet-allowed-areas';
@@ -59,7 +59,11 @@ const PetRestrictionField = ({ control, watch }: StepThreePolicyProp) => {
                         <FormItem>
                           <FormLabel>Max weight (in kg)</FormLabel>
                           <FormControl>
-                            <Input {...field} className="w-full max-w-md" />
+                            <Input
+                              {...field}
+                              className="w-full max-w-md"
+                              value={field.value ?? undefined}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

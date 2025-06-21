@@ -24,8 +24,12 @@ import {
   ROOM_SIZE_UNIT_TYPE,
   ROOM_VIEW_TYPE,
   OUTDOOR_SPACE_TYPE,
+  CLIMATE_CONTROL_TYPE,
+  AIR_CONDITIONING_TYPE,
+  HEATING_TYPE,
+  PRICING_MODEL_TYPE,
 } from '@/types';
-import { createObjectOptions } from '../utils';
+import { createObjectOptions, createPricingOptions } from '../utils';
 
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Hotellier';
 export const JWT_SECRET = process.env.JWT_SECRET!;
@@ -139,6 +143,13 @@ export const ROOM_SIZE_UNIT_OPTIONS = createObjectOptions(ROOM_SIZE_UNIT_TYPE);
 export const ROOM_VIEW_OPTION = createObjectOptions(ROOM_VIEW_TYPE);
 export const OUTDOOR_SPACE_OPTIONS = createObjectOptions(OUTDOOR_SPACE_TYPE);
 
+export const CLIMATE_CONTROL_OPTION = createObjectOptions(CLIMATE_CONTROL_TYPE);
+export const AIR_CONDITIONING_OPTIONS = createObjectOptions(
+  AIR_CONDITIONING_TYPE
+);
+export const PRICING_MODEL_OPTIONS = createPricingOptions(PRICING_MODEL_TYPE);
+//
+export const HEATING_OPTION = createObjectOptions(HEATING_TYPE);
 export const GENERATED_NUMBERS = createObjectOptions(
   Array.from({ length: 10 }, (_, i) => (i + 1).toString())
 );

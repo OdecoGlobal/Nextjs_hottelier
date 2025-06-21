@@ -8,16 +8,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import YesNoButton from '@/components/yes-no-button';
-import { StepOnePolicyType } from '@/types';
-import { Control, UseFormWatch } from 'react-hook-form';
+import { StepOnePolicyProp } from '.';
 
-const DepositRequiredPolicy = ({
-  control,
-  watch,
-}: {
-  control: Control<StepOnePolicyType>;
-  watch: UseFormWatch<StepOnePolicyType>;
-}) => {
+const DepositRequiredPolicy = ({ control, watch }: StepOnePolicyProp) => {
   const isDepositRequired = watch('isDepositRequired');
   return (
     <Card>
@@ -41,7 +34,11 @@ const DepositRequiredPolicy = ({
                         What&apos;s the deposit amount
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Deposit Amount" />
+                        <Input
+                          {...field}
+                          placeholder="Deposit Amount"
+                          value={field.value ?? undefined}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

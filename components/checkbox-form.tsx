@@ -1,4 +1,10 @@
-import { FormItem, FormControl, FormLabel, FormDescription } from './ui/form';
+import {
+  FormItem,
+  FormControl,
+  FormLabel,
+  FormDescription,
+  FormMessage,
+} from './ui/form';
 import { Checkbox } from './ui/checkbox';
 import { GeneratedTypes } from '@/types';
 import { FieldValues, ControllerRenderProps, Path } from 'react-hook-form';
@@ -9,6 +15,7 @@ interface CheckboxProps<T extends FieldValues> {
   label?: string;
   className?: string;
   data: GeneratedTypes[];
+  nestedElements?: Record<string, React.ReactNode>;
 }
 
 const CheckboxForm = <T extends FieldValues>({
@@ -16,35 +23,41 @@ const CheckboxForm = <T extends FieldValues>({
   data,
   disabled,
   label,
+  nestedElements = {},
 }: CheckboxProps<T>) => {
+  const selectedValues: string[] = field.value || [];
   return (
     <>
       <FormDescription className="font-semibold text-base md:text-xl">
         {label}
       </FormDescription>
-      {data.map(option => (
-        <FormItem
-          className="flex flex-row items-center gap-4"
-          key={option.value}
-        >
-          <FormControl>
-            <Checkbox
-              disabled={disabled}
-              checked={field.value?.includes(option.value)}
-              onCheckedChange={checked => {
-                return checked
-                  ? field.onChange([...field.value, option.value])
-                  : field.onChange(
-                      field.value?.filter(
-                        (value: string) => value !== option.value
-                      )
-                    );
-              }}
-            />
-          </FormControl>
-          <FormLabel className="font-normal">{option.label}</FormLabel>
-        </FormItem>
-      ))}
+      <FormMessage />
+      {data.map(option => {
+        const isChecked = selectedValues?.includes(option.value);
+        return (
+          <div key={option.value}>
+            <FormItem className="flex flex-row items-center gap-4">
+              <FormControl>
+                <Checkbox
+                  disabled={disabled}
+                  checked={isChecked}
+                  onCheckedChange={checked => {
+                    const updated = checked
+                      ? [...selectedValues, option.value]
+                      : selectedValues.filter(v => v !== option.value);
+                    field.onChange(updated);
+                  }}
+                />
+              </FormControl>
+              <FormLabel className="font-normal">{option.label}</FormLabel>
+            </FormItem>
+
+            {isChecked && nestedElements[option.value] && (
+              <div className="ml-5"> {nestedElements[option.value]}</div>
+            )}
+          </div>
+        );
+      })}
     </>
   );
 };

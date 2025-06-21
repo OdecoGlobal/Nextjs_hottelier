@@ -5,7 +5,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { StepThreePolicyProp } from '..';
+import { StepThreePolicyProp } from '.';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Tooltip,
@@ -54,7 +54,11 @@ const PetDepositField = ({ control, watch }: StepThreePolicyProp) => {
               <FormItem>
                 <FormLabel>Amount in NGN</FormLabel>
                 <FormControl>
-                  <Input {...field} className="w-full max-w-md " />
+                  <Input
+                    {...field}
+                    className="w-full max-w-md "
+                    value={field.value ?? undefined}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

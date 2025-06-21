@@ -36,6 +36,26 @@ import {
 import z from 'zod';
 import { MAX_FILE_SIZE } from '../constants';
 
+export const optionalIntSchema = z
+  .union([z.string(), z.number(), z.null(), z.undefined()])
+  .transform(val => {
+    // Handle empty values
+    if (val === null || val === undefined || val === '') return undefined;
+
+    // Handle string input
+    if (typeof val === 'string') {
+      const parsed = parseInt(val, 10);
+      return isNaN(parsed) ? undefined : parsed;
+    }
+
+    // Handle number input
+    return val;
+  })
+  .optional()
+  .refine(val => val === undefined || Number.isInteger(val), {
+    message: 'Must be an integer',
+  });
+
 export const userSchema = z.object({
   id: z.string().min(1, 'Id is required'),
   email: z.string().email('invalid email address'),
@@ -91,10 +111,10 @@ export const baseHotelPolicySchema = z.object({
     .array(z.enum(PAYMENT_METHODS))
     .min(1, 'Please select at least one payment method'),
   isDepositRequired: z.boolean(),
-  depositAmount: z.coerce.number().optional(),
+  depositAmount: z.coerce.number().nullish(),
   isTaxIncludedInRoomRates: z.boolean(),
   cancellationPolicy: z.enum(CANCELLATION_POLICIES),
-  cancellationFeeType: z.enum(CANCELLATION_FEE_TYPE).optional(),
+  cancellationFeeType: z.enum(CANCELLATION_FEE_TYPE).nullish(),
   smokingPolicy: z.enum(SMOKING_POLICIES),
   hasAdditionalPolicy: z.boolean(),
   additionalPolicy: z.array(z.object({ value: z.string() })).optional(),
@@ -127,25 +147,23 @@ export const baseHotelPolicySchema = z.object({
   isPetAllowed: z.boolean(),
   isPetSurcharged: z.boolean().optional(),
   petSurchargeAmount: z.coerce.number().optional(),
-  petSurchargeType: z.enum(PET_SURCHARGE_TYPE).optional(),
-  petSurchargeDuration: z.enum(PET_FEE_DURATION).optional(),
+  petSurchargeType: z.enum(PET_SURCHARGE_TYPE).nullish(),
+  petSurchargeDuration: z.enum(PET_FEE_DURATION).nullish(),
   isMaxFeePerStay: z.boolean().optional(),
-  maxFeePerStayAmount: z.coerce.number().optional(),
+  maxFeePerStayAmount: z.coerce.number().nullish(),
   isPetFeeVaried: z.boolean().optional(),
-  allowedPetType: z.enum(ALLOWED_PET_TYPE).optional(),
+  allowedPetType: z.enum(ALLOWED_PET_TYPE).nullish(),
   isPetRestricted: z.boolean().optional(),
   petRestrictionType: z.array(z.enum(PET_RESTRICTION_TYPE)).optional(),
   isMaxWeightPerPet: z.boolean().optional(),
-  petMaxWeight: z.coerce.number().optional(),
+  petMaxWeight: z.coerce.number().nullish(),
   isPetDeposit: z.boolean().optional(),
-  petDepositType: z.enum(PET_FEE_DURATION).optional(),
-  petDepositAmount: z.coerce.number().optional(),
+  petDepositType: z.enum(PET_FEE_DURATION).nullish(),
+  petDepositAmount: z.coerce.number().nullish(),
   isPetCleaningFee: z.boolean().optional(),
-  petCleaningFee: z.coerce.number().optional(),
+  petCleaningFee: z.coerce.number().nullish(),
   petFriendlyFeatures: z.array(z.enum(PET_FRIENDLY_FEATURES)).optional(),
 });
-
-export const hotelPolicySchema = baseHotelPolicySchema;
 
 export const baseHotelAmenitiesSchema = z.object({
   isWifi: z.boolean(),
@@ -220,7 +238,7 @@ export const baseRoomAmenitiesSchema = z.object({
   roomSizeUnit: z.enum(ROOM_SIZE_UNIT_TYPE),
   isOutDoorSpace: z.boolean(),
   outDoorSpaceType: z.enum(OUTDOOR_SPACE_TYPE).optional(),
-  roomLayout: z.enum(ROOM_LAYOUT_TYPES).optional(),
+  roomLayout: z.array(z.enum(ROOM_LAYOUT_TYPES)).optional(),
 });
 
 export const baseRoomSchema = z.object({

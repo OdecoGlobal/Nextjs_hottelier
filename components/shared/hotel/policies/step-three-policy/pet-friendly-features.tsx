@@ -8,14 +8,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { PET_FRIENDLY_FEATURES_OPTIONS } from '@/lib/constants';
-import { StepThreePolicyType } from '@/types';
-import { Control } from 'react-hook-form';
 
-const PetFriendlyFeaturesField = ({
-  control,
-}: {
-  control: Control<StepThreePolicyType>;
-}) => {
+import { StepThreePolicyControl } from '.';
+
+const PetFriendlyFeaturesField = ({ control }: StepThreePolicyControl) => {
   return (
     <FormItem className="space-y-2">
       <FormDescription className="font-bold">

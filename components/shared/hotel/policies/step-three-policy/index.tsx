@@ -1,8 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { hotelPolicyStepThreeSchema } from '@/lib/schemas/grouped-validators';
-import { StepThreePolicyType } from '@/types';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { HotelPolicyType } from '@/types';
+import { Control, UseFormReturn, UseFormWatch } from 'react-hook-form';
 import {
   Form,
   FormDescription,
@@ -21,26 +19,30 @@ import SubmitFormButton from '@/components/submit-form-button';
 import { SelectFieldForm } from '@/components/select-field-form';
 import { ALLOWED_PET_OPTIONS } from '@/lib/constants';
 
+export type StepThreePolicyProp = {
+  control: Control<HotelPolicyType>;
+  watch: UseFormWatch<HotelPolicyType>;
+};
+export type StepThreePolicyControl = {
+  control: Control<HotelPolicyType>;
+};
+
 const StepThreePolicy = ({
   onPrevious,
   onSubmit,
   isPending,
-  defaultValues,
+  form,
 }: {
   isPending: boolean;
   onPrevious: () => void;
-  onSubmit: (FormData: StepThreePolicyType) => void;
-  defaultValues: StepThreePolicyType;
+  onSubmit: () => void;
+  form: UseFormReturn<HotelPolicyType>;
 }) => {
-  const form = useForm<StepThreePolicyType>({
-    resolver: zodResolver(hotelPolicyStepThreeSchema),
-    defaultValues: defaultValues,
-  });
   const { control, watch } = form;
   const isPetAllowed = watch('isPetAllowed');
 
   return (
-    <Card className="max-w-lg flex-1">
+    <Card>
       <CardHeader>
         <CardTitle className="text-xl md:text-2xl font-bold">
           Pet Policies
@@ -49,7 +51,7 @@ const StepThreePolicy = ({
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormItem className="flex flex-col md:flex-row md:items-center max-w-md justify-between">
+            <FormItem className="flex flex-col md:flex-row md:items-center  justify-between">
               <FormDescription className="flex items-center gap-2">
                 <PawPrint />
                 Are Pets allowed

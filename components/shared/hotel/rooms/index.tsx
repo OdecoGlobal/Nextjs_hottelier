@@ -16,6 +16,7 @@ import { Control, UseFormWatch } from 'react-hook-form';
 import StepTwoAddRoom from './step-two-room';
 import AddRooomImages from './step-four-room';
 import StepThreeAddRoom from './step-three-room';
+import StepFiveAddRoom from './step-five-room';
 
 export type StepOneAddRoomProp = {
   control: Control<StepOneAddRoomType>;
@@ -29,7 +30,7 @@ const AddRoomComponent = ({
   hotelId: string;
   userName: string;
 }) => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(5);
   //   const { toast } = useToast();
   //   const [isPending, startTransition] = useTransition();
   //   const router = useRouter();
@@ -74,7 +75,7 @@ const AddRoomComponent = ({
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
       <HotelCreationSteps current={4} />
-      <div className="flex-1 my-5 px-5 max-w-3xl mx-auto">
+      <div className="flex-1 my-5 px-5 w-full max-w-3xl mx-auto">
         {step === 1 && (
           <StepOneRoom
             defaultValues={formData}
@@ -103,6 +104,8 @@ const AddRoomComponent = ({
             userName={userName}
           />
         )}
+
+        {step === 5 && <StepFiveAddRoom onPrevious={handlePrevious} />}
       </div>
     </section>
   );

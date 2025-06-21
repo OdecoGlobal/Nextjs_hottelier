@@ -9,6 +9,7 @@ import RoomLayoutForm from './room-layout';
 import RoomSize from './room-size';
 import RoomView from './room-view';
 import OutdoorSpace from './outdoor-space';
+import ClimateControl from './climate-control';
 export type StepThreeAddRoomType = z.infer<typeof StepThreeAddRoomSchema>;
 type StepThreeAddRoomProp = {
   onNext: (data: StepThreeAddRoomType) => void;
@@ -41,6 +42,7 @@ const StepThreeAddRoom = ({
           Add Room amenities to give travelers of what their stay will be like
         </FormDescription>
         <BathRoomType control={control} />
+        <ClimateControl control={control} />
         <RoomView control={control} />
         <RoomSize control={control} />
         <OutdoorSpace control={control} />

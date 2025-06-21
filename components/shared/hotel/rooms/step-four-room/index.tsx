@@ -46,7 +46,7 @@ const AddRooomImages = ({
           )}
         />
         <SubmitFormButton
-          action="Submit"
+          action="Next"
           isPending={isPending}
           showSteps={true}
           showPrevious={true}

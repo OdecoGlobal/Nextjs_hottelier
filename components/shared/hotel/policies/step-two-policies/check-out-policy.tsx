@@ -2,14 +2,12 @@ import { SelectTime } from '@/components/select-time';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { selectTime } from '@/lib/utils';
-import { StepTwoPolicyType } from '@/types';
-import { Control } from 'react-hook-form';
+
+import { StepTwoPolicyControl } from '.';
 
 const CheckOutPolicy = ({
   control,
-}: {
-  control: Control<StepTwoPolicyType>;
-}) => {
+}:  StepTwoPolicyControl) => {
   return (
     <Card>
       <CardHeader>

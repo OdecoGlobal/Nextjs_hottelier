@@ -1,32 +1,28 @@
-
 import { Form } from '@/components/ui/form';
-import { StepTwoPolicyType } from '@/types';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Control, useForm, UseFormWatch } from 'react-hook-form';
+import { HotelPolicyType } from '@/types';
+import { Control, UseFormReturn, UseFormWatch } from 'react-hook-form';
 import FrontDeskPolicy from './front-desk-policy';
 import CheckOutPolicy from './check-out-policy';
 import AgeRestrictionPolicy from './age-restriction-policy';
 import CheckInPolicy from './check-in-policy';
-import { hotelPolicyStepTwoSchema } from '@/lib/schemas/grouped-validators';
 import SubmitFormButton from '@/components/submit-form-button';
 
 export type StepTwoPolicyProps = {
-  control: Control<StepTwoPolicyType>;
-  watch: UseFormWatch<StepTwoPolicyType>;
+  control: Control<HotelPolicyType>;
+  watch: UseFormWatch<HotelPolicyType>;
+};
+export type StepTwoPolicyControl = {
+  control: Control<HotelPolicyType>;
 };
 const StepTwoPolicy = ({
   onNext,
   onPrevious,
-  defaultValues,
+  form,
 }: {
-  onNext: (FormData: StepTwoPolicyType) => void;
+  onNext: () => void;
   onPrevious: () => void;
-  defaultValues: StepTwoPolicyType;
+  form: UseFormReturn<HotelPolicyType>;
 }) => {
-  const form = useForm<StepTwoPolicyType>({
-    resolver: zodResolver(hotelPolicyStepTwoSchema),
-    defaultValues: defaultValues,
-  });
   const { control, watch, formState } = form;
   const isPending = formState.isSubmitting;
 

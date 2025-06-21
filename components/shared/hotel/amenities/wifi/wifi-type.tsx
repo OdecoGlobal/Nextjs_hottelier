@@ -1,12 +1,3 @@
-/*
-
- wifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),
-  wifiSpeed: z.enum(WIFI_SPEED_TYPE).optional(),
-  wifiSurchargeAmout: z.coerce.number().optional(),
-  wifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).optional(),
-  isDeviceLimited: z.boolean().optional(),
-  deviceLimitNumber: z.coerce.number().optional(),*/
-
 import {
   FormControl,
   FormField,

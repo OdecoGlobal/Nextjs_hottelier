@@ -81,7 +81,7 @@ const MainAmenitiesForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 max-w-md mx-auto"
+            className="space-y-4 max-w-3xl mx-auto"
           >
             <WifiAmenities control={control} watch={watch} />
             <BreakfastAmenities control={control} watch={watch} />

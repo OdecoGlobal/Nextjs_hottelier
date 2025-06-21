@@ -7,14 +7,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { PET_RESTRICTION_TYPE, StepThreePolicyType } from '@/types';
-import { Control } from 'react-hook-form';
+import { PET_RESTRICTION_TYPE } from '@/types';
+import { StepThreePolicyControl } from '.';
 
 const PetAllowedAreas = ({
   control,
-}: {
-  control: Control<StepThreePolicyType>;
-}) => {
+}: StepThreePolicyControl) => {
   return (
     <FormItem className="space-y-2">
       <FormDescription className="font-bold">Pet Allowed Areas</FormDescription>
