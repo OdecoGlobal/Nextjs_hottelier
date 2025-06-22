@@ -22,6 +22,7 @@ const CloudinaryImagePreview = ({
                 fill
                 className="object-cover rounder-md"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                unoptimized
               />
               <Button
                 type="button"

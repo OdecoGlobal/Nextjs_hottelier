@@ -50,7 +50,6 @@ const UploadHotelPhotoForm = ({
   const interiorResetRef = useRef<() => void | null>(null);
 
   const onSubmit = async (values: hotelImageUploadType) => {
-    console.log(values);
     const res = await addHotelImages(values, hotelId);
     if (!res?.success) {
       toast({
