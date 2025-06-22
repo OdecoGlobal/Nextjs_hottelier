@@ -4,22 +4,36 @@ import { Camera } from 'lucide-react';
 import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
 import { useCloudImageUpload } from '@/hooks/use-cloudinary-upload';
 import CloudinaryImagePreview from './cloud-image-preview';
+import { useEffect } from 'react';
 
 const SmallCloudinaryUploadButton = <T extends FieldValues>({
   form,
   fieldName,
   onResetRef,
   folder,
+  onUploadStateChange,
 }: {
   form: UseFormReturn<T>;
   fieldName: FieldPath<T>;
   onResetRef?: React.RefObject<(() => void) | null>;
   folder: string;
+  onUploadStateChange?: (isPending: boolean) => void;
 }) => {
-  const { handleFileSelect, imagePreviews, removeImage, resetPreviews } =
-    useCloudImageUpload(form, fieldName, folder);
+  const {
+    handleFileSelect,
+    imagePreviews,
+    removeImage,
+    resetPreviews,
+    isPending,
+  } = useCloudImageUpload(form, fieldName, folder);
 
   if (onResetRef) onResetRef.current = resetPreviews;
+
+  useEffect(() => {
+    if (onUploadStateChange) {
+      onUploadStateChange(isPending);
+    }
+  }, [isPending, onUploadStateChange]);
   return (
     <FormItem>
       <FormControl>

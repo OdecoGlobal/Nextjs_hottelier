@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCloudImageUpload } from '@/hooks/use-cloudinary-upload';
 import CloudinaryImagePreview from './cloud-image-preview';
+import { useEffect } from 'react';
 
 const CloudinaryImageUploader = <T extends FieldValues>({
   form,
@@ -14,6 +15,7 @@ const CloudinaryImageUploader = <T extends FieldValues>({
   labelText,
   onResetRef,
   folder,
+  onUploadStateChange,
 }: {
   form: UseFormReturn<T>;
   fieldName: FieldPath<T>;
@@ -22,11 +24,23 @@ const CloudinaryImageUploader = <T extends FieldValues>({
   labelText: string;
   folder: string;
   onResetRef?: React.RefObject<(() => void) | null>;
+  onUploadStateChange?: (isPending: boolean) => void;
 }) => {
-  const { handleFileSelect, imagePreviews, removeImage, resetPreviews } =
-    useCloudImageUpload(form, fieldName, folder);
+  const {
+    handleFileSelect,
+    imagePreviews,
+    removeImage,
+    resetPreviews,
+    isPending,
+  } = useCloudImageUpload(form, fieldName, folder);
 
   if (onResetRef) onResetRef.current = resetPreviews;
+
+  useEffect(() => {
+    if (onUploadStateChange) {
+      onUploadStateChange(isPending);
+    }
+  }, [isPending, onUploadStateChange]);
 
   return (
     <FormItem>

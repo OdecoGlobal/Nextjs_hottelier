@@ -25,10 +25,13 @@ export const useCloudImageUpload = <T extends FieldValues>(
   const [imagePreviews, setImagePreviews] = useState<
     CloudinaryImagePreviewType[]
   >([]);
+  const [isPending, setIsPending] = useState(false);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
     if (files.length === 0) return;
+
+    setIsPending(true);
 
     const currentUrls: string[] = form.getValues(fieldName) || [];
     const uploadPromises: Promise<string | null>[] = [];
@@ -42,14 +45,44 @@ export const useCloudImageUpload = <T extends FieldValues>(
 
       setImagePreviews(prev => [
         ...prev,
-        { id: tempId, url: localUrl, public_id: '' },
+        {
+          id: tempId,
+          url: localUrl,
+          public_id: '',
+          isUploading: true,
+          progress: 0,
+        },
       ]);
+
+      const progressInterval = setInterval(() => {
+        setImagePreviews(prev =>
+          prev.map(p =>
+            p.id === tempId && p.isUploading
+              ? {
+                  ...p,
+                  progress: Math.min(
+                    (p.progress || 0) + Math.random() * 20,
+                    95
+                  ),
+                }
+              : p
+          )
+        );
+      }, 200);
 
       const uploadPromise = uploadToCloudinary(file, folder)
         .then(({ secure_url, public_id }) => {
           setImagePreviews(prev =>
             prev.map(p =>
-              p.id === tempId ? { id: tempId, url: secure_url, public_id } : p
+              p.id === tempId
+                ? {
+                    id: tempId,
+                    url: secure_url,
+                    public_id,
+                    isUploading: false,
+                    progress: 100,
+                  }
+                : p
             )
           );
 
@@ -57,6 +90,7 @@ export const useCloudImageUpload = <T extends FieldValues>(
           return secure_url;
         })
         .catch(err => {
+          clearInterval(progressInterval);
           console.error('Upload error:', err);
 
           setImagePreviews(prev => prev.filter(p => p.id !== tempId));
@@ -102,11 +136,15 @@ export const useCloudImageUpload = <T extends FieldValues>(
       console.error('Unexpected error during upload:', error);
 
       tempPreviews.forEach(preview => URL.revokeObjectURL(preview.url));
+    } finally {
+      setIsPending(false);
     }
   };
 
   const removeImage = async (indexToRemove: number) => {
     const imageToRemove = imagePreviews[indexToRemove];
+    if (imageToRemove.isUploading) return;
+
     await axiosInstance.post('cloudinary/delete', {
       public_id: imageToRemove.public_id,
     });
@@ -125,10 +163,17 @@ export const useCloudImageUpload = <T extends FieldValues>(
 
   const resetPreviews = () => {
     setImagePreviews([]);
+    setIsPending(false);
     form.setValue(fieldName, [] as PathValue<T, typeof fieldName>, {
       shouldValidate: true,
     });
   };
 
-  return { imagePreviews, handleFileSelect, removeImage, resetPreviews };
+  return {
+    imagePreviews,
+    handleFileSelect,
+    removeImage,
+    resetPreviews,
+    isPending,
+  };
 };

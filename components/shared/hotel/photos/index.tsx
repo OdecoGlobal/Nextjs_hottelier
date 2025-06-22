@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useForm } from 'react-hook-form';
 import z from 'zod';
-import { useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import HotelCreationSteps from '../creation-steps';
 import { addHotelImages } from '@/lib/actions/hotel.action';
 import { useToast } from '@/hooks/use-toast';
@@ -34,6 +34,11 @@ const UploadHotelPhotoForm = ({
   role: AdminOwnerRole;
 }) => {
   const router = useRouter();
+  const [isUploading, setIsUploading] = useState({
+    coverUploading: false,
+    exteriorUploading: false,
+    interiorUploading: false,
+  });
 
   const form = useForm({
     resolver: zodResolver(HotelImageUploadBodySchema),
@@ -49,8 +54,20 @@ const UploadHotelPhotoForm = ({
   const exteriorResetRef = useRef<() => void | null>(null);
   const interiorResetRef = useRef<() => void | null>(null);
 
+  const handleCoverUploadState = useCallback((isPending: boolean) => {
+    setIsUploading(prev => ({ ...prev, coverUploading: isPending }));
+  }, []);
+
+  const handleInteriorUploadState = useCallback((isPending: boolean) => {
+    setIsUploading(prev => ({ ...prev, interiorUploading: isPending }));
+  }, []);
+  const handleExteriorUploadState = useCallback((isPending: boolean) => {
+    setIsUploading(prev => ({ ...prev, exteriorUploading: isPending }));
+  }, []);
+
   const onSubmit = async (values: hotelImageUploadType) => {
     const res = await addHotelImages(values, hotelId);
+
     if (!res?.success) {
       toast({
         title: 'Error',
@@ -103,6 +120,7 @@ const UploadHotelPhotoForm = ({
                       labelText="hotel"
                       onResetRef={hotelImageResetRef}
                       folder={`${baseFolder}/cover`}
+                      onUploadStateChange={handleCoverUploadState}
                     />
                   )}
                 />
@@ -131,6 +149,7 @@ const UploadHotelPhotoForm = ({
                           fieldName="exteriorImages"
                           onResetRef={exteriorResetRef}
                           folder={`${baseFolder}/exterior`}
+                          onUploadStateChange={handleExteriorUploadState}
                         />
                       </FormItem>
                     )}
@@ -149,6 +168,7 @@ const UploadHotelPhotoForm = ({
                           fieldName="interiorImages"
                           onResetRef={interiorResetRef}
                           folder={`${baseFolder}/interior`}
+                          onUploadStateChange={handleInteriorUploadState}
                         />
                       </FormItem>
                     )}
@@ -158,6 +178,11 @@ const UploadHotelPhotoForm = ({
                   isPending={isPending}
                   action="Submit"
                   className="flex justify-end"
+                  disabled={
+                    isUploading.coverUploading ||
+                    isUploading.exteriorUploading ||
+                    isUploading.interiorUploading
+                  }
                 />
               </form>
             </Form>
