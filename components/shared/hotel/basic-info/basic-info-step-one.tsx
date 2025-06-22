@@ -23,27 +23,18 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { currency, hotelTypes } from '@/lib/constants';
-import { hotelBasicInfoStepOneSchema } from '@/lib/schemas/grouped-validators';
+import { HotelBasicInfoType } from '@/types';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Info } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-
-type StepOneData = z.infer<typeof hotelBasicInfoStepOneSchema>;
+import { UseFormReturn } from 'react-hook-form';
 
 const HotelBasicInfoStepOne = ({
-  defaultValues,
+  form,
   onNext,
 }: {
-  defaultValues?: StepOneData;
-  onNext: (data: StepOneData) => void;
+  form: UseFormReturn<HotelBasicInfoType>;
+  onNext: () => void;
 }) => {
-  const form = useForm<StepOneData>({
-    resolver: zodResolver(hotelBasicInfoStepOneSchema),
-    defaultValues,
-  });
-
   return (
     <Card>
       <CardHeader>

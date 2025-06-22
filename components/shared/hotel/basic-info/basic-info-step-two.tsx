@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Form,
@@ -7,23 +7,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 import {
   getAllCountries,
   getCitiesByState,
   getStateByCountry,
-} from "@/lib/actions/location.action";
+} from '@/lib/actions/location.action';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import z from "zod";
-import debounce from "debounce";
+import { useCallback, useEffect, useState } from 'react';
+import { UseFormReturn } from 'react-hook-form';
+import debounce from 'debounce';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from '@/components/ui/popover';
 import {
   Command,
   CommandEmpty,
@@ -31,37 +29,29 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { Button } from "@/components/ui/button";
-
-import { Check } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { CityData, CountryData, StateData } from "@/types";
-import { hotelBasicInfoStepTwoSchema } from "@/lib/schemas/grouped-validators";
-
-const extendedSchema = hotelBasicInfoStepTwoSchema.extend({
-  countryId: z.string().optional(),
-  stateId: z.string().optional(),
-});
-
-type LocationFormValues = z.infer<typeof extendedSchema>;
+} from '@/components/ui/command';
+import { Button } from '@/components/ui/button';
+import { Check } from 'lucide-react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { CityData, CountryData, HotelBasicInfoType, StateData } from '@/types';
+import SubmitFormButton from '@/components/submit-form-button';
 
 const HotelBasicInfoStepTwo = ({
-  defaultValues,
+  form,
   onNext,
   onPrevious,
 }: {
-  defaultValues?: LocationFormValues;
-  onNext: (data: LocationFormValues) => void;
-  onPrevious: (data: LocationFormValues) => void;
+  form: UseFormReturn<HotelBasicInfoType>;
+  onNext: () => void;
+  onPrevious: () => void;
 }) => {
   const [countries, setCountries] = useState<CountryData[]>([]);
   const [states, setStates] = useState<StateData[]>([]);
   const [cities, setCities] = useState<CityData[]>([]);
   const [searchQueries, setSearchQueries] = useState({
-    state: "",
-    city: "",
+    state: '',
+    city: '',
   });
   const [loading, setLoading] = useState({
     countries: true,
@@ -74,33 +64,19 @@ const HotelBasicInfoStepTwo = ({
     city: false,
   });
 
-  const form = useForm<LocationFormValues>({
-    resolver: zodResolver(extendedSchema),
-    defaultValues: defaultValues,
-  });
-
-  const selectedCountry = form.watch("countryId");
-  const selectedState = form.watch("stateId");
-
-  const handlePrevious = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onPrevious) {
-      const currentValues = form.getValues();
-      onPrevious(currentValues);
-    }
-  };
+  const selectedCountry = form.watch('countryId');
+  const selectedState = form.watch('stateId');
 
   const loadCountries = useCallback(async () => {
-    setLoading((prev) => ({ ...prev, countries: true }));
+    setLoading(prev => ({ ...prev, countries: true }));
 
     try {
       const data = await getAllCountries();
       setCountries(data.data.countries);
     } catch (error) {
-      console.log("Error fetching countries", error);
+      console.log('Error fetching countries', error);
     } finally {
-      setLoading((prev) => ({ ...prev, countries: false }));
+      setLoading(prev => ({ ...prev, countries: false }));
     }
   }, []);
 
@@ -111,11 +87,11 @@ const HotelBasicInfoStepTwo = ({
   useEffect(() => {
     const loadStates = async () => {
       if (!selectedCountry) return;
-      form.setValue("state", "");
-      form.setValue("city", "");
+      form.setValue('state', '');
+      form.setValue('city', '');
       setStates([]);
       setCities([]);
-      setLoading((prev) => ({ ...prev, states: true }));
+      setLoading(prev => ({ ...prev, states: true }));
       try {
         const data = await getStateByCountry(
           selectedCountry,
@@ -124,9 +100,9 @@ const HotelBasicInfoStepTwo = ({
         );
         setStates(data.data.states);
       } catch (error) {
-        console.log("Error fetching states", error);
+        console.log('Error fetching states', error);
       } finally {
-        setLoading((prev) => ({ ...prev, states: false }));
+        setLoading(prev => ({ ...prev, states: false }));
       }
     };
     const debouncedLoadStates = debounce(loadStates, 300);
@@ -137,17 +113,17 @@ const HotelBasicInfoStepTwo = ({
   useEffect(() => {
     const loadCities = async () => {
       if (!selectedState) return;
-      form.setValue("city", "");
+      form.setValue('city', '');
 
       setCities([]);
-      setLoading((prev) => ({ ...prev, cities: true }));
+      setLoading(prev => ({ ...prev, cities: true }));
       try {
         const data = await getCitiesByState(selectedState, searchQueries.city);
         setCities(data.data.cities);
       } catch (error) {
-        console.log("Error fetching states", error);
+        console.log('Error fetching states', error);
       } finally {
-        setLoading((prev) => ({ ...prev, cities: false }));
+        setLoading(prev => ({ ...prev, cities: false }));
       }
     };
     const debouncedLoadCities = debounce(loadCities, 300);
@@ -174,8 +150,8 @@ const HotelBasicInfoStepTwo = ({
                   <FormLabel>Country</FormLabel>
                   <Popover
                     open={dropdownOpen.country}
-                    onOpenChange={(open) =>
-                      setDropdownOpen((prev) => ({ ...prev, country: open }))
+                    onOpenChange={open =>
+                      setDropdownOpen(prev => ({ ...prev, country: open }))
                     }
                   >
                     <PopoverTrigger asChild>
@@ -184,14 +160,14 @@ const HotelBasicInfoStepTwo = ({
                           variant="outline"
                           role="combobox"
                           className={`w-full justify-between ${
-                            !field.value && "text-muted-foreground"
+                            !field.value && 'text-muted-foreground'
                           }`}
                         >
                           {field.value
                             ? countries.find(
-                                (country) => country.name === field.value
+                                country => country.name === field.value
                               )?.name
-                            : "Select Country"}
+                            : 'Select Country'}
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -205,18 +181,18 @@ const HotelBasicInfoStepTwo = ({
                         <CommandList>
                           <CommandEmpty>
                             {loading.countries
-                              ? "Loading..."
-                              : "No country found"}
+                              ? 'Loading...'
+                              : 'No country found'}
                           </CommandEmpty>
                           <CommandGroup>
-                            {countries.map((country) => (
+                            {countries.map(country => (
                               <CommandItem
                                 key={country.name}
                                 value={country.name}
                                 onSelect={() => {
-                                  form.setValue("country", country.name);
-                                  form.setValue("countryId", country.id);
-                                  setDropdownOpen((prev) => ({
+                                  form.setValue('country', country.name);
+                                  form.setValue('countryId', country.id);
+                                  setDropdownOpen(prev => ({
                                     ...prev,
                                     country: false,
                                   }));
@@ -227,8 +203,8 @@ const HotelBasicInfoStepTwo = ({
                                 <Check
                                   className={`ml-auto ${
                                     country.name === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
                                   }`}
                                 />
                               </CommandItem>
@@ -251,8 +227,8 @@ const HotelBasicInfoStepTwo = ({
                   <FormLabel>State</FormLabel>
                   <Popover
                     open={dropdownOpen.state}
-                    onOpenChange={(open) =>
-                      setDropdownOpen((prev) => ({ ...prev, state: open }))
+                    onOpenChange={open =>
+                      setDropdownOpen(prev => ({ ...prev, state: open }))
                     }
                   >
                     <PopoverTrigger asChild>
@@ -261,13 +237,13 @@ const HotelBasicInfoStepTwo = ({
                           variant="outline"
                           role="combobox"
                           className={`w-full justify-between ${
-                            !field.value && "text-muted-foreground"
+                            !field.value && 'text-muted-foreground'
                           }`}
                         >
                           {field.value
-                            ? states.find((state) => state.name === field.value)
+                            ? states.find(state => state.name === field.value)
                                 ?.name
-                            : "Select State"}
+                            : 'Select State'}
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -278,8 +254,8 @@ const HotelBasicInfoStepTwo = ({
                           placeholder="Search States"
                           className="h-9"
                           value={searchQueries.state}
-                          onValueChange={(value) =>
-                            setSearchQueries((prev) => ({
+                          onValueChange={value =>
+                            setSearchQueries(prev => ({
                               ...prev,
                               state: value,
                             }))
@@ -287,17 +263,17 @@ const HotelBasicInfoStepTwo = ({
                         />
                         <CommandList>
                           <CommandEmpty>
-                            {loading.states ? "Loading..." : "No state found"}
+                            {loading.states ? 'Loading...' : 'No state found'}
                           </CommandEmpty>
                           <CommandGroup>
-                            {states.map((state) => (
+                            {states.map(state => (
                               <CommandItem
                                 key={state.id}
                                 value={state.name}
                                 onSelect={() => {
-                                  form.setValue("state", state.name);
-                                  form.setValue("stateId", state.id);
-                                  setDropdownOpen((prev) => ({
+                                  form.setValue('state', state.name);
+                                  form.setValue('stateId', state.id);
+                                  setDropdownOpen(prev => ({
                                     ...prev,
                                     state: false,
                                   }));
@@ -308,8 +284,8 @@ const HotelBasicInfoStepTwo = ({
                                 <Check
                                   className={`ml-auto ${
                                     state.name === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
                                   }`}
                                 />
                               </CommandItem>
@@ -332,8 +308,8 @@ const HotelBasicInfoStepTwo = ({
                   <FormLabel>City</FormLabel>
                   <Popover
                     open={dropdownOpen.city}
-                    onOpenChange={(open) =>
-                      setDropdownOpen((prev) => ({ ...prev, city: open }))
+                    onOpenChange={open =>
+                      setDropdownOpen(prev => ({ ...prev, city: open }))
                     }
                   >
                     <PopoverTrigger asChild>
@@ -342,13 +318,13 @@ const HotelBasicInfoStepTwo = ({
                           variant="outline"
                           role="combobox"
                           className={`w-full justify-between ${
-                            !field.value && "text-muted-foreground"
+                            !field.value && 'text-muted-foreground'
                           }`}
                         >
                           {field.value
-                            ? cities.find((city) => city.name === field.value)
+                            ? cities.find(city => city.name === field.value)
                                 ?.name
-                            : "Select City"}
+                            : 'Select City'}
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -359,8 +335,8 @@ const HotelBasicInfoStepTwo = ({
                           placeholder="Search City"
                           className="h-9"
                           value={searchQueries.city}
-                          onValueChange={(value) =>
-                            setSearchQueries((prev) => ({
+                          onValueChange={value =>
+                            setSearchQueries(prev => ({
                               ...prev,
                               city: value,
                             }))
@@ -368,16 +344,16 @@ const HotelBasicInfoStepTwo = ({
                         />
                         <CommandList>
                           <CommandEmpty>
-                            {loading.cities ? "Loading..." : "No cities found"}
+                            {loading.cities ? 'Loading...' : 'No cities found'}
                           </CommandEmpty>
                           <CommandGroup>
-                            {cities.map((city) => (
+                            {cities.map(city => (
                               <CommandItem
                                 key={city.id}
                                 value={city.name}
                                 onSelect={() => {
-                                  form.setValue("city", city.name);
-                                  setDropdownOpen((prev) => ({
+                                  form.setValue('city', city.name);
+                                  setDropdownOpen(prev => ({
                                     ...prev,
                                     city: false,
                                   }));
@@ -388,8 +364,8 @@ const HotelBasicInfoStepTwo = ({
                                 <Check
                                   className={`ml-auto ${
                                     city.name === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
                                   }`}
                                 />
                               </CommandItem>
@@ -432,10 +408,14 @@ const HotelBasicInfoStepTwo = ({
                 </FormItem>
               )}
             />
-            <div className="flex justify-between">
-              <Button onClick={handlePrevious}>Previous</Button>
-              <Button type="submit">Next</Button>
-            </div>
+            <SubmitFormButton
+              action="Next"
+              showPrevious={true}
+              showSteps={true}
+              currentStep={2}
+              totalSteps={3}
+              onPrevious={onPrevious}
+            />
           </form>
         </Form>
       </CardContent>

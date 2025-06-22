@@ -2,18 +2,41 @@
 import { axiosInstance } from '../axios';
 import { formatError } from '../utils';
 import {
+  AddRoomType,
   CreateHotelApiResponse,
   HotelAmenitiesType,
-  HotelBasicInfoData,
+  HotelBasicInfoType,
   HotelImageUploadBody,
   HotelPolicyType,
   IncompleteHotelApiResponse,
 } from '@/types';
 
-export async function createNewHotel(formData: HotelBasicInfoData) {
+export async function createNewHotel(formData: HotelBasicInfoType) {
   try {
     const res = await axiosInstance.post<CreateHotelApiResponse>(
       '/hotels',
+      formData
+    );
+    if (!res) throw new Error('An error occured while creating Hotel');
+
+    return {
+      success: true,
+      message: 'Hotel basic info updated successfully',
+      hotel: res.data.data.hotel,
+    };
+  } catch (error) {
+    console.log(formatError(error));
+    return { success: false, message: formatError(error) };
+  }
+}
+
+export async function updateHotelBasicInfo(
+  formData: HotelBasicInfoType,
+  hotelId: string
+) {
+  try {
+    const res = await axiosInstance.patch(
+      `/hotels/${hotelId}/basic-info`,
       formData
     );
     if (!res) throw new Error('An error occured while creating Hotel');
@@ -49,10 +72,31 @@ export async function updateHotelPolicies(
     return { success: false, message: formatError(error) };
   }
 }
+type HotelResponse = {
+  policies: HotelPolicyType;
+  basicInfo: HotelBasicInfoType;
+  amenities: HotelAmenitiesType;
+  rooms: AddRoomType;
+};
 
-export async function getHotelPolicies(
-  hotelId: string
-): Promise<{
+export async function getHotelById(hotelId: string): Promise<{
+  hotel: HotelResponse | null;
+  success: boolean;
+  message?: string;
+}> {
+  try {
+    const res = await axiosInstance(`/hotels/${hotelId}`);
+    if (!res || res.status !== 200)
+      throw new Error('No response from the server');
+    const { hotel } = res.data.data;
+
+    return { hotel, success: true };
+  } catch (error) {
+    return { hotel: null, success: false, message: formatError(error) };
+  }
+}
+
+export async function getHotelPolicies(hotelId: string): Promise<{
   data: HotelPolicyType | null;
   success: boolean;
   message?: string;

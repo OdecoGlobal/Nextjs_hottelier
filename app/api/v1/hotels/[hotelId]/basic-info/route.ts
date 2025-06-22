@@ -1,6 +1,7 @@
 import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
 import AppError from '@/lib/errors/app-error';
+import { hotelBasicInfoSchema } from '@/lib/schemas/validator';
 import { protect, restrictTo, validateHotelAcces } from '@/middleware/auth';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -11,28 +12,14 @@ export const GET = async (
   try {
     const { hotelId } = await params;
     if (!hotelId) throw new AppError('ID is required', 400);
-
-    const hotel = await prisma.hotel.findUnique({
-      where: { id: hotelId },
-      include: {
-        basicInfo: true,
-        policies: true,
-        images: true,
-        amenities: true,
-        rooms: {
-          include: {
-            roomAvailability: true,
-            roomImages: true,
-            amenities: true,
-          },
-        },
-      },
+    const basicInfo = await prisma.hotelBasicInfo.findUnique({
+      where: { hotelId },
     });
-    if (!hotel) throw new AppError('Hotel not found', 404);
+    if (!basicInfo) throw new AppError('No hotel found', 400);
     return NextResponse.json(
       {
-        data: { hotel },
         status: 'success',
+        data: basicInfo,
       },
       { status: 200 }
     );
@@ -41,8 +28,7 @@ export const GET = async (
   }
 };
 
-
-export const DELETE = async (
+export const PATCH = async (
   req: NextRequest,
   { params }: { params: Promise<{ hotelId: string }> }
 ) => {
@@ -52,12 +38,22 @@ export const DELETE = async (
     validateHotelAcces();
     const { hotelId } = await params;
     if (!hotelId) throw new AppError('ID is required', 400);
+    const body = await req.json();
+    const updatedBasicInfoData = hotelBasicInfoSchema.parse(body);
 
-    await prisma.hotel.delete({
-      where: { id: hotelId },
+    const basicInfo = await prisma.hotelBasicInfo.update({
+      where: { hotelId },
+      data: updatedBasicInfoData,
     });
+    if (!basicInfo) throw new AppError('No hotel found', 400);
 
-    return new NextResponse(null, { status: 204 });
+    return NextResponse.json(
+      {
+        status: 'success',
+        data: basicInfo,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     return formatApiError(error);
   }

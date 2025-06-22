@@ -104,7 +104,10 @@ export const baseHotelSchema = z.object({
   acceptedCurrency: z.enum(['NGN', 'USD', 'EUR', 'GBP']),
 });
 
-export const hotelBasicInfoSchema = baseHotelSchema;
+export const hotelBasicInfoSchema = baseHotelSchema.extend({
+  countryId: z.string().optional(),
+  stateId: z.string().optional(),
+});
 
 export const baseHotelPolicySchema = z.object({
   paymentMethods: z

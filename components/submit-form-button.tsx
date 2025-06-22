@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 
 type SubmitFormButtonProps = {
-  isPending: boolean;
+  isPending?: boolean;
   className?: string;
   action: string;
   showSteps?: boolean;

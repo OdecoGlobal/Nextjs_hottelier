@@ -1,8 +1,10 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { HotelBasicInfoType } from '@/types';
 import { Loader } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { UseFormReturn } from 'react-hook-form';
 
 const LeafletMap = dynamic(
   () => import('@/components/shared/maps/leaflet-map'),
@@ -10,20 +12,23 @@ const LeafletMap = dynamic(
 );
 
 const HotelBasicInfoStepThree = ({
-  lat,
-  lng,
+  form,
   onPrevious,
-  onSelect,
   onSubmit,
   isPending,
 }: {
-  lat: number | null;
-  lng: number | null;
+  form: UseFormReturn<HotelBasicInfoType>;
   isPending: boolean;
   onPrevious: () => void;
-  onSelect: (lat: number, lng: number) => void;
   onSubmit: () => void;
 }) => {
+  const { setValue, watch } = form;
+  const lat = watch('lat');
+  const lng = watch('lng');
+  const handleSelect = (lat: number, lng: number) => {
+    setValue('lat', lat, { shouldValidate: true });
+    setValue('lng', lng, { shouldValidate: true });
+  };
   return (
     <Card>
       <CardHeader>
@@ -33,7 +38,7 @@ const HotelBasicInfoStepThree = ({
         </h1>
       </CardHeader>
       <CardContent>
-        <LeafletMap onSelect={onSelect} />
+        <LeafletMap onSelect={handleSelect} />
         <div className="flex gap-6 my-2 justify-between">
           <Button onClick={onPrevious}>Previous</Button>
           <Button onClick={onSubmit} disabled={!lat || !lng || isPending}>

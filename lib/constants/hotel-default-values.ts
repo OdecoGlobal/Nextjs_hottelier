@@ -1,4 +1,18 @@
-import { HotelPolicyType } from '@/types';
+import { HotelBasicInfoType, HotelPolicyType } from '@/types';
+
+export const defaultBasicInfo: HotelBasicInfoType = {
+  name: '',
+  address: '',
+  city: '',
+  state: '',
+  country: '',
+  zipCode: '',
+  lng: 0,
+  lat: 0,
+  hotelType: 'HOTEL',
+  roomUnitTotal: 1,
+  acceptedCurrency: 'NGN',
+};
 
 export const defaultPolicies: HotelPolicyType = {
   paymentMethods: [],

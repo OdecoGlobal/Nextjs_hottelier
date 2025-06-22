@@ -268,5 +268,5 @@ export type IncompleteHotelApiResponse = z.infer<
   typeof incompleteHotelApiResponseSchema
 >;
 
-export type HotelBasicInfoData = z.infer<typeof hotelBasicInfoSchema>;
+export type HotelBasicInfoType = z.infer<typeof hotelBasicInfoSchema>;
 export type HotelImageUploadBody = z.infer<typeof HotelImageUploadBodySchema>;
