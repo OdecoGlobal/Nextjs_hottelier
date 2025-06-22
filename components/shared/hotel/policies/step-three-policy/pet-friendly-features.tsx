@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/form';
 import { PET_FRIENDLY_FEATURES_OPTIONS } from '@/lib/constants';
 
-import { StepThreePolicyControl } from '.';
+import { HotelPolicyControl } from '..';
 
-const PetFriendlyFeaturesField = ({ control }: StepThreePolicyControl) => {
+const PetFriendlyFeaturesField = ({ control }: HotelPolicyControl) => {
   return (
     <FormItem className="space-y-2">
       <FormDescription className="font-bold">

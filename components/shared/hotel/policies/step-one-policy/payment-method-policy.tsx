@@ -7,11 +7,9 @@ import {
 } from '@/components/ui/card';
 import { FormField, FormItem } from '@/components/ui/form';
 import { PAYMENT_METHODS_OPTIONS } from '@/lib/constants';
-import { StepOnePolicyControl } from '.';
+import { HotelPolicyControl } from '..';
 
-const PaymentMethodPolicy = ({
-  control,
-}:StepOnePolicyControl) => {
+const PaymentMethodPolicy = ({ control }: HotelPolicyControl) => {
   return (
     <Card>
       <CardHeader>

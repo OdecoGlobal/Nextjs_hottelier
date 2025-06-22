@@ -1,59 +1,115 @@
 'use client';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import HotelCreationSteps from '../creation-steps';
 import { AdminOwnerRole, HotelPolicyType } from '@/types';
 import StepOnePolicy from './step-one-policy';
 import StepThreePolicy from './step-three-policy';
 import StepTwoPolicy from './step-two-policies';
-import {
-  getHotelPolicies,
-  updateHotelPolicies,
-} from '@/lib/actions/hotel.action';
+import { updateHotelPolicies } from '@/lib/actions/hotel.action';
 import { hotelPolicySchema } from '@/lib/schemas/grouped-validators';
-import { useForm } from 'react-hook-form';
+import { Control, useForm, UseFormWatch } from 'react-hook-form';
 import { defaultPolicies } from '@/lib/constants/hotel-default-values';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Form } from '@/components/ui/form';
+import { baseHotelPolicySchema } from '@/lib/schemas/validator';
+import { pickKeys } from '@/lib/utils';
+import SubmitFormButton from '@/components/submit-form-button';
+
+export type HotelPolicyProp = {
+  control: Control<HotelPolicyType>;
+  watch: UseFormWatch<HotelPolicyType>;
+};
+export type HotelPolicyControl = {
+  control: Control<HotelPolicyType>;
+};
+
+const stepOneSchema = baseHotelPolicySchema.pick({
+  paymentMethods: true,
+  isDepositRequired: true,
+  depositAmount: true,
+  cancellationFeeType: true,
+  cancellationPolicy: true,
+  isTaxIncludedInRoomRates: true,
+  smokingPolicy: true,
+  additionalPolicy: true,
+  hasAdditionalPolicy: true,
+});
+
+const stepTwoSchema = baseHotelPolicySchema.pick({
+  isFrontDesk: true,
+  isFrontDeskEveryDay: true,
+  isFrontDeskOpen24Hours: true,
+  frontDeskScheduleStartDay: true,
+  frontDeskScheduleEndDay: true,
+  frontDeskStartTime: true,
+  frontDeskEndTime: true,
+  isSelfCheckIn: true,
+  selfCheckInType: true,
+  checkInStartTime: true,
+  checkInEndTime: true,
+  isOpen24Hours: true,
+  isLateCheckIn: true,
+  lateCheckInType: true,
+  lateCheckInStartTime: true,
+  lateCheckInEndTime: true,
+  surchargeType: true,
+  surchargeAmount: true,
+  isAdvancedNoticeCheckIn: true,
+  advanceNoticeCheckInTime: true,
+  checkOutTime: true,
+  minCheckInAgeAllowed: true,
+});
+
+const stepThreeSchema = baseHotelPolicySchema.pick({
+  isPetAllowed: true,
+  isPetSurcharged: true,
+  petSurchargeAmount: true,
+  petSurchargeType: true,
+  petSurchargeDuration: true,
+  isMaxFeePerStay: true,
+  maxFeePerStayAmount: true,
+  isPetFeeVaried: true,
+  allowedPetType: true,
+  isPetRestricted: true,
+  petRestrictionType: true,
+  isMaxWeightPerPet: true,
+  petMaxWeight: true,
+  isPetDeposit: true,
+  petDepositType: true,
+  petDepositAmount: true,
+  isPetCleaningFee: true,
+  petCleaningFee: true,
+  petFriendlyFeatures: true,
+});
+
+const stepFields = [
+  pickKeys(stepOneSchema),
+  pickKeys(stepTwoSchema),
+  pickKeys(stepThreeSchema),
+];
 
 const MainPolicyForm = ({
   hotelId,
   role,
+  data,
 }: {
   hotelId: string;
   role: AdminOwnerRole;
+  data: HotelPolicyType;
 }) => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const form = useForm<HotelPolicyType>({
     resolver: zodResolver(hotelPolicySchema),
-    defaultValues: defaultPolicies,
+    defaultValues: data ?? defaultPolicies,
     shouldUnregister: false,
   });
 
-  useEffect(() => {
-    const getPolicies = async () => {
-      const { data } = await getHotelPolicies(hotelId);
-      if (data) {
-        form.reset(data);
-        form.trigger();
-      }
-      console.log(data);
-    };
-    getPolicies();
-  }, [hotelId, form]);
-
-  const handleNext = async (nextStep: number) => {
-    setStep(nextStep);
-  };
-
-  const handlePrevious = () => setStep(step - 1);
-
   const handleSubmit = async () => {
-    const isValid = await form.trigger();
-    if (!isValid) return;
     const formData = form.getValues();
     console.log(formData);
 
@@ -78,31 +134,49 @@ const MainPolicyForm = ({
     });
   };
 
+  const handleNext = async () => {
+    const isValid = await form.trigger(stepFields[step], { shouldFocus: true });
+    if (!isValid) return;
+    if (step < stepFields.length - 1) {
+      setStep(prev => prev + 1);
+    } else {
+      await handleSubmit();
+    }
+  };
+
+  const handlePrevious = () => {
+    if (step > 0) setStep(prevStep => prevStep - 1);
+  };
+
+  const isLastStep = step === stepFields.length - 1;
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
       <HotelCreationSteps current={1} />
 
-      <div className="flex-1 my-5 px-5 w-full max-w-3xl mx-auto">
-        {step === 1 && (
-          <StepOnePolicy form={form} onNext={() => handleNext(2)} />
-        )}
+      <Form {...form}>
+        <form
+          className="flex-1 my-5 px-5 w-full max-w-3xl mx-auto space-y-4"
+          onSubmit={e => {
+            e.preventDefault();
+            handleNext();
+          }}
+        >
+          {step === 0 && <StepOnePolicy form={form} />}
 
-        {step === 2 && (
-          <StepTwoPolicy
-            onNext={() => handleNext(3)}
-            onPrevious={handlePrevious}
-            form={form}
-          />
-        )}
-        {step === 3 && (
-          <StepThreePolicy
+          {step === 1 && <StepTwoPolicy form={form} />}
+          {step === 2 && <StepThreePolicy form={form} />}
+
+          <SubmitFormButton
+            action={isLastStep ? 'Submit' : 'Next'}
             isPending={isPending}
+            showPrevious={step > 0}
+            showSteps
             onPrevious={handlePrevious}
-            onSubmit={handleSubmit}
-            form={form}
+            currentStep={step + 1}
+            totalSteps={stepFields.length}
           />
-        )}
-      </div>
+        </form>
+      </Form>
     </section>
   );
 };

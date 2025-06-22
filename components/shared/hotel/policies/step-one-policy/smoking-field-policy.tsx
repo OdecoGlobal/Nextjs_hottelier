@@ -10,9 +10,9 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { SMOKING_POLICIES } from '@/types';
 
-import { StepOnePolicyControl } from '.';
+import { HotelPolicyControl } from '..';
 
-const SmokingFieldPolicy = ({ control }: StepOnePolicyControl) => {
+const SmokingFieldPolicy = ({ control }: HotelPolicyControl) => {
   return (
     <Card>
       <CardHeader>

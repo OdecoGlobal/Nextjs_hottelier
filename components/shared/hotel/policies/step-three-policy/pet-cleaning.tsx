@@ -5,7 +5,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { StepThreePolicyProp } from '.';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Tooltip,
@@ -14,8 +13,9 @@ import {
 } from '@/components/ui/tooltip';
 import { Info } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { HotelPolicyProp } from '..';
 
-const PetCleaningField = ({ control, watch }: StepThreePolicyProp) => {
+const PetCleaningField = ({ control, watch }: HotelPolicyProp) => {
   const isPetCleaningFee = watch('isPetCleaningFee');
   return (
     <FormItem>

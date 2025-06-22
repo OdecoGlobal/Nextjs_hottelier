@@ -1,10 +1,13 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import slugify from 'slugify';
-import { ZodError } from 'zod';
+import z, { ZodError } from 'zod';
 import { CompletionSteps } from '@/types';
 import { AxiosError } from 'axios';
 import { NextRequest } from 'next/server';
+
+export const pickKeys = <T extends z.ZodRawShape>(schema: z.ZodObject<T>) =>
+  Object.keys(schema.shape) as (keyof T)[];
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

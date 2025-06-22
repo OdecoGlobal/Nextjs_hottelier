@@ -1,54 +1,23 @@
-import { Form } from '@/components/ui/form';
 import { HotelPolicyType } from '@/types';
-import { Control, UseFormReturn, UseFormWatch } from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
 import FrontDeskPolicy from './front-desk-policy';
 import CheckOutPolicy from './check-out-policy';
 import AgeRestrictionPolicy from './age-restriction-policy';
 import CheckInPolicy from './check-in-policy';
-import SubmitFormButton from '@/components/submit-form-button';
 
-export type StepTwoPolicyProps = {
-  control: Control<HotelPolicyType>;
-  watch: UseFormWatch<HotelPolicyType>;
-};
-export type StepTwoPolicyControl = {
-  control: Control<HotelPolicyType>;
-};
-const StepTwoPolicy = ({
-  onNext,
-  onPrevious,
-  form,
-}: {
-  onNext: () => void;
-  onPrevious: () => void;
-  form: UseFormReturn<HotelPolicyType>;
-}) => {
-  const { control, watch, formState } = form;
-  const isPending = formState.isSubmitting;
+const StepTwoPolicy = ({ form }: { form: UseFormReturn<HotelPolicyType> }) => {
+  const { control, watch } = form;
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onNext)} className="space-y-4">
-        <h1 className="text-xl md:text-2xl font-bold">
-          Check-In / Check-Out Policies
-        </h1>
-        <FrontDeskPolicy control={control} watch={watch} />
-        <CheckInPolicy control={control} watch={watch} />
-        <CheckOutPolicy control={control} />
-        <AgeRestrictionPolicy control={control} />
-        <div className="flex justify-between">
-          <SubmitFormButton
-            isPending={isPending}
-            action="Next"
-            showPrevious={true}
-            onPrevious={onPrevious}
-            showSteps={true}
-            currentStep={2}
-            totalSteps={3}
-          />
-        </div>
-      </form>
-    </Form>
+    <>
+      <h1 className="text-xl md:text-2xl font-bold">
+        Check-In / Check-Out Policies
+      </h1>
+      <FrontDeskPolicy control={control} watch={watch} />
+      <CheckInPolicy control={control} watch={watch} />
+      <CheckOutPolicy control={control} />
+      <AgeRestrictionPolicy control={control} />
+    </>
   );
 };
 

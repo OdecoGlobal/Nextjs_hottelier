@@ -7,15 +7,15 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { StepTwoPolicyProps } from '.';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { SelectDays, SelectTime } from '@/components/select-time';
 import { selectTime, timeNextDay } from '@/lib/utils';
 import YesNoButton from '@/components/yes-no-button';
 import SelfCheckInPolicy from './self-checkin-policy';
 import { Checkbox } from '@/components/ui/checkbox';
+import { HotelPolicyProp } from '..';
 
-const FrontDeskPolicy = ({ control, watch }: StepTwoPolicyProps) => {
+const FrontDeskPolicy = ({ control, watch }: HotelPolicyProp) => {
   const isFrontDesk = watch('isFrontDesk');
   const isFrontDeskEveryDay = watch('isFrontDeskEveryDay');
   const isFrontDeskOpen24Hours = watch('isFrontDeskOpen24Hours');

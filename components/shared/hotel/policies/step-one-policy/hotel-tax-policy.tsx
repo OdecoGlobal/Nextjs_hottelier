@@ -7,9 +7,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { StepOnePolicyControl } from '.';
+import { HotelPolicyControl } from '..';
 
-const HotelTaxPolicy = ({ control }: StepOnePolicyControl) => {
+const HotelTaxPolicy = ({ control }: HotelPolicyControl) => {
   return (
     <Card>
       <CardHeader>

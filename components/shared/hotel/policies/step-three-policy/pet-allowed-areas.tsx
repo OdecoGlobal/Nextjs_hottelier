@@ -8,11 +8,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { PET_RESTRICTION_TYPE } from '@/types';
-import { StepThreePolicyControl } from '.';
+import { HotelPolicyControl } from '..';
 
 const PetAllowedAreas = ({
   control,
-}: StepThreePolicyControl) => {
+}: HotelPolicyControl) => {
   return (
     <FormItem className="space-y-2">
       <FormDescription className="font-bold">Pet Allowed Areas</FormDescription>

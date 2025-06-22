@@ -4,7 +4,6 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { StepTwoPolicyProps } from '.';
 import YesNoButton from '@/components/yes-no-button';
 import {
   Select,
@@ -16,8 +15,9 @@ import {
 
 import { SELF_CHECK_IN_OPTIONS } from '@/lib/constants';
 import { SELF_CHECK_IN } from '@/types';
+import { HotelPolicyProp } from '..';
 
-const SelfCheckInPolicy = ({ control, watch }: StepTwoPolicyProps) => {
+const SelfCheckInPolicy = ({ control, watch }: HotelPolicyProp) => {
   const isSelfCheckIn = watch('isSelfCheckIn');
   return (
     <div className="space-y-4">

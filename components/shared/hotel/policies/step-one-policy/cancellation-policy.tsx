@@ -24,9 +24,9 @@ import {
   CANCELLATION_FEE_TYPE_OPTIONS,
   CANCELLATION_POLICIES_OPTIONS,
 } from '@/lib/constants';
-import { StepOnePolicyControl } from '.';
+import { HotelPolicyControl } from '..';
 
-const CancellationPolicy = ({ control }: StepOnePolicyControl) => {
+const CancellationPolicy = ({ control }: HotelPolicyControl) => {
   return (
     <Card>
       <CardHeader>

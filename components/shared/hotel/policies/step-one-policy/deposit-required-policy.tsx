@@ -8,9 +8,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import YesNoButton from '@/components/yes-no-button';
-import { StepOnePolicyProp } from '.';
+import { HotelPolicyProp } from '..';
 
-const DepositRequiredPolicy = ({ control, watch }: StepOnePolicyProp) => {
+const DepositRequiredPolicy = ({ control, watch }: HotelPolicyProp) => {
   const isDepositRequired = watch('isDepositRequired');
   return (
     <Card>

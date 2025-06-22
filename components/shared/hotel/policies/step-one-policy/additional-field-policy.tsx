@@ -17,9 +17,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Plus, X } from 'lucide-react';
 import { useFieldArray } from 'react-hook-form';
-import { StepOnePolicyProp } from '.';
+import { HotelPolicyProp } from '..';
 
-const AdditionalFieldPolicy = ({ control, watch }: StepOnePolicyProp) => {
+const AdditionalFieldPolicy = ({ control, watch }: HotelPolicyProp) => {
   const hasAdditionalPolicy = watch('hasAdditionalPolicy');
   const { fields, append, remove } = useFieldArray({
     control: control,

@@ -6,7 +6,6 @@ import {
   FormMessage,
   FormLabel,
 } from '@/components/ui/form';
-import { StepThreePolicyProp } from '.';
 import { Input } from '@/components/ui/input';
 import { SelectFieldForm } from '@/components/select-field-form';
 import {
@@ -15,8 +14,9 @@ import {
   RADIO_BOOLEAN,
 } from '@/lib/constants';
 import { Checkbox } from '@/components/ui/checkbox';
+import { HotelPolicyProp } from '..';
 
-const PetSurcharge = ({ control, watch }: StepThreePolicyProp) => {
+const PetSurcharge = ({ control, watch }: HotelPolicyProp) => {
   const isPetSurcharged = watch('isPetSurcharged');
   const isMaxFeePerStay = watch('isMaxFeePerStay');
 

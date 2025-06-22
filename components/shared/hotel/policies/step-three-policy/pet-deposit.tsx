@@ -5,7 +5,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { StepThreePolicyProp } from '.';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Tooltip,
@@ -16,8 +15,9 @@ import { Info } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { SelectFieldForm } from '@/components/select-field-form';
 import { PET_FEE_DURATION_OPTIONS } from '@/lib/constants';
+import { HotelPolicyProp } from '..';
 
-const PetDepositField = ({ control, watch }: StepThreePolicyProp) => {
+const PetDepositField = ({ control, watch }: HotelPolicyProp) => {
   const isPetDeposit = watch('isPetDeposit');
   return (
     <FormItem>

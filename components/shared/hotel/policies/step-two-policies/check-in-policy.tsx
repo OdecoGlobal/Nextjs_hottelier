@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StepTwoPolicyProps } from '.';
 import {
   FormControl,
   FormDescription,
@@ -20,8 +19,9 @@ import {
 import RadioForm from '@/components/radio-form';
 import { Input } from '@/components/ui/input';
 import { SelectFieldForm } from '@/components/select-field-form';
+import { HotelPolicyProp } from '..';
 
-const CheckInPolicy = ({ control, watch }: StepTwoPolicyProps) => {
+const CheckInPolicy = ({ control, watch }: HotelPolicyProp) => {
   const isOpen24Hours = watch('isOpen24Hours');
   const isLateCheckIn = watch('isLateCheckIn');
   const lateCheckInType = watch('lateCheckInType');

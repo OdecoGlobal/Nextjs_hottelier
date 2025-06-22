@@ -12,9 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { StepTwoPolicyControl } from '.';
+import { HotelPolicyControl } from '..';
 
-const AgeRestrictionPolicy = ({ control }: StepTwoPolicyControl) => {
+const AgeRestrictionPolicy = ({ control }: HotelPolicyControl) => {
   return (
     <Card>
       <CardHeader>

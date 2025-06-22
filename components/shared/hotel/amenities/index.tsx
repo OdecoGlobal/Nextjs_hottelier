@@ -12,7 +12,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import SubmitFormButton from '@/components/submit-form-button';
 import { defaultHotelAmenities } from '@/lib/constants/hotel-default-values';
-import { useEffect } from 'react';
 export type HotelAmenitiesProps = {
   control: Control<HotelAmenitiesType>;
   watch: UseFormWatch<HotelAmenitiesType>;
@@ -25,23 +24,16 @@ const MainAmenitiesForm = ({
 }: {
   hotelId: string;
   role: AdminOwnerRole;
-  hotelAmenities: HotelAmenitiesType | null;
+  hotelAmenities: HotelAmenitiesType;
 }) => {
   const { toast } = useToast();
   const router = useRouter();
-
   const form = useForm<HotelAmenitiesType>({
     resolver: zodResolver(hotelAmenitiesSchema),
-    defaultValues: defaultHotelAmenities,
+    defaultValues: hotelAmenities ?? defaultHotelAmenities,
   });
 
-  console.log(hotelAmenities);
-  useEffect(() => {
-    if (hotelAmenities) form.reset(hotelAmenities);
-  }, [hotelAmenities, form]);
-
   const onSubmit = async (values: HotelAmenitiesType) => {
-    console.log(values, hotelId);
     const res = await updateHotelAmenities(values, hotelId);
     if (!res.success) {
       toast({

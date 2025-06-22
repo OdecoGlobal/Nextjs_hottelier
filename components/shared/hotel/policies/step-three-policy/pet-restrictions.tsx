@@ -5,12 +5,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { StepThreePolicyProp } from '.';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import PetAllowedAreas from './pet-allowed-areas';
+import { HotelPolicyProp } from '..';
 
-const PetRestrictionField = ({ control, watch }: StepThreePolicyProp) => {
+const PetRestrictionField = ({ control, watch }: HotelPolicyProp) => {
   const isPetRestricted = watch('isPetRestricted');
   const isMaxWeightPerPet = watch('isMaxWeightPerPet');
   return (

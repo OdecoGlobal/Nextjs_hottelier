@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import HotelBasicInfoStepOne from './basic-info-step-one';
 import HotelBasicInfoStepTwo from './basic-info-step-two';
 import HotelBasicInfoStepThree from './basic-info-step-three';
@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import SubmitFormButton from '@/components/submit-form-button';
-import z from 'zod';
+import { pickKeys } from '@/lib/utils';
 
 const stepOneSchema = hotelBasicInfoSchema.pick({
   name: true,
@@ -54,8 +54,6 @@ const MainBasicInfoPage = ({
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const pickKeys = <T extends z.ZodRawShape>(schema: z.ZodObject<T>) =>
-    Object.keys(schema.shape) as (keyof T)[];
 
   const stepFields = [
     pickKeys(stepOneSchema),
@@ -67,12 +65,6 @@ const MainBasicInfoPage = ({
     resolver: zodResolver(hotelBasicInfoSchema),
     defaultValues: isUpdate && basicData ? basicData : defaultBasicInfo,
   });
-
-  // useEffect(() => {
-  //   if (isUpdate && basicData) {
-  //     form.reset(basicData);
-  //   }
-  // }, [isUpdate, basicData, form]);
 
   const handleSubmit = async (formData: HotelBasicInfoType) => {
     startTransition(async () => {

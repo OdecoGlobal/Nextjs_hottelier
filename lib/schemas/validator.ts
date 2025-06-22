@@ -109,13 +109,6 @@ export const hotelBasicInfoSchema = baseHotelSchema.extend({
   stateId: z.string().nullish(),
 });
 
-export const hotelBasicInfoStepOneSchema = hotelBasicInfoSchema.pick({
-  name: true,
-  hotelType: true,
-  acceptedCurrency: true,
-  roomUnitTotal: true,
-});
-
 export const baseHotelPolicySchema = z.object({
   paymentMethods: z
     .array(z.enum(PAYMENT_METHODS))
