@@ -203,7 +203,7 @@ CREATE TABLE "hotel_policies" (
     "isAdvancedNoticeCheckIn" BOOLEAN DEFAULT false,
     "advanceNoticeCheckInTime" TEXT,
     "checkOutTime" TEXT NOT NULL,
-    "minCheckInAgeAllowed" DECIMAL(65,30) NOT NULL,
+    "minCheckInAgeAllowed" INTEGER NOT NULL,
     "isPetAllowed" BOOLEAN NOT NULL,
     "isPetSurcharged" BOOLEAN DEFAULT false,
     "petSurchargeAmount" DECIMAL(65,30),

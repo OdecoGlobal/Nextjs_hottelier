@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 
 type SubmitFormButtonProps = {
   isPending?: boolean;
+  disabled?: boolean;
   className?: string;
   action: string;
   showSteps?: boolean;
@@ -22,6 +23,7 @@ const SubmitFormButton = ({
   totalSteps,
   onPrevious,
   showPrevious = false,
+  disabled,
 }: SubmitFormButtonProps) => {
   return (
     <div className={cn('flex items-center justify-between w-full', className)}>
@@ -30,7 +32,7 @@ const SubmitFormButton = ({
           type="button"
           onClick={onPrevious}
           variant="outline"
-          className="rounded-full"
+          className="rounded-xl"
         >
           Previous
         </Button>
@@ -46,9 +48,9 @@ const SubmitFormButton = ({
       )}
 
       <Button
+        disabled={isPending || disabled}
+        className="rounded-xl bg-blue-600 text-slate-50 hover:text-slate-100 hover:bg-blue-700"
         type="submit"
-        disabled={isPending}
-        className="rounded-full bg-blue-600 text-slate-50 hover:text-slate-100 hover:bg-blue-700"
       >
         {isPending ? <Loader className="w-4 h-4 animate-spin" /> : action}
       </Button>

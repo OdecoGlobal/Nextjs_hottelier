@@ -105,8 +105,15 @@ export const baseHotelSchema = z.object({
 });
 
 export const hotelBasicInfoSchema = baseHotelSchema.extend({
-  countryId: z.string().optional(),
-  stateId: z.string().optional(),
+  countryId: z.string().nullish(),
+  stateId: z.string().nullish(),
+});
+
+export const hotelBasicInfoStepOneSchema = hotelBasicInfoSchema.pick({
+  name: true,
+  hotelType: true,
+  acceptedCurrency: true,
+  roomUnitTotal: true,
 });
 
 export const baseHotelPolicySchema = z.object({

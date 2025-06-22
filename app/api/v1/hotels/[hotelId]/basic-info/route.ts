@@ -1,7 +1,7 @@
 import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
 import AppError from '@/lib/errors/app-error';
-import { hotelBasicInfoSchema } from '@/lib/schemas/validator';
+import { baseHotelSchema } from '@/lib/schemas/validator';
 import { protect, restrictTo, validateHotelAcces } from '@/middleware/auth';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -39,7 +39,7 @@ export const PATCH = async (
     const { hotelId } = await params;
     if (!hotelId) throw new AppError('ID is required', 400);
     const body = await req.json();
-    const updatedBasicInfoData = hotelBasicInfoSchema.parse(body);
+    const updatedBasicInfoData = baseHotelSchema.parse(body);
 
     const basicInfo = await prisma.hotelBasicInfo.update({
       where: { hotelId },

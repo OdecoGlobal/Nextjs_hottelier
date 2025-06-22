@@ -1,4 +1,8 @@
-import { HotelBasicInfoType, HotelPolicyType } from '@/types';
+import {
+  HotelAmenitiesType,
+  HotelBasicInfoType,
+  HotelPolicyType,
+} from '@/types';
 
 export const defaultBasicInfo: HotelBasicInfoType = {
   name: '',
@@ -69,4 +73,27 @@ export const defaultPolicies: HotelPolicyType = {
   isPetCleaningFee: false,
   petCleaningFee: 0,
   petFriendlyFeatures: [],
+};
+
+export const defaultHotelAmenities: HotelAmenitiesType = {
+  isWifi: false,
+  wifiArea: [],
+  roomWifiChargeType: 'FREE',
+  roomWifiSpeed: 'MBPS_25',
+  roomWifiSurchargeAmout: 0,
+  roomWifiSurchargeDuration: 'PER_DAY',
+  roomDeviceLimited: false,
+  roomDeviceLimitNumber: 1,
+  publicWifiChargeType: 'FREE',
+  publicWifiSpeed: 'MBPS_25',
+  publicWifiSurchargeAmout: 0,
+  publicWifiSurchargeDuration: 'PER_DAY',
+  publicDeviceLimited: false,
+  publicDeviceLimitNumber: 0,
+  isBreakfast: false,
+  breakfastChargeType: 'FREE',
+  breakfastSurchargeAmount: 0,
+  breakfastSchedule: 'DAILY',
+  breakfastStartTime: '',
+  breakfastEndTime: '',
 };

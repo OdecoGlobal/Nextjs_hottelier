@@ -1,6 +1,6 @@
 import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
-import { hotelBasicInfoSchema } from '@/lib/schemas/validator';
+import { baseHotelSchema } from '@/lib/schemas/validator';
 import { generateSlug } from '@/lib/utils';
 import { protect, restrictTo } from '@/middleware/auth';
 import { AuthenticatedRequest } from '@/types/custom';
@@ -12,7 +12,7 @@ export const POST = async (req: NextRequest) => {
     restrictTo('OWNER', 'ADMIN')(req);
     const authReq = req as AuthenticatedRequest;
     const body = await req.json();
-    const basicInfoData = hotelBasicInfoSchema.parse(body);
+    const basicInfoData = baseHotelSchema.parse(body);
     const slug = generateSlug(basicInfoData.name);
     const result = await prisma.$transaction(async tx => {
       const hotel = await tx.hotel.create({

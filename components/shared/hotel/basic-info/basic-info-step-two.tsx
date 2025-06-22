@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -35,16 +34,11 @@ import { Check } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { CityData, CountryData, HotelBasicInfoType, StateData } from '@/types';
-import SubmitFormButton from '@/components/submit-form-button';
 
 const HotelBasicInfoStepTwo = ({
   form,
-  onNext,
-  onPrevious,
 }: {
   form: UseFormReturn<HotelBasicInfoType>;
-  onNext: () => void;
-  onPrevious: () => void;
 }) => {
   const [countries, setCountries] = useState<CountryData[]>([]);
   const [states, setStates] = useState<StateData[]>([]);
@@ -138,286 +132,278 @@ const HotelBasicInfoStepTwo = ({
         <p className="text-muted-foreground font-semibold">Step 2 of 3</p>
         <h1 className="text-xl md:text-2xl font-bold">Property Address</h1>
       </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(onNext)}>
-            {/* COUNTRY */}
-            <FormField
-              control={form.control}
-              name="country"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel>Country</FormLabel>
-                  <Popover
-                    open={dropdownOpen.country}
-                    onOpenChange={open =>
-                      setDropdownOpen(prev => ({ ...prev, country: open }))
-                    }
-                  >
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={`w-full justify-between ${
-                            !field.value && 'text-muted-foreground'
-                          }`}
-                        >
-                          {field.value
-                            ? countries.find(
-                                country => country.name === field.value
-                              )?.name
-                            : 'Select Country'}
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-
-                    <PopoverContent>
-                      <Command>
-                        <CommandInput
-                          placeholder="Search Countries"
-                          className="h-9"
-                        />
-                        <CommandList>
-                          <CommandEmpty>
-                            {loading.countries
-                              ? 'Loading...'
-                              : 'No country found'}
-                          </CommandEmpty>
-                          <CommandGroup>
-                            {countries.map(country => (
-                              <CommandItem
-                                key={country.name}
-                                value={country.name}
-                                onSelect={() => {
-                                  form.setValue('country', country.name);
-                                  form.setValue('countryId', country.id);
-                                  setDropdownOpen(prev => ({
-                                    ...prev,
-                                    country: false,
-                                  }));
-                                }}
-                              >
-                                {country.name}
-
-                                <Check
-                                  className={`ml-auto ${
-                                    country.name === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0'
-                                  }`}
-                                />
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* STATES */}
-            <FormField
-              control={form.control}
-              name="state"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel>State</FormLabel>
-                  <Popover
-                    open={dropdownOpen.state}
-                    onOpenChange={open =>
-                      setDropdownOpen(prev => ({ ...prev, state: open }))
-                    }
-                  >
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={`w-full justify-between ${
-                            !field.value && 'text-muted-foreground'
-                          }`}
-                        >
-                          {field.value
-                            ? states.find(state => state.name === field.value)
-                                ?.name
-                            : 'Select State'}
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-
-                    <PopoverContent>
-                      <Command>
-                        <CommandInput
-                          placeholder="Search States"
-                          className="h-9"
-                          value={searchQueries.state}
-                          onValueChange={value =>
-                            setSearchQueries(prev => ({
-                              ...prev,
-                              state: value,
-                            }))
-                          }
-                        />
-                        <CommandList>
-                          <CommandEmpty>
-                            {loading.states ? 'Loading...' : 'No state found'}
-                          </CommandEmpty>
-                          <CommandGroup>
-                            {states.map(state => (
-                              <CommandItem
-                                key={state.id}
-                                value={state.name}
-                                onSelect={() => {
-                                  form.setValue('state', state.name);
-                                  form.setValue('stateId', state.id);
-                                  setDropdownOpen(prev => ({
-                                    ...prev,
-                                    state: false,
-                                  }));
-                                }}
-                              >
-                                {state.name}
-
-                                <Check
-                                  className={`ml-auto ${
-                                    state.name === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0'
-                                  }`}
-                                />
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* CITIES */}
-            <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel>City</FormLabel>
-                  <Popover
-                    open={dropdownOpen.city}
-                    onOpenChange={open =>
-                      setDropdownOpen(prev => ({ ...prev, city: open }))
-                    }
-                  >
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={`w-full justify-between ${
-                            !field.value && 'text-muted-foreground'
-                          }`}
-                        >
-                          {field.value
-                            ? cities.find(city => city.name === field.value)
-                                ?.name
-                            : 'Select City'}
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-
-                    <PopoverContent>
-                      <Command>
-                        <CommandInput
-                          placeholder="Search City"
-                          className="h-9"
-                          value={searchQueries.city}
-                          onValueChange={value =>
-                            setSearchQueries(prev => ({
-                              ...prev,
-                              city: value,
-                            }))
-                          }
-                        />
-                        <CommandList>
-                          <CommandEmpty>
-                            {loading.cities ? 'Loading...' : 'No cities found'}
-                          </CommandEmpty>
-                          <CommandGroup>
-                            {cities.map(city => (
-                              <CommandItem
-                                key={city.id}
-                                value={city.name}
-                                onSelect={() => {
-                                  form.setValue('city', city.name);
-                                  setDropdownOpen(prev => ({
-                                    ...prev,
-                                    city: false,
-                                  }));
-                                }}
-                              >
-                                {city.name}
-
-                                <Check
-                                  className={`ml-auto ${
-                                    city.name === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0'
-                                  }`}
-                                />
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Address */}
-
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel> Street Address</FormLabel>
+      <CardContent className="space-y-6">
+        {/* COUNTRY */}
+        <FormField
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>Country</FormLabel>
+              <Popover
+                open={dropdownOpen.country}
+                onOpenChange={open =>
+                  setDropdownOpen(prev => ({ ...prev, country: open }))
+                }
+              >
+                <PopoverTrigger asChild>
                   <FormControl>
-                    <Input {...field} placeholder="Enter your street address" />
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={`w-full justify-between ${
+                        !field.value && 'text-muted-foreground'
+                      }`}
+                    >
+                      {field.value
+                        ? countries.find(
+                            country => country.name === field.value
+                          )?.name
+                        : 'Select Country'}
+                    </Button>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </PopoverTrigger>
 
-            <FormField
-              control={form.control}
-              name="zipCode"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel> Zip Code</FormLabel>
+                <PopoverContent>
+                  <Command>
+                    <CommandInput
+                      placeholder="Search Countries"
+                      className="h-9"
+                    />
+                    <CommandList>
+                      <CommandEmpty>
+                        {loading.countries ? 'Loading...' : 'No country found'}
+                      </CommandEmpty>
+                      <CommandGroup>
+                        {countries.map(country => (
+                          <CommandItem
+                            key={country.name}
+                            value={country.name}
+                            onSelect={() => {
+                              form.setValue('country', country.name);
+                              form.setValue('countryId', country.id);
+                              setDropdownOpen(prev => ({
+                                ...prev,
+                                country: false,
+                              }));
+                            }}
+                          >
+                            {country.name}
+
+                            <Check
+                              className={`ml-auto ${
+                                country.name === field.value
+                                  ? 'opacity-100'
+                                  : 'opacity-0'
+                              }`}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* STATES */}
+        <FormField
+          control={form.control}
+          name="state"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>State</FormLabel>
+              <Popover
+                open={dropdownOpen.state}
+                onOpenChange={open =>
+                  setDropdownOpen(prev => ({ ...prev, state: open }))
+                }
+              >
+                <PopoverTrigger asChild>
                   <FormControl>
-                    <Input {...field} placeholder="Enter your zip code" />
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={`w-full justify-between ${
+                        !field.value && 'text-muted-foreground'
+                      }`}
+                    >
+                      {field.value
+                        ? states.find(state => state.name === field.value)?.name
+                        : 'Select State'}
+                    </Button>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <SubmitFormButton
+                </PopoverTrigger>
+
+                <PopoverContent>
+                  <Command>
+                    <CommandInput
+                      placeholder="Search States"
+                      className="h-9"
+                      value={searchQueries.state}
+                      onValueChange={value =>
+                        setSearchQueries(prev => ({
+                          ...prev,
+                          state: value,
+                        }))
+                      }
+                    />
+                    <CommandList>
+                      <CommandEmpty>
+                        {loading.states ? 'Loading...' : 'No state found'}
+                      </CommandEmpty>
+                      <CommandGroup>
+                        {states.map(state => (
+                          <CommandItem
+                            key={state.id}
+                            value={state.name}
+                            onSelect={() => {
+                              form.setValue('state', state.name);
+                              form.setValue('stateId', state.id);
+                              setDropdownOpen(prev => ({
+                                ...prev,
+                                state: false,
+                              }));
+                            }}
+                          >
+                            {state.name}
+
+                            <Check
+                              className={`ml-auto ${
+                                state.name === field.value
+                                  ? 'opacity-100'
+                                  : 'opacity-0'
+                              }`}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* CITIES */}
+        <FormField
+          control={form.control}
+          name="city"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>City</FormLabel>
+              <Popover
+                open={dropdownOpen.city}
+                onOpenChange={open =>
+                  setDropdownOpen(prev => ({ ...prev, city: open }))
+                }
+              >
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={`w-full justify-between ${
+                        !field.value && 'text-muted-foreground'
+                      }`}
+                    >
+                      {field.value
+                        ? cities.find(city => city.name === field.value)?.name
+                        : 'Select City'}
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+
+                <PopoverContent>
+                  <Command>
+                    <CommandInput
+                      placeholder="Search City"
+                      className="h-9"
+                      value={searchQueries.city}
+                      onValueChange={value =>
+                        setSearchQueries(prev => ({
+                          ...prev,
+                          city: value,
+                        }))
+                      }
+                    />
+                    <CommandList>
+                      <CommandEmpty>
+                        {loading.cities ? 'Loading...' : 'No cities found'}
+                      </CommandEmpty>
+                      <CommandGroup>
+                        {cities.map(city => (
+                          <CommandItem
+                            key={city.id}
+                            value={city.name}
+                            onSelect={() => {
+                              form.setValue('city', city.name);
+                              setDropdownOpen(prev => ({
+                                ...prev,
+                                city: false,
+                              }));
+                            }}
+                          >
+                            {city.name}
+
+                            <Check
+                              className={`ml-auto ${
+                                city.name === field.value
+                                  ? 'opacity-100'
+                                  : 'opacity-0'
+                              }`}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Address */}
+
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel> Street Address</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="Enter your street address" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="zipCode"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel> Zip Code</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="Enter your zip code" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* <SubmitFormButton
               action="Next"
               showPrevious={true}
               showSteps={true}
               currentStep={2}
               totalSteps={3}
               onPrevious={onPrevious}
-            />
-          </form>
-        </Form>
+            /> */}
       </CardContent>
     </Card>
   );

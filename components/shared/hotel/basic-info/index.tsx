@@ -15,6 +15,29 @@ import { hotelBasicInfoSchema } from '@/lib/schemas/validator';
 import { defaultBasicInfo } from '@/lib/constants/hotel-default-values';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Form } from '@/components/ui/form';
+import SubmitFormButton from '@/components/submit-form-button';
+import z from 'zod';
+
+const stepOneSchema = hotelBasicInfoSchema.pick({
+  name: true,
+  hotelType: true,
+  roomUnitTotal: true,
+  acceptedCurrency: true,
+});
+
+const stepTwoSchema = hotelBasicInfoSchema.pick({
+  address: true,
+  city: true,
+  country: true,
+  zipCode: true,
+  state: true,
+});
+
+const stepThreeSchema = hotelBasicInfoSchema.pick({
+  lat: true,
+  lng: true,
+});
 
 const MainBasicInfoPage = ({
   role,
@@ -24,38 +47,34 @@ const MainBasicInfoPage = ({
 }: {
   role: AdminOwnerRole;
   hotelId?: string;
-  basicData?: HotelBasicInfoType | null;
+  basicData?: HotelBasicInfoType;
   isUpdate?: boolean;
 }) => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const pickKeys = <T extends z.ZodRawShape>(schema: z.ZodObject<T>) =>
+    Object.keys(schema.shape) as (keyof T)[];
+
+  const stepFields = [
+    pickKeys(stepOneSchema),
+    pickKeys(stepTwoSchema),
+    pickKeys(stepThreeSchema),
+  ];
 
   const form = useForm<HotelBasicInfoType>({
     resolver: zodResolver(hotelBasicInfoSchema),
-    defaultValues: defaultBasicInfo,
+    defaultValues: isUpdate && basicData ? basicData : defaultBasicInfo,
   });
 
-  useEffect(() => {
-    if (basicData) {
-      form.reset(basicData);
-    }
-  }, [basicData, form]);
+  // useEffect(() => {
+  //   if (isUpdate && basicData) {
+  //     form.reset(basicData);
+  //   }
+  // }, [isUpdate, basicData, form]);
 
-  const handleNext = async (nextStep: number) => {
-    const isValid = await form.trigger();
-    if (!isValid) return;
-    setStep(nextStep);
-  };
-
-  const handleBack = () => setStep(step - 1);
-
-  const handleSubmit = async () => {
-    const isValid = await form.trigger();
-    if (!isValid) return;
-    const formData = form.getValues();
-
+  const handleSubmit = async (formData: HotelBasicInfoType) => {
     startTransition(async () => {
       const response = isUpdate
         ? await updateHotelBasicInfo(formData, hotelId!)
@@ -78,34 +97,53 @@ const MainBasicInfoPage = ({
       }
     });
   };
+  const handleNext = async () => {
+    const isValid = await form.trigger(stepFields[step], { shouldFocus: true });
+    if (!isValid) return;
+    if (step < stepFields.length - 1) {
+      setStep(prev => prev + 1);
+    } else {
+      await handleSubmit(form.getValues());
+    }
+  };
 
+  const handleBack = () => {
+    if (step > 0) setStep(prevStep => prevStep - 1);
+  };
+
+  const isLastStep = step === stepFields.length - 1;
+  const lat = form.watch('lat');
+  const lng = form.watch('lng');
   return (
     <section className="flex flex-col md:flex-row space-y-3  min-h-screen">
       <HotelCreationSteps current={0} />
 
       <div className="flex-1 flex flex-col justify-center space-y-7  ">
-        <section className="w-full max-w-sm md:max-w-md self-center">
-          {step === 1 && (
-            <HotelBasicInfoStepOne form={form} onNext={() => handleNext(2)} />
-          )}
+        <Form {...form}>
+          <form
+            className="w-full max-w-sm md:max-w-md self-center space-y-4"
+            onSubmit={e => {
+              e.preventDefault();
+              handleNext();
+            }}
+          >
+            {step === 0 && <HotelBasicInfoStepOne form={form} />}
 
-          {step === 2 && (
-            <HotelBasicInfoStepTwo
-              form={form}
-              onNext={() => handleNext(3)}
-              onPrevious={handleBack}
-            />
-          )}
+            {step === 1 && <HotelBasicInfoStepTwo form={form} />}
 
-          {step === 3 && (
-            <HotelBasicInfoStepThree
-              form={form}
-              onPrevious={handleBack}
-              onSubmit={handleSubmit}
+            {step === 2 && <HotelBasicInfoStepThree form={form} />}
+            <SubmitFormButton
+              action={isLastStep ? 'Submit' : 'Next'}
               isPending={isPending}
+              disabled={isLastStep && (!lat || !lng)}
+              showPrevious={step > 0}
+              showSteps
+              onPrevious={handleBack}
+              currentStep={step + 1}
+              totalSteps={stepFields.length}
             />
-          )}
-        </section>
+          </form>
+        </Form>
       </div>
     </section>
   );

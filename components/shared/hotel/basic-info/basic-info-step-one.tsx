@@ -1,8 +1,6 @@
-import SubmitFormButton from '@/components/submit-form-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -30,10 +28,8 @@ import { UseFormReturn } from 'react-hook-form';
 
 const HotelBasicInfoStepOne = ({
   form,
-  onNext,
 }: {
   form: UseFormReturn<HotelBasicInfoType>;
-  onNext: () => void;
 }) => {
   return (
     <Card>
@@ -43,126 +39,116 @@ const HotelBasicInfoStepOne = ({
           Tell us a little about your property
         </h1>
       </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onNext)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel>Property Name</FormLabel>
-                  <FormControl>
-                    <div className="flex justify-center items-center">
-                      <Input {...field} />
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <Info />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent className="w-56">
-                          <p>
-                            Use the official name of your property, for example
-                            the one you use on your website. Avoid use of
-                            special characters. The name should ideally not be
-                            less than 35 characters for search engine
-                            optimization.
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      <CardContent className="space-y-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>Property Name</FormLabel>
+              <FormControl>
+                <div className="flex justify-center items-center">
+                  <Input {...field} />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Info />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="w-56">
+                      <p>
+                        Use the official name of your property, for example the
+                        one you use on your website. Avoid use of special
+                        characters. The name should ideally not be less than 35
+                        characters for search engine optimization.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="hotelType"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel>Property Type</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Hotel type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {hotelTypes.map(type => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.text}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="hotelType"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>Property Type</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Hotel type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {hotelTypes.map(type => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.text}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="roomUnitTotal"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel>Number of rooms/units</FormLabel>
-                  <FormControl>
-                    <div className="flex justify-center items-center">
-                      <Input {...field} type="number" />
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <Info />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent className="w-56">
-                          <p>
-                            Please note that an apartment or house counts as one
-                            unit.
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="roomUnitTotal"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>Number of rooms/units</FormLabel>
+              <FormControl>
+                <div className="flex justify-center items-center">
+                  <Input {...field} type="number" />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Info />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="w-56">
+                      <p>
+                        Please note that an apartment or house counts as one
+                        unit.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="acceptedCurrency"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel>Currency</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select accepted currency" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {currency.map(type => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.text}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <SubmitFormButton
-              action="Next"
-              isPending={form.formState.isSubmitting}
-            />
-          </form>
-        </Form>
+        <FormField
+          control={form.control}
+          name="acceptedCurrency"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>Currency</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select accepted currency" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {currency.map(type => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.text}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </CardContent>
     </Card>
   );

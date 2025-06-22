@@ -46,8 +46,6 @@ const MainPolicyForm = ({
   }, [hotelId, form]);
 
   const handleNext = async (nextStep: number) => {
-    const isValid = await form.trigger();
-    if (!isValid) return;
     setStep(nextStep);
   };
 

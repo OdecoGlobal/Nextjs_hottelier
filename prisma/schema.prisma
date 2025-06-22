@@ -66,7 +66,7 @@ model Hotel {
   basicInfo HotelBasicInfo?
   policies  HotelPolicy?
   rooms     Room[]
-  amenities HotelAmenity[]
+  amenities HotelAmenity?
   images    HotelImages[]
 
   // bookings    Booking[]

@@ -16,7 +16,6 @@ import YesNoButton from '@/components/yes-no-button';
 import { Wifi } from 'lucide-react';
 import { WIFI_AREA_OPTIONS } from '@/lib/constants';
 import { Checkbox } from '@/components/ui/checkbox';
-// import GuestRoomWifi from './guest';
 import WifiTypeComponent from './wifi-type';
 
 const WifiAmenities = ({ control, watch }: HotelAmenitiesProps) => {

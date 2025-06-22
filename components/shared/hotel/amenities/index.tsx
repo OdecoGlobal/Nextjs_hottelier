@@ -11,6 +11,8 @@ import { updateHotelAmenities } from '@/lib/actions/hotel.action';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import SubmitFormButton from '@/components/submit-form-button';
+import { defaultHotelAmenities } from '@/lib/constants/hotel-default-values';
+import { useEffect } from 'react';
 export type HotelAmenitiesProps = {
   control: Control<HotelAmenitiesType>;
   watch: UseFormWatch<HotelAmenitiesType>;
@@ -19,38 +21,24 @@ export type HotelAmenitiesProps = {
 const MainAmenitiesForm = ({
   hotelId,
   role,
+  hotelAmenities,
 }: {
   hotelId: string;
   role: AdminOwnerRole;
+  hotelAmenities: HotelAmenitiesType | null;
 }) => {
   const { toast } = useToast();
   const router = useRouter();
 
   const form = useForm<HotelAmenitiesType>({
     resolver: zodResolver(hotelAmenitiesSchema),
-    defaultValues: {
-      isWifi: false,
-      wifiArea: [],
-      roomWifiChargeType: 'FREE',
-      roomWifiSpeed: 'MBPS_25',
-      roomWifiSurchargeAmout: 0,
-      roomWifiSurchargeDuration: 'PER_DAY',
-      roomDeviceLimited: false,
-      roomDeviceLimitNumber: 1,
-      publicWifiChargeType: 'FREE',
-      publicWifiSpeed: 'MBPS_25',
-      publicWifiSurchargeAmout: 0,
-      publicWifiSurchargeDuration: 'PER_DAY',
-      publicDeviceLimited: false,
-      publicDeviceLimitNumber: 0,
-      isBreakfast: false,
-      breakfastChargeType: 'FREE',
-      breakfastSurchargeAmount: 0,
-      breakfastSchedule: 'DAILY',
-      breakfastStartTime: '',
-      breakfastEndTime: '',
-    },
+    defaultValues: defaultHotelAmenities,
   });
+
+  console.log(hotelAmenities);
+  useEffect(() => {
+    if (hotelAmenities) form.reset(hotelAmenities);
+  }, [hotelAmenities, form]);
 
   const onSubmit = async (values: HotelAmenitiesType) => {
     console.log(values, hotelId);
