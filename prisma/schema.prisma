@@ -315,7 +315,7 @@ model Room {
   peopleInBaseRate Int        @default(1)
   baseRate         Decimal    @default(0) @db.Decimal(12, 2)
 
-  amenities        RoomAmenity[]
+  amenities        RoomAmenity?
   roomImages       RoomImages[]
   roomAvailability RoomAvailability[]
   pricingModel     PricingModelType
@@ -323,8 +323,9 @@ model Room {
   isCompleted Boolean   @default(false)
   completedAt DateTime?
 
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
+  createdAt     DateTime @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime @updatedAt @db.Timestamp(6)
+  roomAmenityId String   @db.Uuid
 
   // bookings      Booking[]
   @@map("rooms")
@@ -332,7 +333,7 @@ model Room {
 
 model RoomAmenity {
   id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  roomId          String           @db.Uuid
+  roomId          String           @unique @db.Uuid
   room            Room             @relation(fields: [roomId], references: [id])
   bathroomType    BathroomType
   bathroomNumber  Decimal          @default(1)

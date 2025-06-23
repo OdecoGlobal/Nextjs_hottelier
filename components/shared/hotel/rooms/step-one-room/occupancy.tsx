@@ -13,14 +13,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { StepOneAddRoomType } from '@/types';
-import { Control } from 'react-hook-form';
+import { AddRoomControl } from '..';
 
-const RoomOccupancy = ({
-  control,
-}: {
-  control: Control<StepOneAddRoomType>;
-}) => {
+const RoomOccupancy = ({ control }: AddRoomControl) => {
   return (
     <Card>
       <CardHeader>

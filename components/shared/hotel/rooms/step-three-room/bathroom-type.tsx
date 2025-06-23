@@ -5,8 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Control } from 'react-hook-form';
-import { StepThreeAddRoomType } from '.';
 import { FormField } from '@/components/ui/form';
 import { SelectFieldForm } from '@/components/select-field-form';
 import {
@@ -18,12 +16,9 @@ import {
 import NumberIncrementButton from '@/components/number-increment-button';
 import CheckboxForm from '@/components/checkbox-form';
 import RadioForm from '@/components/radio-form';
+import { AddRoomControl } from '..';
 
-const BathRoomType = ({
-  control,
-}: {
-  control: Control<StepThreeAddRoomType>;
-}) => {
+const BathRoomType = ({ control }: AddRoomControl) => {
   return (
     <Card>
       <CardHeader>

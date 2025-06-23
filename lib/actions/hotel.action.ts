@@ -1,5 +1,6 @@
 'use server';
 import { axiosInstance } from '../axios';
+import { fetchInstance } from '../fetch';
 import { formatError } from '../utils';
 import {
   AddRoomType,
@@ -48,6 +49,16 @@ export async function updateHotelBasicInfo(
     };
   } catch (error) {
     console.log(formatError(error));
+    return { success: false, message: formatError(error) };
+  }
+}
+
+export async function addRoom(data: AddRoomType, hotelId: string) {
+  try {
+    const res = await fetchInstance.post(`/hotels/${hotelId}/rooms`, data);
+    if (!res) throw new Error('Error occured while creeating room');
+    return { success: true, message: 'Room created successfully' };
+  } catch (error) {
     return { success: false, message: formatError(error) };
   }
 }

@@ -1,5 +1,3 @@
-import { Control } from 'react-hook-form';
-import { StepThreeAddRoomType } from '.';
 import {
   Card,
   CardContent,
@@ -17,8 +15,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { SelectFieldForm } from '@/components/select-field-form';
 import { ROOM_SIZE_UNIT_OPTIONS } from '@/lib/constants';
+import { AddRoomControl } from '..';
 
-const RoomSize = ({ control }: { control: Control<StepThreeAddRoomType> }) => {
+const RoomSize = ({ control }: AddRoomControl) => {
   return (
     <Card>
       <CardHeader>

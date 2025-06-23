@@ -13,12 +13,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { StepOneAddRoomProp } from '..';
+import { AddRoomProp } from '..';
 import { SelectFieldForm } from '@/components/select-field-form';
 import { generateNumbers } from '@/lib/constants';
 import { User2Icon } from 'lucide-react';
 
-const BaseRate = ({ control, watch }: StepOneAddRoomProp) => {
+const BaseRate = ({ control, watch }: AddRoomProp) => {
   const maxNumber = watch('maxOccupancy');
   const baseRate = watch('baseRate');
   const people = watch('peopleInBaseRate');

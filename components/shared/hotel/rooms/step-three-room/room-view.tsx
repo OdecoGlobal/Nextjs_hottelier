@@ -1,12 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StepThreeAddRoomType } from '.';
 import { FormField } from '@/components/ui/form';
 import RadioForm from '@/components/radio-form';
 import { RADIO_BOOLEAN, ROOM_VIEW_OPTION } from '@/lib/constants';
 import { SelectFieldForm } from '@/components/select-field-form';
-import { Control } from 'react-hook-form';
+import { AddRoomControl } from '..';
 
-const RoomView = ({ control }: { control: Control<StepThreeAddRoomType> }) => {
+const RoomView = ({ control }: AddRoomControl) => {
   return (
     <Card>
       <CardHeader>

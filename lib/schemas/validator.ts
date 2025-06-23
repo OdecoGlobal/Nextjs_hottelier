@@ -232,15 +232,17 @@ export const baseRoomAmenitiesSchema = z.object({
   showerType: z.enum(SHOWER_TYPES),
   roomEssential: z.array(z.enum(ROOM_ESSENTIALS_TYPES)).optional(),
   isTowelProvided: z.boolean(),
-  climateControl: z.array(z.enum(CLIMATE_CONTROL_TYPE)),
-  airConditionType: z.enum(AIR_CONDITIONING_TYPE).optional(),
+  climateControl: z
+    .array(z.enum(CLIMATE_CONTROL_TYPE))
+    .min(1, 'Select at least one option'),
+  airConditionType: z.enum(AIR_CONDITIONING_TYPE).nullish(),
   heatingType: z.enum(HEATING_TYPE).optional(),
   isRoomView: z.boolean(),
-  roomViewType: z.enum(ROOM_VIEW_TYPE).optional(),
+  roomViewType: z.enum(ROOM_VIEW_TYPE).nullish(),
   roomSize: z.coerce.number().nonnegative(),
   roomSizeUnit: z.enum(ROOM_SIZE_UNIT_TYPE),
   isOutDoorSpace: z.boolean(),
-  outDoorSpaceType: z.enum(OUTDOOR_SPACE_TYPE).optional(),
+  outDoorSpaceType: z.enum(OUTDOOR_SPACE_TYPE).nullish(),
   roomLayout: z.array(z.enum(ROOM_LAYOUT_TYPES)).optional(),
 });
 
@@ -248,14 +250,14 @@ export const baseRoomSchema = z.object({
   name: z.string().min(3, 'Room name must be at least 3 characters'),
   roomType: z.enum(ROOM_TYPES),
   roomClass: z.enum(ROOM_CLASS).optional(),
-  maxOccupancy: z.coerce.number().min(1, 'SHould be greater than one'),
+  maxOccupancy: z.coerce.number().min(1, 'Should be at least  one'),
   bedType: z.enum(BED_TYPES),
   bedTotal: z.coerce
     .number()
     .min(1, 'There should be at least one bed in a room'),
-  totalRooms: z.coerce.number().min(1, 'SHould be greater than one'),
+  totalRooms: z.coerce.number().min(1, 'Should be at least one'),
   baseRate: z.coerce.number().nonnegative(),
-  peopleInBaseRate: z.coerce.number().min(1, 'SHould be greater than one'),
+  peopleInBaseRate: z.coerce.number().min(1, 'Should be at least  one'),
   pricingModel: z.enum(PRICING_MODEL_TYPE),
   roomImages: ImageArraySchema,
 });

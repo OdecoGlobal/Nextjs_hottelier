@@ -9,10 +9,9 @@ import {
 } from '@/components/ui/card';
 import { FormField } from '@/components/ui/form';
 import { BED_TYPES_OPTIONS } from '@/lib/constants';
-import { StepOneAddRoomType } from '@/types';
-import { Control } from 'react-hook-form';
+import { AddRoomControl } from '..';
 
-const BedSpace = ({ control }: { control: Control<StepOneAddRoomType> }) => {
+const BedSpace = ({ control }: AddRoomControl) => {
   return (
     <Card>
       <CardHeader>

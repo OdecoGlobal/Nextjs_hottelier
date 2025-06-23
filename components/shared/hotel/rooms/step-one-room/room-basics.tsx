@@ -15,10 +15,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ROOM_CLASS_OPTIONS, ROOM_TYPES_OPTIONS } from '@/lib/constants';
-import { StepOneAddRoomType } from '@/types';
-import { Control } from 'react-hook-form';
+import { AddRoomControl } from '..';
 
-const RoomBasics = ({ control }: { control: Control<StepOneAddRoomType> }) => {
+const RoomBasics = ({ control }: AddRoomControl) => {
   return (
     <Card>
       <CardHeader>

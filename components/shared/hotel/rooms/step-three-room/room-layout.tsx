@@ -8,14 +8,10 @@ import {
 import { FormField } from '@/components/ui/form';
 import CheckboxForm from '@/components/checkbox-form';
 import { ROOM_LAYOUT_OPTIONS } from '@/lib/constants';
-import { Control } from 'react-hook-form';
-import { StepThreeAddRoomType } from '.';
 
-const RoomLayoutForm = ({
-  control,
-}: {
-  control: Control<StepThreeAddRoomType>;
-}) => {
+import { AddRoomControl } from '..';
+
+const RoomLayoutForm = ({ control }: AddRoomControl) => {
   return (
     <Card>
       <CardHeader>

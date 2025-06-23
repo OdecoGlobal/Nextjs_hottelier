@@ -1,7 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { FormField } from '@/components/ui/form';
-import { Control } from 'react-hook-form';
-import { StepThreeAddRoomType } from '.';
+
 import CheckboxForm from '@/components/checkbox-form';
 import {
   AIR_CONDITIONING_OPTIONS,
@@ -9,12 +8,9 @@ import {
   HEATING_OPTION,
 } from '@/lib/constants';
 import RadioForm from '@/components/radio-form';
+import { AddRoomControl } from '..';
 
-const ClimateControl = ({
-  control,
-}: {
-  control: Control<StepThreeAddRoomType>;
-}) => {
+const ClimateControl = ({ control }: AddRoomControl) => {
   return (
     <Card>
       <CardContent className="space-y-4">

@@ -1,4 +1,5 @@
 import {
+  AddRoomType,
   HotelAmenitiesType,
   HotelBasicInfoType,
   HotelPolicyType,
@@ -96,4 +97,26 @@ export const defaultHotelAmenities: HotelAmenitiesType = {
   breakfastSchedule: 'DAILY',
   breakfastStartTime: '',
   breakfastEndTime: '',
+};
+
+export const defaultRooomValues: AddRoomType = {
+  name: '',
+  roomType: 'SINGLE',
+  roomImages: [],
+  roomSize: 0,
+  roomSizeUnit: 'SQUARE_FEET',
+  totalRooms: 0,
+  baseRate: 0,
+  pricingModel: 'PER_DAY',
+  maxOccupancy: 1,
+  bedTotal: 1,
+  bedType: 'BUNK',
+  bathroomType: 'PRIVATE',
+  bathroomNumber: 1,
+  showerType: 'SHOWER',
+  isTowelProvided: false,
+  climateControl: [],
+  isRoomView: false,
+  isOutDoorSpace: false,
+  peopleInBaseRate: 1,
 };
