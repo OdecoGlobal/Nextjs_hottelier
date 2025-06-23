@@ -5,6 +5,7 @@ import { formatError } from '../utils';
 import {
   AddRoomType,
   CreateHotelApiResponse,
+  GetRoomType,
   HotelAmenitiesType,
   HotelBasicInfoType,
   HotelImageUploadBody,
@@ -57,7 +58,11 @@ export async function addRoom(data: AddRoomType, hotelId: string) {
   try {
     const res = await fetchInstance.post(`/hotels/${hotelId}/rooms`, data);
     if (!res) throw new Error('Error occured while creeating room');
-    return { success: true, message: 'Room created successfully' };
+    return {
+      room: res.data.room,
+      success: true,
+      message: 'Room created successfully',
+    };
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
@@ -87,7 +92,7 @@ type HotelResponse = {
   policies: HotelPolicyType;
   basicInfo: HotelBasicInfoType;
   amenities: HotelAmenitiesType;
-  rooms: AddRoomType;
+  rooms: GetRoomType[];
 };
 
 export async function getHotelById(hotelId: string): Promise<{
@@ -96,10 +101,10 @@ export async function getHotelById(hotelId: string): Promise<{
   message?: string;
 }> {
   try {
-    const res = await axiosInstance(`/hotels/${hotelId}`);
-    if (!res || res.status !== 200)
+    const res = await fetchInstance.get(`/hotels/${hotelId}`);
+    if (!res || res.status !== 'success')
       throw new Error('No response from the server');
-    const { hotel } = res.data.data;
+    const { hotel } = res.data;
 
     return { hotel, success: true };
   } catch (error) {

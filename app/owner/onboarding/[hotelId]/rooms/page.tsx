@@ -12,6 +12,12 @@ const RoomsAndRatePage = async ({
   const owner = await requireOwner();
   if (!owner) redirect('/unauthorized');
   const { hotelId } = await params;
-  return <AddRoomComponent hotelId={hotelId} userName={owner.user.userName} />;
+  return (
+    <AddRoomComponent
+      hotelId={hotelId}
+      userName={owner.user.userName}
+      role={owner.user.role as 'OWNER'}
+    />
+  );
 };
 export default RoomsAndRatePage;

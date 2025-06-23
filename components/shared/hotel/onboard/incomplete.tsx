@@ -42,6 +42,10 @@ const IncompleteHotelComponent = ({
           const progress = getHotelCompletionProgress(hotel.completionSteps);
           const nextStep = getStepName(hotel.currentStep);
           const basicInfo = hotel.basicInfo;
+          const deleteAction = async () => {
+            'use server';
+            return await deletHotel(hotel.id);
+          };
 
           return (
             <Card
@@ -112,7 +116,7 @@ const IncompleteHotelComponent = ({
                     className="ml-2 group-hover:translate-x-1 transition-transform"
                   />
                 </Button>
-                <DeleteDialog action={deletHotel} id={hotel.id} />
+                <DeleteDialog action={deleteAction} />
               </CardFooter>
             </Card>
           );

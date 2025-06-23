@@ -111,7 +111,6 @@ const MainPolicyForm = ({
 
   const handleSubmit = async () => {
     const formData = form.getValues();
-    console.log(formData);
 
     startTransition(async () => {
       const response = await updateHotelPolicies(formData, hotelId);

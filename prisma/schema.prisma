@@ -323,9 +323,8 @@ model Room {
   isCompleted Boolean   @default(false)
   completedAt DateTime?
 
-  createdAt     DateTime @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime @updatedAt @db.Timestamp(6)
-  roomAmenityId String   @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @db.Timestamp(6)
 
   // bookings      Booking[]
   @@map("rooms")
@@ -334,7 +333,7 @@ model Room {
 model RoomAmenity {
   id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   roomId          String           @unique @db.Uuid
-  room            Room             @relation(fields: [roomId], references: [id])
+  room            Room             @relation(fields: [roomId], references: [id], onDelete: Cascade)
   bathroomType    BathroomType
   bathroomNumber  Decimal          @default(1)
   showerType      ShowerType

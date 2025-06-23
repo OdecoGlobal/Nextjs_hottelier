@@ -1,7 +1,7 @@
 'use client';
-import { AddRoomType } from '@/types';
+import { AddRoomType, AdminOwnerRole } from '@/types';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import HotelCreationSteps from '../creation-steps';
 import StepOneRoom from './step-one-room';
 import {
@@ -23,6 +23,8 @@ import { completeRoomSchema } from '@/lib/schemas/validator';
 import SubmitFormButton from '@/components/submit-form-button';
 import { pickKeys } from '@/lib/utils';
 import { addRoom } from '@/lib/actions/hotel.action';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const stepFields = [
   pickKeys(StepOneAddRoomSchema),
@@ -42,14 +44,16 @@ export type AddRoomControl = {
 const AddRoomComponent = ({
   hotelId,
   userName,
+  role,
 }: {
   hotelId: string;
   userName: string;
+  role: AdminOwnerRole;
 }) => {
   const [step, setStep] = useState(0);
-  //   const { toast } = useToast();
-  //   const [isPending, startTransition] = useTransition();
-  //   const router = useRouter();
+  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const [isUploading, setIsUploading] = useState(false);
 
@@ -59,12 +63,31 @@ const AddRoomComponent = ({
     shouldUnregister: false,
   });
 
-  const { formState, getValues } = form;
+  const { getValues } = form;
   const onSubmit = async () => {
     const formData = getValues();
-    const res = await addRoom(formData, hotelId);
-    if (res.success) console.log(res);
-    console.log(formData);
+    startTransition(async () => {
+      const response = await addRoom(formData, hotelId);
+      if (!response?.success) {
+        toast({
+          title: 'Error',
+          variant: 'destructive',
+          description: response.message,
+        });
+      } else {
+        console.log(response.room.id);
+        toast({
+          title: 'Success',
+          description: response.message,
+          variant: 'default',
+        });
+        router.replace(
+          `/${role.toLowerCase()}/onboarding/${hotelId}/rates-and-availability/${
+            response?.room?.id
+          }`
+        );
+      }
+    });
   };
 
   const handleNext = async () => {
@@ -80,7 +103,7 @@ const AddRoomComponent = ({
   const handlePrevious = () => {
     if (step > 0) setStep(prevStep => prevStep - 1);
   };
-  const isPending = formState.isSubmitting;
+  // const isPending = formState.isSubmitting;
 
   const isLastStep = step === stepFields.length - 1;
 

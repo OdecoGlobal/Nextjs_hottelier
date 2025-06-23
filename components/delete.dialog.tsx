@@ -13,19 +13,22 @@ import {
   AlertDialogCancel,
 } from './ui/alert-dialog';
 import { Button } from './ui/button';
+import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 const DeleteDialog = ({
-  id,
   action,
+  className,
 }: {
-  id: string;
-  action: (id: string) => Promise<{ success: boolean; message: string }>;
+  action: () => Promise<{ success: boolean; message: string }>;
+  className?: string;
 }) => {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const { toast } = useToast();
   const handleDeleteClick = () => {
     startTransition(async () => {
-      const res = await action(id);
+      const res = await action();
       if (!res.success) {
         toast({
           title: 'Error',
@@ -38,6 +41,7 @@ const DeleteDialog = ({
           title: 'Success',
           description: res.message,
         });
+        router.refresh();
       }
     });
   };
@@ -45,7 +49,7 @@ const DeleteDialog = ({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button size="sm" variant="destructive" className="ml-2">
+        <Button variant="destructive" className={cn('ml-2', className)}>
           Delete
         </Button>
       </AlertDialogTrigger>

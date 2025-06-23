@@ -59,6 +59,17 @@ const selectTime = generateTimeSlots();
 
 export { selectTime, timeNextDay };
 
+type CustomError = {
+  status?: number;
+  message?: string;
+  data?: {
+    message?: string;
+    error?: {
+      message?: string;
+    };
+  };
+};
+
 export function formatError(error: unknown): string {
   if (!error || typeof error !== 'object') {
     return String(error);
@@ -81,6 +92,20 @@ export function formatError(error: unknown): string {
       return err.message;
     }
     return 'An error occurred while making a request.';
+  }
+
+  if (typeof error === 'object') {
+    const err = error as CustomError;
+    if (err.data?.message) {
+      return err.data.message;
+    }
+    if (err.data?.error?.message) {
+      return err.data.error.message;
+    }
+
+    if (err.message) {
+      return err.message;
+    }
   }
 
   // Default error.message
@@ -182,6 +207,12 @@ type PricingOption<T extends string> = {
   example: PricingExample;
 };
 
+export const formatValueString = (value: string) => {
+  return value
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
 export const createPricingOptions = <T extends readonly string[]>(
   constants: T
 ): PricingOption<T[number]>[] => {

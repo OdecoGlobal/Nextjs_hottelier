@@ -80,9 +80,7 @@ const UploadHotelPhotoForm = ({
         description: res.message,
         variant: 'default',
       });
-      router.replace(
-        `/${role.toLowerCase()}/onboarding/${hotelId}/rooms-and-rates`
-      );
+      router.replace(`/${role.toLowerCase()}/onboarding/${hotelId}/rooms`);
     }
     form.reset();
     if (exteriorResetRef.current) exteriorResetRef.current();

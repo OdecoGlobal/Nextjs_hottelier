@@ -6,7 +6,7 @@ type StepKey =
   | 'step3_amenities'
   | 'step4_hotel_images'
   | 'step5_rooms'
-  | 'step6_rate_and_availabilty'
+  | 'step6_rate_and_availability'
   | 'step7_review';
 
 export async function updateHotelProgress(

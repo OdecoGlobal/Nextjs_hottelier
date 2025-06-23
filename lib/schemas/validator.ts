@@ -32,6 +32,7 @@ import {
   WIFI_SPEED_TYPE,
   WIFI_AREA_TYPE,
   PRICING_MODEL_TYPE,
+  ROLES,
 } from '@/types';
 import z from 'zod';
 import { MAX_FILE_SIZE } from '../constants';
@@ -65,7 +66,7 @@ export const userSchema = z.object({
   image: z.string().nullish(),
   passwordChangedAt: z.date().nullish(),
   paymentMethod: z.enum(PAYMENT_METHODS).nullish(),
-  role: z.enum(['USER', 'OWNER', 'ADMIN']),
+  role: z.enum(ROLES),
 });
 
 export const loginSchema = z.object({
@@ -256,13 +257,30 @@ export const baseRoomSchema = z.object({
     .number()
     .min(1, 'There should be at least one bed in a room'),
   totalRooms: z.coerce.number().min(1, 'Should be at least one'),
-  baseRate: z.coerce.number().nonnegative(),
+  baseRate: z.coerce
+    .number()
+    .nonnegative()
+    .min(1, 'Rate should be greater than 0'),
   peopleInBaseRate: z.coerce.number().min(1, 'Should be at least  one'),
   pricingModel: z.enum(PRICING_MODEL_TYPE),
-  roomImages: ImageArraySchema,
+  roomImages: ImageArraySchema.refine(
+    data => data.length > 0,
+    'Add at least one image'
+  ),
 });
 
 export const completeRoomSchema = baseRoomSchema.merge(baseRoomAmenitiesSchema);
+export const roomImagesSchema = z.object({
+  id: z.string(),
+  roomId: z.string(),
+  imageUrl: z.string(),
+});
+export const getRoomSchema = baseRoomSchema.extend({
+  id: z.string(),
+  hotelId: z.string(),
+  roomImages: z.array(roomImagesSchema),
+  amenities: baseRoomAmenitiesSchema,
+});
 export const updateHotelSchema = baseHotelSchema.partial().extend({
   slug: z.string().min(3, 'Slug must be at least 3 characters').optional(),
 });

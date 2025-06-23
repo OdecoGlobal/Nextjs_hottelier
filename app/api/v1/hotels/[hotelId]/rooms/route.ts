@@ -2,6 +2,7 @@ import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
 import AppError from '@/lib/errors/app-error';
 import { completeRoomSchema } from '@/lib/schemas/validator';
+import { protect, restrictTo, validateHotelAcces } from '@/middleware/auth';
 import { updateHotelProgress } from '@/utils/hotel';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -10,6 +11,10 @@ export const POST = async (
   { params }: { params: Promise<{ hotelId: string }> }
 ) => {
   try {
+    await protect(req);
+    restrictTo('OWNER', 'ADMIN')(req);
+    validateHotelAcces();
+
     const { hotelId } = await params;
     if (!hotelId) throw new AppError('ID is required', 400);
 

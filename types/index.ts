@@ -5,8 +5,6 @@ import {
   createHotelApiResponseSchema,
   incompleteHotelApiResponseSchema,
   hotelAmenitiesSchema,
-  StepOneAddRoomSchema,
-  StepFiveAddRoomSchema,
   hotelPolicySchema,
 } from '@/lib/schemas/grouped-validators';
 import {
@@ -19,6 +17,7 @@ import {
   hotelBasicInfoSchema,
   HotelImageUploadBodySchema,
   completeRoomSchema,
+  getRoomSchema,
 } from '@/lib/schemas/validator';
 import { z } from 'zod';
 
@@ -229,6 +228,9 @@ export const ALLOWED_FILE_TYPES = [
   'image/webp',
   'image/avif',
 ];
+
+export const ROLES = ['USER', 'OWNER', 'ADMIN'] as const;
+export type Roles = typeof ROLES[number];
 export type User = z.infer<typeof userSchema>;
 export type signUpInput = z.infer<typeof signUpFormSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
@@ -256,8 +258,8 @@ export type ImageType = z.infer<typeof ImageType>;
 export type BasicInfo = z.infer<typeof basicInfoSchema>;
 export type HotelPolicyType = z.infer<typeof hotelPolicySchema>;
 export type AddRoomType = z.infer<typeof completeRoomSchema>;
-export type StepOneAddRoomType = z.infer<typeof StepOneAddRoomSchema>;
-export type StepFiveAddRoomType = z.infer<typeof StepFiveAddRoomSchema>;
+
+export type GetRoomType = z.infer<typeof getRoomSchema>;
 
 export type CompletionSteps = z.infer<typeof completionStepsSchema>;
 export type HotelItem = z.infer<typeof hotelItemSchema>;

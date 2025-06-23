@@ -12,6 +12,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ROOM_CLASS_OPTIONS, ROOM_TYPES_OPTIONS } from '@/lib/constants';
@@ -69,6 +70,7 @@ const RoomBasics = ({ control }: AddRoomControl) => {
                   </FormControl>
                   <FormLabel>Rooms</FormLabel>
                 </div>
+                <FormMessage />
               </FormItem>
             )}
           />

@@ -51,6 +51,13 @@ class FetchClient {
     });
   }
 
+  patch(endpoint: string, body: any, options: RequestInit = {}) {
+    return this.request(endpoint, {
+      ...options,
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+  }
   put(endpoint: string, body: any, options: RequestInit = {}) {
     return this.request(endpoint, {
       ...options,
