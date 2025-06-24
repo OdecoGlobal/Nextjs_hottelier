@@ -11,6 +11,7 @@ const RoomRatesPage = async ({
   const { roomId, hotelId } = await params;
   const owner = await requireOwner();
   const { room } = await getRoomById(hotelId, roomId);
+  console.log(room);
   if (!room) {
     notFound();
   }

@@ -136,7 +136,7 @@ const RoomAvailabilityForm = ({
             </FormItem>
           )}
         />
-        <SubmitFormButton action="Save Availablity" isPending={isPending} />
+        <SubmitFormButton action="Save Availability" isPending={isPending} />
       </form>
     </Form>
   );

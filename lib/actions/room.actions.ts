@@ -14,7 +14,7 @@ export async function getRoomById(
     const res = await axiosInstance.get(`/hotels/${hotelId}/rooms/${roomId}`);
     if (!res || res.status !== 200)
       throw new Error('No response from the server');
-    const { room } = res.data;
+    const { room } = res.data.data;
 
     return { room, success: true };
   } catch (error) {

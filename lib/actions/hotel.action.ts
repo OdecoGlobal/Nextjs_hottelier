@@ -56,9 +56,10 @@ export async function updateHotelBasicInfo(
 export async function addRoom(data: AddRoomType, hotelId: string) {
   try {
     const res = await axiosInstance.post(`/hotels/${hotelId}/rooms`, data);
-    if (!res) throw new Error('Error occured while creeating room');
+    console.log(res.data, 'server');
+    if (!res) throw new Error('Error occured while creating room');
     return {
-      room: res.data.room,
+      room: res.data.data.room,
       success: true,
       message: 'Room created successfully',
     };
@@ -103,7 +104,7 @@ export async function getHotelById(hotelId: string): Promise<{
     const res = await axiosInstance.get(`/hotels/${hotelId}`);
     if (!res || res.status !== 200)
       throw new Error('No response from the server');
-    const { hotel } = res.data;
+    const { hotel } = res.data.data;
 
     return { hotel, success: true };
   } catch (error) {

@@ -75,16 +75,15 @@ const AddRoomComponent = ({
           description: response.message,
         });
       } else {
-        console.log(response.room.id);
         toast({
           title: 'Success',
           description: response.message,
           variant: 'default',
         });
         router.replace(
-          `/${role.toLowerCase()}/onboarding/${hotelId}/rates-and-availability/${
+          `/${role.toLowerCase()}/onboarding/${hotelId}/rooms/${
             response?.room?.id
-          }`
+          }/rates`
         );
       }
     });

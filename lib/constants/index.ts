@@ -91,7 +91,7 @@ export const steps = [
   'Amenities',
   'Photos',
   'Rooms and Rates',
-  'Rates and Availablity',
+  'Rates and Availability',
   'Review',
 ];
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
