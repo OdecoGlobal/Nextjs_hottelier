@@ -1,4 +1,3 @@
-'use client';
 import { APP_NAME } from '@/lib/constants';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -9,7 +8,6 @@ const NotFound = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
       <div className="flex flex-col items-center max-w-md w-full">
-        {/* Logo Section */}
         <div className="flex items-center gap-3 mb-8">
           <Image
             src="/images/logo.svg"
@@ -22,7 +20,6 @@ const NotFound = () => {
           <h1 className="text-xl font-semibold">{APP_NAME}</h1>
         </div>
 
-        {/* Error Card */}
         <div className="w-full p-8 rounded-xl border bg-card text-card-foreground shadow-sm text-center space-y-6">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
             <Compass className="h-6 w-6 text-red-600 dark:text-red-400" />
@@ -46,12 +43,11 @@ const NotFound = () => {
               </Link>
             </Button>
             <Button asChild variant="secondary">
-              <a href="/support">Get Help</a>
+              <Link href="/support">Get Help</Link>
             </Button>
           </div>
         </div>
 
-        {/* Footer */}
         <p className="mt-8 text-sm text-muted-foreground">
           Error 404 · {new Date().getFullYear()} {APP_NAME}
         </p>
