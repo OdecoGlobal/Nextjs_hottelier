@@ -3,7 +3,6 @@ import { prisma } from '@/db/prisma';
 import { loginSchema } from '@/lib/schemas/validator';
 import bcrypt from 'bcryptjs';
 import { NextRequest } from 'next/server';
-// import { createSendToken } from '@/lib/auth/util';
 import { User } from '@prisma/client';
 import { formatApiError } from '@/lib/errors';
 import { createSendToken } from '@/lib/auth/verify';

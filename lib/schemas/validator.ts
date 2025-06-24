@@ -37,26 +37,6 @@ import {
 import z from 'zod';
 import { MAX_FILE_SIZE } from '../constants';
 
-export const optionalIntSchema = z
-  .union([z.string(), z.number(), z.null(), z.undefined()])
-  .transform(val => {
-    // Handle empty values
-    if (val === null || val === undefined || val === '') return undefined;
-
-    // Handle string input
-    if (typeof val === 'string') {
-      const parsed = parseInt(val, 10);
-      return isNaN(parsed) ? undefined : parsed;
-    }
-
-    // Handle number input
-    return val;
-  })
-  .optional()
-  .refine(val => val === undefined || Number.isInteger(val), {
-    message: 'Must be an integer',
-  });
-
 export const userSchema = z.object({
   id: z.string().min(1, 'Id is required'),
   email: z.string().email('invalid email address'),
@@ -275,12 +255,21 @@ export const roomImagesSchema = z.object({
   roomId: z.string(),
   imageUrl: z.string(),
 });
+
+export const availabilitySchema = z.object({
+  date: z.coerce.date(),
+  isAvailable: z.boolean(),
+  inventory: z.coerce.number().min(0),
+  price: z.coerce.number().min(0),
+});
 export const getRoomSchema = baseRoomSchema.extend({
   id: z.string(),
   hotelId: z.string(),
   roomImages: z.array(roomImagesSchema),
   amenities: baseRoomAmenitiesSchema,
+  roomAvailability: z.array(availabilitySchema),
 });
+
 export const updateHotelSchema = baseHotelSchema.partial().extend({
   slug: z.string().min(3, 'Slug must be at least 3 characters').optional(),
 });

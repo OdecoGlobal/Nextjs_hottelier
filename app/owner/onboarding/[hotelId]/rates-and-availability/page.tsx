@@ -15,6 +15,12 @@ const RatesAndAvailability = async ({
     notFound();
   }
   const { rooms } = hotel;
-  return <ShowRooms role={owner.user.role as 'OWNER'} rooms={rooms} />;
+  return (
+    <ShowRooms
+      role={owner.user.role as 'OWNER'}
+      rooms={rooms}
+      hotelId={hotelId}
+    />
+  );
 };
 export default RatesAndAvailability;

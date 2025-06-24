@@ -18,6 +18,7 @@ import {
   HotelImageUploadBodySchema,
   completeRoomSchema,
   getRoomSchema,
+  availabilitySchema,
 } from '@/lib/schemas/validator';
 import { z } from 'zod';
 
@@ -230,7 +231,7 @@ export const ALLOWED_FILE_TYPES = [
 ];
 
 export const ROLES = ['USER', 'OWNER', 'ADMIN'] as const;
-export type Roles = typeof ROLES[number];
+export type Roles = (typeof ROLES)[number];
 export type User = z.infer<typeof userSchema>;
 export type signUpInput = z.infer<typeof signUpFormSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
@@ -272,3 +273,4 @@ export type IncompleteHotelApiResponse = z.infer<
 
 export type HotelBasicInfoType = z.infer<typeof hotelBasicInfoSchema>;
 export type HotelImageUploadBody = z.infer<typeof HotelImageUploadBodySchema>;
+export type AvailabilityType = z.infer<typeof availabilitySchema>;

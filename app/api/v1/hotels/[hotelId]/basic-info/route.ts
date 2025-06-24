@@ -39,13 +39,11 @@ export const PATCH = async (
     const { hotelId } = await params;
     if (!hotelId) throw new AppError('ID is required', 400);
     const body = await req.json();
-    const updatedBasicInfoData = baseHotelSchema.parse(body);
-
+    const updatedBasicInfoData = baseHotelSchema.partial().parse(body);
     const basicInfo = await prisma.hotelBasicInfo.update({
       where: { hotelId },
       data: updatedBasicInfoData,
     });
-    if (!basicInfo) throw new AppError('No hotel found', 400);
 
     return NextResponse.json(
       {

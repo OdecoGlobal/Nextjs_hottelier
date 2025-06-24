@@ -6,30 +6,11 @@ import { Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
 
 export const protect = async (req: NextRequest) => {
-  //   try {
   const { user } = await verifyAndGetUser(req);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _, ...safeUser } = user;
   req.user = safeUser;
 };
-
-// return NextResponse.next();
-//   } catch (error) {
-//     const errorMessage = formatError(error);
-//     console.log(errorMessage);
-//     return NextResponse.json(
-//       {
-//         status: "error",
-//         message: errorMessage,
-//       },
-//       { status: 401 }
-//     );
-//   }
-
-//   const headers = new Headers(req.headers);
-//   headers.set("x-user-id", user.id);
-//   return NextResponse.next({ request: { headers } });
-// };
 
 export const restrictTo = (...roles: Role[]) => {
   return (req: NextRequest) => {

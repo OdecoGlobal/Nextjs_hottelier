@@ -22,7 +22,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // const session = await auth();
   const cookiesStore = await cookies();
   const token = cookiesStore.get('jwt')?.value;
   if (!token) throw new Error('User not authenticated');

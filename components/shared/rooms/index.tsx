@@ -1,32 +1,49 @@
 import DeleteDialog from '@/components/delete.dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '@/components/ui/card';
 import { deleteRoom } from '@/lib/actions/delete.actions';
 import { formatValueString } from '@/lib/utils';
 import { GetRoomType, Roles } from '@/types';
-import { House } from 'lucide-react';
+import { House, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 type RoomProp = {
   rooms: GetRoomType[];
   role: Roles;
+  hotelId: string;
 };
 
-const ShowRooms = ({ rooms, role }: RoomProp) => {
+const ShowRooms = ({ rooms, role, hotelId }: RoomProp) => {
   return (
-    <section className="py-8 px-4 max-w-7xl mx-auto">
+    <section className="py-8 px-4 max-w-7xl mx-auto space-y-8">
       {rooms.length === 0 && role !== 'USER' && (
-        <div className="text-center py-16">
-          <div className="bg-muted-foreground rounded-lg p-8 border-2 border-dashed border-blue-600">
-            <House />
+        <Card className="border-2 border-dashed border-gray-300 hover:border-blue-400 hover:shadow-lg transition-all duration-300">
+          <CardContent className="pt-6 text-center h-full flex flex-col justify-center">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Plus size={32} className="text-blue-600" />
+            </div>
             <h3 className="text-xl font-semibold  mb-2">No Rooms Added</h3>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              Add Your First Room
+          </CardContent>
+
+          <CardFooter>
+            <Button
+              asChild
+              className="w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center group"
+            >
+              <Link href={`/owner/onboarding/${hotelId}/rooms`}>
+                <House size={16} className="mr-2" />
+                Add Your First Room
+              </Link>
             </Button>
-          </div>
-        </div>
+          </CardFooter>
+        </Card>
       )}
 
       {rooms.length > 0 && (
@@ -105,7 +122,7 @@ const ShowRooms = ({ rooms, role }: RoomProp) => {
                         </Link>
                       </Button>
                       {role !== 'USER' && (
-                        <div className="flex justify-evenly">
+                        <div className="flex gap-2">
                           <Button
                             asChild
                             type="button"
@@ -117,7 +134,7 @@ const ShowRooms = ({ rooms, role }: RoomProp) => {
                                 room.hotelId
                               }/rooms/${room.id}/rates`}
                             >
-                              ✏️ Edit Room Availability
+                              ✏️ Edit Availability
                             </Link>
                           </Button>
                           <DeleteDialog action={deleteAction} />

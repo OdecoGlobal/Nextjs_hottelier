@@ -306,7 +306,7 @@ model Room {
   hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
   name             String     @unique(map: "room_name_idx")
-  roomType         RoomType   @unique
+  roomType         RoomType
   roomClass        RoomClass?
   maxOccupancy     Int
   bedType          BedType
@@ -327,6 +327,7 @@ model Room {
   updatedAt DateTime @updatedAt @db.Timestamp(6)
 
   // bookings      Booking[]
+  @@unique([roomType, roomClass])
   @@map("rooms")
 }
 
@@ -370,77 +371,6 @@ model RoomImages {
   @@map("room_images")
 }
 
-enum BathroomType {
-  PRIVATE
-  PARTIALLY_OPEN
-  SHARED
-}
-
-enum ShowerType {
-  BATHTUB
-  SEPARATE_BATHTUB_AND_SHOWER
-  SHOWER
-  BATHTUB_OR_SHOWER
-}
-
-enum RoomEssentials {
-  FREE_TOILETRIES
-  SOAP
-  SHAMPOO
-  TOILET_PAPER
-  HAIR_DRYER
-}
-
-enum ClimateControlType {
-  AIR_CONDITIONING
-  HEATING
-}
-
-enum AirConditioningType {
-  AIR_CONDITIONING
-  IN_ROOM_CLIMATE_CONTROL
-}
-
-enum HeatingType {
-  HEATING
-  IN_ROOM_CLIMATE_CONTROL
-}
-
-enum RoomViewType {
-  BAY
-  BEACH
-  DESERT
-  GOLF
-  CITY
-  GARDEN
-  CANAL
-  LAKE
-  OCEAN
-  PARK
-}
-
-enum RoomSizeUnitType {
-  SQUARE_FEET
-  SQUARE_METER
-}
-
-enum OutDoorSpaceType {
-  BALCONY
-  FURNISHED_BALCONY
-  BALCONY_OR_PATIO
-  FURNISHED_BALCONY_OR_PATIO
-  PATIO
-  FURNISHED_PATIO
-  DECK
-}
-
-enum RoomLayoutType {
-  DESK
-  SEPARATE_SITTING_AREA
-  LAPTOP_FRIENDLY_WORK_SPACE
-  PRIVATE_POOL
-}
-
 model RoomAvailability {
   id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   roomId String @db.Uuid
@@ -451,6 +381,9 @@ model RoomAvailability {
   inventory   Int?
   price       Decimal?
   currency    String?
+
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
 
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt @db.Timestamp(6)
@@ -651,7 +584,98 @@ enum BookingStatus {
   COMPLETED
 }
 
+enum BathroomType {
+  PRIVATE
+  PARTIALLY_OPEN
+  SHARED
+}
+
+enum ShowerType {
+  BATHTUB
+  SEPARATE_BATHTUB_AND_SHOWER
+  SHOWER
+  BATHTUB_OR_SHOWER
+}
+
+enum RoomEssentials {
+  FREE_TOILETRIES
+  SOAP
+  SHAMPOO
+  TOILET_PAPER
+  HAIR_DRYER
+}
+
+enum ClimateControlType {
+  AIR_CONDITIONING
+  HEATING
+}
+
+enum AirConditioningType {
+  AIR_CONDITIONING
+  IN_ROOM_CLIMATE_CONTROL
+}
+
+enum HeatingType {
+  HEATING
+  IN_ROOM_CLIMATE_CONTROL
+}
+
+enum RoomViewType {
+  BAY
+  BEACH
+  DESERT
+  GOLF
+  CITY
+  GARDEN
+  CANAL
+  LAKE
+  OCEAN
+  PARK
+}
+
+enum RoomSizeUnitType {
+  SQUARE_FEET
+  SQUARE_METER
+}
+
+enum OutDoorSpaceType {
+  BALCONY
+  FURNISHED_BALCONY
+  BALCONY_OR_PATIO
+  FURNISHED_BALCONY_OR_PATIO
+  PATIO
+  FURNISHED_PATIO
+  DECK
+}
+
+enum RoomLayoutType {
+  DESK
+  SEPARATE_SITTING_AREA
+  LAPTOP_FRIENDLY_WORK_SPACE
+  PRIVATE_POOL
+}
+
 /**
+ * model Booking {
+ * id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+ * userId             String   @db.Uuid
+ * roomId             String   @db.Uuid
+ * checkInDate        DateTime @db.Date
+ * checkOutDate       DateTime @db.Date
+ * quantity           Int
+ * totalPrice         Decimal  @db.Decimal(10, 2)
+ * paymentMethod      PaymentMethod
+ * status             BookingStatus @default(PENDING)
+ * // Cancellation tracking
+ * cancelledAt        DateTime?
+ * cancelledByUser    Boolean? @default(false)
+ * cancellationFee    Decimal? @db.Decimal(10, 2)
+ * cancellationReason String?
+ * createdAt          DateTime @default(now())
+ * updatedAt          DateTime @updatedAt
+ * room               Room @relation(fields: [roomId], references: [id])
+ * user               User @relation(fields: [userId], references: [id])
+ * }
  * model Booking {
  * id        String        @id @default(cuid())
  * hotelId   String
@@ -694,10 +718,5 @@ enum BookingStatus {
  * user      User     @relation(fields: [userId], references: [id])
  * hotel     Hotel    @relation(fields: [hotelId], references: [id])
  * createdAt DateTime @default(now())
- * }
- * model StateLGA {
- * id      String   @id @default(uuid())
- * state   String
- * lga     String
  * }
  */

@@ -55,7 +55,6 @@ function calculateCurrentStep(
     'step5_rooms',
     'step6_rate_and_availabilty',
     'step7_review',
-    // 'step7_contract',
   ];
 
   for (let i = 0; i < steps.length; i++) {
