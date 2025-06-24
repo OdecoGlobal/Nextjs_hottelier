@@ -45,9 +45,9 @@ export const GET = async (req: NextRequest) => {
       orderBy: {
         updatedAt: 'desc',
       },
-      cacheStrategy: {
-        ttl: 5 * 60,
-      },
+      // cacheStrategy: {
+      //   ttl: 5 * 60,
+      // },
     });
     return NextResponse.json({
       status: 'success',

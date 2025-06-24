@@ -173,7 +173,7 @@ export async function deletHotel(hotelId: string) {
     if (!res) throw new Error('An error occured while updating hotel images');
     return {
       success: true,
-      message: 'Hotel images updated successfully',
+      message: 'Hotel deleted successfully',
     };
   } catch (error) {
     return { success: false, message: formatError(error) };
