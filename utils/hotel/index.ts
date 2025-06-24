@@ -9,6 +9,16 @@ type StepKey =
   | 'step6_rate_and_availability'
   | 'step7_review';
 
+const steps: StepKey[] = [
+  'step1_basic_info',
+  'step2_policies',
+  'step3_amenities',
+  'step4_hotel_images',
+  'step5_rooms',
+  'step6_rate_and_availability',
+  'step7_review',
+];
+
 export async function updateHotelProgress(
   hotelId: string,
   stepKey: StepKey,
@@ -24,7 +34,7 @@ export async function updateHotelProgress(
 
   const completedCount = Object.values(completionSteps).filter(Boolean).length;
   const currentStep = calculateCurrentStep(completionSteps);
-  const isFullyCompleted = completedCount === 8;
+  const isFullyCompleted = completedCount === steps.length;
 
   let status = hotel.status;
   if (isFullyCompleted && status === 'DRAFT') {
@@ -47,20 +57,10 @@ export async function updateHotelProgress(
 function calculateCurrentStep(
   completionSteps: Record<string, boolean>
 ): number {
-  const steps = [
-    'step1_basic_info',
-    'step2_policies',
-    'step3_amenities',
-    'step4_hotel_images',
-    'step5_rooms',
-    'step6_rate_and_availabilty',
-    'step7_review',
-  ];
-
   for (let i = 0; i < steps.length; i++) {
     if (!completionSteps[steps[i]]) {
       return i + 1;
     }
   }
-  return 6;
+  return steps.length;
 }
