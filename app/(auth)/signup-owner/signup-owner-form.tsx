@@ -1,5 +1,5 @@
-"use client";
-import { Button } from "@/components/ui/button";
+'use client';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -7,28 +7,29 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { signUpOwner } from "@/lib/actions/auth.actions";
-import { signUpFormSchema } from "@/lib/schemas/validator";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { signUpOwner } from '@/lib/actions/auth.actions';
+import { signUpFormSchema } from '@/lib/schemas/validator';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const SignUpOwnerForm = () => {
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
-      userName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      userName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
   });
 
@@ -36,17 +37,17 @@ const SignUpOwnerForm = () => {
     const res = await signUpOwner(values);
     if (!res.success) {
       toast({
-        title: "Error",
+        title: 'Error',
         description: res.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } else {
       toast({
-        title: "Success",
+        title: 'Success',
         description: res.message,
-        variant: "default",
+        variant: 'default',
       });
-      redirect("/");
+      router.replace('/');
     }
     console.log(values);
   };
@@ -119,14 +120,14 @@ const SignUpOwnerForm = () => {
           {form.formState.isSubmitting ? (
             <Loader className="w-4 h-4 animate-spin" />
           ) : (
-            "Sign Up"
+            'Sign Up'
           )}
         </Button>
       </form>
 
       <div className="space-y-2 my-2">
         <p className="text-sm text-center">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <Link href="/login" className="underline text-muted-foreground">
             Login
           </Link>

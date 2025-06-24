@@ -1,6 +1,5 @@
 'use server';
 import { axiosInstance } from '../axios';
-import { fetchInstance } from '../fetch';
 import { formatError } from '../utils';
 import {
   AddRoomType,
@@ -56,7 +55,7 @@ export async function updateHotelBasicInfo(
 
 export async function addRoom(data: AddRoomType, hotelId: string) {
   try {
-    const res = await fetchInstance.post(`/hotels/${hotelId}/rooms`, data);
+    const res = await axiosInstance.post(`/hotels/${hotelId}/rooms`, data);
     if (!res) throw new Error('Error occured while creeating room');
     return {
       room: res.data.room,
@@ -101,8 +100,8 @@ export async function getHotelById(hotelId: string): Promise<{
   message?: string;
 }> {
   try {
-    const res = await fetchInstance.get(`/hotels/${hotelId}`);
-    if (!res || res.status !== 'success')
+    const res = await axiosInstance.get(`/hotels/${hotelId}`);
+    if (!res || res.status !== 200)
       throw new Error('No response from the server');
     const { hotel } = res.data;
 

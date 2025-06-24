@@ -1,5 +1,5 @@
-"use client";
-import { Button } from "@/components/ui/button";
+'use client';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -7,26 +7,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { loginUser } from "@/lib/actions/auth.actions";
-import { loginSchema } from "@/lib/schemas/validator";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { loginUser } from '@/lib/actions/auth.actions';
+import { loginSchema } from '@/lib/schemas/validator';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const LoginForm = () => {
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -34,17 +35,17 @@ const LoginForm = () => {
     const res = await loginUser(values);
     if (!res.success) {
       toast({
-        title: "Error",
+        title: 'Error',
         description: res.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } else {
       toast({
-        title: "Success",
+        title: 'Success',
         description: res.message,
-        variant: "default",
+        variant: 'default',
       });
-      redirect("/");
+      router.replace('/');
     }
   };
 
@@ -90,7 +91,7 @@ const LoginForm = () => {
           {form.formState.isSubmitting ? (
             <Loader className="w-4 h-4 animate-spin" />
           ) : (
-            "Login"
+            'Login'
           )}
         </Button>
         <p className="text-sm text-right">
@@ -99,7 +100,7 @@ const LoginForm = () => {
           </Link>
         </p>
         <p className="text-sm text-center">
-          Don&apos;t have an account?{" "}
+          Don&apos;t have an account?{' '}
           <Link href="/sign-up" className="underline text-muted-foreground">
             Sign Up
           </Link>

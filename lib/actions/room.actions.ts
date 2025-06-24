@@ -1,5 +1,4 @@
 import { AvailabilityType, GetRoomType } from '@/types';
-import { fetchInstance } from '../fetch';
 import { formatError } from '../utils';
 import { axiosInstance } from '../axios';
 
@@ -12,8 +11,8 @@ export async function getRoomById(
   message?: string;
 }> {
   try {
-    const res = await fetchInstance.get(`/hotels/${hotelId}/rooms/${roomId}`);
-    if (!res || res.status !== 'success')
+    const res = await axiosInstance.get(`/hotels/${hotelId}/rooms/${roomId}`);
+    if (!res || res.status !== 200)
       throw new Error('No response from the server');
     const { room } = res.data;
 
