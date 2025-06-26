@@ -13,8 +13,10 @@ export const POST = async (
   try {
     await protect(req);
     restrictTo('ADMIN', 'OWNER')(req);
-    validateHotelAcces();
     const { hotelId } = await params;
+
+    validateHotelAcces(req, hotelId);
+
     const body = await req.json();
     const policiesData = baseHotelPolicySchema.parse(body);
 
@@ -54,8 +56,9 @@ export const PATCH = async (
   try {
     await protect(req);
     restrictTo('ADMIN', 'OWNER')(req);
-    validateHotelAcces();
     const { hotelId } = await params;
+    validateHotelAcces(req, hotelId);
+
     const body = await req.json();
     const policiesData = baseHotelPolicySchema.partial().parse(body);
 
@@ -85,30 +88,38 @@ export const PUT = async (
   try {
     await protect(req);
     restrictTo('ADMIN', 'OWNER')(req);
-    validateHotelAcces();
     const { hotelId } = await params;
+    validateHotelAcces(req, hotelId);
+
     const body = await req.json();
     const policiesData = baseHotelPolicySchema.parse(body);
 
-    const policies = await prisma.hotelPolicy.upsert({
-      where: { hotelId },
-      update: {
-        ...policiesData,
-      },
-      create: {
-        hotelId,
-        ...policiesData,
-        isCompleted: true,
-        completedAt: new Date(),
-      },
-    });
+    const result = await prisma.$transaction(async tx => {
+      const policies = await tx.hotelPolicy.upsert({
+        where: { hotelId },
+        update: {
+          ...policiesData,
+        },
+        create: {
+          hotelId,
+          ...policiesData,
+          isCompleted: true,
+          completedAt: new Date(),
+        },
+      });
 
-    await updateHotelProgress(hotelId, 'step2_policies', policies.isCompleted);
+      await updateHotelProgress(
+        hotelId,
+        'step2_policies',
+        policies.isCompleted
+      );
+      return policies;
+    });
 
     return NextResponse.json(
       {
         success: true,
-        data: policies,
+        data: result,
       },
       { status: 200 }
     );

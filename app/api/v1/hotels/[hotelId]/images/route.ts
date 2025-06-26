@@ -29,9 +29,9 @@ export const POST = async (
   try {
     await protect(req);
     restrictTo('ADMIN', 'OWNER')(req);
-    validateHotelAcces();
 
     const { hotelId } = await params;
+    validateHotelAcces(req, hotelId);
     if (!hotelId) throw new AppError('ID is required too upload images', 400);
 
     const hotel = await prisma.hotelBasicInfo.findUnique({

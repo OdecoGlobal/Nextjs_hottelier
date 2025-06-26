@@ -41,7 +41,6 @@ export const GET = async (
   }
 };
 
-
 export const DELETE = async (
   req: NextRequest,
   { params }: { params: Promise<{ hotelId: string }> }
@@ -49,9 +48,9 @@ export const DELETE = async (
   try {
     await protect(req);
     restrictTo('OWNER', 'ADMIN')(req);
-    validateHotelAcces();
     const { hotelId } = await params;
     if (!hotelId) throw new AppError('ID is required', 400);
+    validateHotelAcces(req, hotelId);
 
     await prisma.hotel.delete({
       where: { id: hotelId },

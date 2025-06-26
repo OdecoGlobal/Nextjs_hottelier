@@ -13,10 +13,10 @@ export const POST = async (
   try {
     await protect(req);
     restrictTo('OWNER', 'ADMIN')(req);
-    validateHotelAcces();
 
     const { hotelId } = await params;
     if (!hotelId) throw new AppError('ID is required', 400);
+    validateHotelAcces(req, hotelId);
 
     const hotel = await prisma.hotelBasicInfo.findUnique({
       where: { hotelId },

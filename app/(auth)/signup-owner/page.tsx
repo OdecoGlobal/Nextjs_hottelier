@@ -4,27 +4,25 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import SignUpOwnerForm from "./signup-owner-form";
+} from '@/components/ui/card';
+import SignUpOwnerForm from './signup-owner-form';
 
 const SignUpOwnerPage = () => {
   return (
-    <section className="w-full max-w-md mx-auto">
-      <Card>
-        <CardHeader className="space-y-4">
-          <CardTitle className="text-center">
-            Create An Owner&apos;s Account
-          </CardTitle>
-          <CardDescription className="text-center">
-            Enter your details below to create an account to list your property
-          </CardDescription>
-        </CardHeader>
+    <Card className="w-full">
+      <CardHeader className="space-y-4">
+        <CardTitle className="text-center">
+          Create An Owner&apos;s Account
+        </CardTitle>
+        <CardDescription className="text-center">
+          Enter your details below to create an account to list your property
+        </CardDescription>
+      </CardHeader>
 
-        <CardContent>
-          <SignUpOwnerForm />
-        </CardContent>
-      </Card>
-    </section>
+      <CardContent>
+        <SignUpOwnerForm />
+      </CardContent>
+    </Card>
   );
 };
 

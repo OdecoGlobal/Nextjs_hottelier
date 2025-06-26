@@ -266,12 +266,13 @@ export const hotelPolicySchema = baseHotelPolicySchema.superRefine(
 );
 
 export const completionStepsSchema = z.object({
-  step4_rooms: z.boolean(),
-  step5_rates: z.boolean(),
-  step2_policies: z.boolean(),
-  step6_amenities: z.boolean(),
   step1_basic_info: z.boolean(),
-  step3_hotel_images: z.boolean(),
+  step2_policies: z.boolean(),
+  step3_amenities: z.boolean(),
+  step4_hotel_images: z.boolean(),
+  step5_rooms: z.boolean(),
+  step6_rate_and_availability: z.boolean(),
+  step7_review: z.boolean(),
 });
 
 export const basicInfoSchema = hotelBasicInfoSchema.extend({

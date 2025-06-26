@@ -35,8 +35,8 @@ export const PATCH = async (
   try {
     await protect(req);
     restrictTo('OWNER', 'ADMIN')(req);
-    validateHotelAcces();
     const { hotelId } = await params;
+    validateHotelAcces(req, hotelId);
     if (!hotelId) throw new AppError('ID is required', 400);
     const body = await req.json();
     const updatedBasicInfoData = baseHotelSchema.partial().parse(body);

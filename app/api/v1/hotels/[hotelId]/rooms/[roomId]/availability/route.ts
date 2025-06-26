@@ -13,8 +13,10 @@ export const PUT = async (
   try {
     await protect(req);
     restrictTo('ADMIN', 'OWNER')(req);
-    validateHotelAcces();
     const { roomId, hotelId } = await params;
+
+    validateHotelAcces(req, hotelId);
+
     if (!roomId) throw new AppError('ID is required', 400);
     const body = await req.json();
     const parsedData = availabilitySchema.parse(body);

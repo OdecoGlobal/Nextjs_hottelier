@@ -36,13 +36,13 @@ export const GET = async (
 
 export const DELETE = async (
   req: NextRequest,
-  { params }: { params: Promise<{ roomId: string }> }
+  { params }: { params: Promise<{ hotelId: string; roomId: string }> }
 ) => {
   try {
     await protect(req);
     restrictTo('OWNER', 'ADMIN')(req);
-    validateHotelAcces();
-    const { roomId } = await params;
+    const { roomId, hotelId } = await params;
+    validateHotelAcces(req, hotelId);
     if (!roomId) throw new AppError('ID is required', 400);
 
     await prisma.room.delete({

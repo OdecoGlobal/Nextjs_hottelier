@@ -1,6 +1,6 @@
 import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
-import { protect, restrictTo, validateHotelAcces } from '@/middleware/auth';
+import { protect, restrictTo } from '@/middleware/auth';
 import { AuthenticatedRequest } from '@/types/custom';
 import { NextRequest, NextResponse } from 'next/server';
 const validStatuses = [
@@ -18,7 +18,6 @@ export const GET = async (req: NextRequest) => {
   try {
     await protect(req);
     restrictTo('OWNER', 'ADMIN')(req);
-    validateHotelAcces();
     const authReq = req as AuthenticatedRequest;
     const searchParams = req.nextUrl.searchParams;
     const status = searchParams.get('status');
@@ -45,9 +44,6 @@ export const GET = async (req: NextRequest) => {
       orderBy: {
         updatedAt: 'desc',
       },
-      // cacheStrategy: {
-      //   ttl: 5 * 60,
-      // },
     });
     return NextResponse.json({
       status: 'success',

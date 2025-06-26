@@ -163,7 +163,8 @@ export const getHotelCompletionProgress = (
   completionSteps: CompletionSteps
 ) => {
   const completed = Object.values(completionSteps).filter(Boolean).length;
-  return Math.round((completed / 6) * 100);
+  const totalSteps = Object.keys(completionSteps).length;
+  return Math.round((completed / totalSteps) * 100);
 };
 
 export const createObjectOptions = <T extends readonly string[]>(

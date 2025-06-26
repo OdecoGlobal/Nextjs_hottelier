@@ -25,7 +25,7 @@ export const POST = async (req: NextRequest) => {
             step3_amenities: false,
             step3_hotel_images: false,
             step5_rooms: false,
-            step6_rates_and_availabilty: false,
+            step6_rate_and_availabilty: false,
             step7_review: false,
           },
           currentStep: 2,
