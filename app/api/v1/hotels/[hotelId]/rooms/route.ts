@@ -12,7 +12,7 @@ export const POST = async (
 ) => {
   try {
     await protect(req);
-    restrictTo('OWNER', 'ADMIN')(req);
+    restrictTo('AGENT', 'ADMIN')(req);
 
     const { hotelId } = await params;
     if (!hotelId) throw new AppError('ID is required', 400);
@@ -98,7 +98,8 @@ export const POST = async (
       const images = await tx.roomImages.createMany({
         data: roomImages.map(img => ({
           roomId: room.id,
-          imageUrl: img,
+          imageUrl: img.imageUrl,
+          public_id: img.public_id,
         })),
         skipDuplicates: true,
       });

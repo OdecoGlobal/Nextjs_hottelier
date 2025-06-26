@@ -70,9 +70,9 @@ const UserButton = async () => {
             </DropdownMenuItem>
           )}
 
-          {session.user.role === 'OWNER' && (
+          {session.user.role === 'AGENT' && (
             <DropdownMenuItem>
-              <Link href="/owner" className="w-full flex-start gap-2">
+              <Link href="/agent" className="w-full flex-start gap-2">
                 <LayoutDashboard /> Dashboard
               </Link>
             </DropdownMenuItem>

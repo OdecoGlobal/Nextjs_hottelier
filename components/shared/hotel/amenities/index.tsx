@@ -1,7 +1,7 @@
 'use client';
 import { Control, useForm, UseFormWatch } from 'react-hook-form';
 import HotelCreationSteps from '../creation-steps';
-import { AdminOwnerRole, HotelAmenitiesType } from '@/types';
+import { AdminAgentRole, HotelAmenitiesType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { hotelAmenitiesSchema } from '@/lib/schemas/grouped-validators';
 import { Form } from '@/components/ui/form';
@@ -23,7 +23,7 @@ const MainAmenitiesForm = ({
   hotelAmenities,
 }: {
   hotelId: string;
-  role: AdminOwnerRole;
+  role: AdminAgentRole;
   hotelAmenities: HotelAmenitiesType;
 }) => {
   const { toast } = useToast();

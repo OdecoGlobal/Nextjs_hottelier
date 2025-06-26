@@ -174,26 +174,34 @@ export const baseHotelAmenitiesSchema = z.object({
   breakfastEndTime: z.string().nullish(),
 });
 
-export const ImageUrlSchema = z
-  .string()
-  .url('Invalid URL format')
-  .min(1, 'URL cannot be empty')
-  .refine(url => {
-    // Additional validation for image URLs (optional)
-    const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
-    const cloudinaryPattern = /cloudinary\.com/;
-    return cloudinaryPattern.test(url) || imageExtensions.test(url);
-  }, 'URL must be a valid image URL');
+// export const ImageUrlSchema = z
+//   .string()
+//   .url('Invalid URL format')
+//   .min(1, 'URL cannot be empty')
+//   .refine(url => {
+//     const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
+//     const cloudinaryPattern = /cloudinary\.com/;
+//     return cloudinaryPattern.test(url) || imageExtensions.test(url);
+//   }, 'URL must be a valid image URL');
 
-export const ImageArraySchema = z
-  .array(ImageUrlSchema)
+// export const ImageArraySchema = z
+//   .array(ImageUrlSchema)
+//   .transform(arr => arr?.filter(Boolean));
+
+export const cloudinaryImageSchema = z.object({
+  imageUrl: z.string().url('Invalid image URL'),
+  public_id: z.string().min(1, 'Missing public_id'),
+});
+
+export const ImageObjectArraySchema = z
+  .array(cloudinaryImageSchema)
   .transform(arr => arr?.filter(Boolean));
 
 export const HotelImageUploadBodySchema = z
   .object({
-    coverImages: ImageArraySchema,
-    exteriorImages: ImageArraySchema,
-    interiorImages: ImageArraySchema,
+    coverImages: ImageObjectArraySchema,
+    exteriorImages: ImageObjectArraySchema,
+    interiorImages: ImageObjectArraySchema,
   })
   .refine(data => {
     const totalImages = [
@@ -243,18 +251,21 @@ export const baseRoomSchema = z.object({
     .min(1, 'Rate should be greater than 0'),
   peopleInBaseRate: z.coerce.number().min(1, 'Should be at least  one'),
   pricingModel: z.enum(PRICING_MODEL_TYPE),
-  roomImages: ImageArraySchema.refine(
+  roomImages: ImageObjectArraySchema.refine(
     data => data.length > 0,
     'Add at least one image'
   ),
 });
 
 export const completeRoomSchema = baseRoomSchema.merge(baseRoomAmenitiesSchema);
-export const roomImagesSchema = z.object({
+export const roomImagesSchema = cloudinaryImageSchema.extend({
   id: z.string(),
   roomId: z.string(),
-  imageUrl: z.string(),
 });
+
+export const roomImagesArraySchema = z
+  .array(roomImagesSchema)
+  .transform(arr => arr?.filter(Boolean));
 
 export const availabilitySchema = z.object({
   date: z.coerce.date(),

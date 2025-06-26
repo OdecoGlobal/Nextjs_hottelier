@@ -1,5 +1,5 @@
 'use client';
-import { AddRoomType, AdminOwnerRole } from '@/types';
+import { AddRoomType, AdminAgentRole } from '@/types';
 
 import { useState, useTransition } from 'react';
 import HotelCreationSteps from '../creation-steps';
@@ -48,7 +48,7 @@ const AddRoomComponent = ({
 }: {
   hotelId: string;
   userName: string;
-  role: AdminOwnerRole;
+  role: AdminAgentRole;
 }) => {
   const [step, setStep] = useState(0);
   const { toast } = useToast();

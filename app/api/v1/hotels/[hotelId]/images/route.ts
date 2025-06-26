@@ -8,16 +8,18 @@ import { updateHotelProgress } from '@/utils/hotel';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface ImageUploadResult {
+  public_id: string;
   imageUrl: string;
   imageType: ImageType;
 }
 
 const processImageArray = (
-  images: string[],
+  images: { imageUrl: string; public_id: string }[],
   imageType: ImageType
 ): ImageUploadResult[] => {
-  return images.map(url => ({
-    imageUrl: url,
+  return images.map(img => ({
+    imageUrl: img.imageUrl,
+    public_id: img.public_id,
     imageType,
   }));
 };
@@ -28,7 +30,7 @@ export const POST = async (
 ) => {
   try {
     await protect(req);
-    restrictTo('ADMIN', 'OWNER')(req);
+    restrictTo('ADMIN', 'AGENT')(req);
 
     const { hotelId } = await params;
     validateHotelAcces(req, hotelId);
@@ -84,6 +86,7 @@ export const POST = async (
           hotelId,
           imageType: img.imageType,
           imageUrl: img.imageUrl,
+          public_id: img.public_id,
           isCompleted: true,
           completedAt: new Date(),
         })),

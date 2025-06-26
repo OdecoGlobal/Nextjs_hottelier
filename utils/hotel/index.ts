@@ -1,4 +1,5 @@
 import { prisma } from '@/db/prisma';
+import AppError from '@/lib/errors/app-error';
 
 type StepKey =
   | 'step1_basic_info'
@@ -30,6 +31,18 @@ export async function updateHotelProgress(
 
   const completionSteps = hotel.completionSteps as Record<string, boolean>;
 
+  if (stepKey === 'step7_review' && isCompleted) {
+    const otherSteps = steps.filter(step => step !== 'step7_review');
+    const otherStepsCompleted = otherSteps.every(step => completionSteps[step]);
+
+    if (!otherStepsCompleted) {
+      throw new AppError(
+        'You must complete all steps before submitting for review',
+        400
+      );
+    }
+  }
+
   completionSteps[stepKey] = isCompleted;
 
   const completedCount = Object.values(completionSteps).filter(Boolean).length;
@@ -43,7 +56,7 @@ export async function updateHotelProgress(
     status = 'IN_PROGRESS';
   }
 
-  await prisma.hotel.update({
+  const updatedHotel = await prisma.hotel.update({
     where: { id: hotelId },
     data: {
       completionSteps,
@@ -52,6 +65,12 @@ export async function updateHotelProgress(
       status,
     },
   });
+
+  return {
+    isFullyCompleted,
+    updatedSteps: updatedHotel.completionSteps as Record<string, boolean>,
+    status: updatedHotel.status,
+  };
 }
 
 function calculateCurrentStep(

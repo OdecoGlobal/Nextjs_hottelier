@@ -3,7 +3,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import HotelCreationSteps from '../creation-steps';
-import { AdminOwnerRole, HotelPolicyType } from '@/types';
+import { AdminAgentRole, HotelPolicyType } from '@/types';
 import StepOnePolicy from './step-one-policy';
 import StepThreePolicy from './step-three-policy';
 import StepTwoPolicy from './step-two-policies';
@@ -96,7 +96,7 @@ const MainPolicyForm = ({
   data,
 }: {
   hotelId: string;
-  role: AdminOwnerRole;
+  role: AdminAgentRole;
   data: HotelPolicyType;
 }) => {
   const [step, setStep] = useState(0);

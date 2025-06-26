@@ -47,6 +47,7 @@ export const POST = async (
 
     const imageUploadResults: {
       imageUrl: string;
+      public_id: string;
       imageType: 'COVER' | 'EXTERIOR' | 'INTERIOR';
     }[] = [];
 
@@ -57,7 +58,11 @@ export const POST = async (
         `hotelImages-${timestamp}`
       );
       urls.forEach(url => {
-        imageUploadResults.push({ imageUrl: url, imageType: 'COVER' });
+        imageUploadResults.push({
+          imageUrl: url,
+          imageType: 'COVER',
+          public_id: url,
+        });
       });
     }
     if (files.exterior?.length) {
@@ -67,7 +72,11 @@ export const POST = async (
         `exterior-${timestamp}`
       );
       urls.forEach(url => {
-        imageUploadResults.push({ imageUrl: url, imageType: 'EXTERIOR' });
+        imageUploadResults.push({
+          imageUrl: url,
+          imageType: 'EXTERIOR',
+          public_id: url,
+        });
       });
     }
     if (files.interior) {
@@ -77,7 +86,11 @@ export const POST = async (
         `interior-${timestamp}`
       );
       urls.forEach(url => {
-        imageUploadResults.push({ imageUrl: url, imageType: 'INTERIOR' });
+        imageUploadResults.push({
+          imageUrl: url,
+          imageType: 'INTERIOR',
+          public_id: url,
+        });
       });
     }
 
@@ -87,6 +100,8 @@ export const POST = async (
           hotelId,
           imageType: img.imageType,
           imageUrl: img.imageUrl,
+          public_id: img.public_id,
+
           isCompleted: true,
           completedAt: new Date(),
         })),

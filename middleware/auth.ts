@@ -27,7 +27,6 @@ export const validateHotelAcces = async (
   allowAdmin: boolean = true
 ) => {
   const authReq = req as AuthenticatedRequest;
-  console.log('VALIDATE', hotelId, authReq);
   if (!hotelId) {
     throw new AppError('Hotel ID is required', 400);
   }
@@ -40,8 +39,8 @@ export const validateHotelAcces = async (
 
   const { user } = authReq;
   const isAllowed = allowAdmin
-    ? hotel.ownerId === user.id || user.role === 'ADMIN'
-    : hotel.ownerId === user.id;
+    ? hotel.agentId === user.id || user.role === 'ADMIN'
+    : hotel.agentId === user.id;
 
   if (!isAllowed) {
     throw new AppError('Access denied', 403);

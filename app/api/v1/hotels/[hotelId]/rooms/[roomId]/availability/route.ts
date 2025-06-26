@@ -12,7 +12,7 @@ export const PUT = async (
 ) => {
   try {
     await protect(req);
-    restrictTo('ADMIN', 'OWNER')(req);
+    restrictTo('ADMIN', 'AGENT')(req);
     const { roomId, hotelId } = await params;
 
     validateHotelAcces(req, hotelId);

@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { updateRoomAvailability } from '@/lib/actions/room.actions';
 import { availabilitySchema } from '@/lib/schemas/validator';
-import { AdminOwnerRole, AvailabilityType, GetRoomType } from '@/types';
+import { AdminAgentRole, AvailabilityType, GetRoomType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -23,7 +23,7 @@ type RoomAvailabilityProp = {
   room: GetRoomType;
   hotelId: string;
   roomId: string;
-  role: AdminOwnerRole;
+  role: AdminAgentRole;
   initialData: AvailabilityType;
   onClose: () => void;
 };

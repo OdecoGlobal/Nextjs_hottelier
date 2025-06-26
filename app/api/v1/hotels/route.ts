@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export const POST = async (req: NextRequest) => {
   try {
     await protect(req);
-    restrictTo('OWNER', 'ADMIN')(req);
+    restrictTo('AGENT', 'ADMIN')(req);
     const authReq = req as AuthenticatedRequest;
     const body = await req.json();
     const basicInfoData = baseHotelSchema.parse(body);
@@ -17,18 +17,18 @@ export const POST = async (req: NextRequest) => {
     const result = await prisma.$transaction(async tx => {
       const hotel = await tx.hotel.create({
         data: {
-          ownerId: authReq.user.id,
+          agentId: authReq.user.id,
           status: 'IN_PROGRESS',
           completionSteps: {
             step1_basic_info: true,
             step2_policies: false,
             step3_amenities: false,
-            step3_hotel_images: false,
+            step4_hotel_images: false,
             step5_rooms: false,
-            step6_rate_and_availabilty: false,
+            step6_rate_and_availability: false,
             step7_review: false,
           },
-          currentStep: 2,
+          currentStep: 1,
           totalSteps: 7,
         },
       });

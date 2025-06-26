@@ -133,7 +133,7 @@ const SignUpForm = () => {
         <p className="text-sm text-center">
           Want to list your property?{' '}
           <Link
-            href="/signup-owner"
+            href="/signup-agent"
             className="underline text-muted-foreground"
           >
             Sign up here

@@ -25,7 +25,7 @@ const StartNewHotel = () => (
         asChild
         className="w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center group"
       >
-        <Link href="/owner/onboarding/basic-info">
+        <Link href="/agent/onboarding/basic-info">
           <Building2 size={16} className="mr-2" />
           Start New Hotel
         </Link>

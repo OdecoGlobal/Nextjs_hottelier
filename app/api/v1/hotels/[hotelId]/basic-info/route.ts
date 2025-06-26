@@ -34,7 +34,7 @@ export const PATCH = async (
 ) => {
   try {
     await protect(req);
-    restrictTo('OWNER', 'ADMIN')(req);
+    restrictTo('AGENT', 'ADMIN')(req);
     const { hotelId } = await params;
     validateHotelAcces(req, hotelId);
     if (!hotelId) throw new AppError('ID is required', 400);

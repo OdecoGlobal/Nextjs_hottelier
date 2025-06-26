@@ -17,15 +17,15 @@ type HotelStatus = (typeof validStatuses)[number];
 export const GET = async (req: NextRequest) => {
   try {
     await protect(req);
-    restrictTo('OWNER', 'ADMIN')(req);
+    restrictTo('AGENT', 'ADMIN')(req);
     const authReq = req as AuthenticatedRequest;
     const searchParams = req.nextUrl.searchParams;
     const status = searchParams.get('status');
-    const ownerId = authReq.user.id;
+    const agentId = authReq.user.id;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const whereClause: any = {
-      ownerId: ownerId,
+      agentId: agentId,
     };
 
     if (

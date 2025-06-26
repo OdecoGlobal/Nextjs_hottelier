@@ -19,7 +19,7 @@ const Menu = async () => {
         <Button asChild variant="ghost">
           <Link
             href={`${
-              !user || user.role !== 'OWNER' ? '/signup-owner' : '/owner'
+              !user || user.role !== 'AGENT' ? '/signup-agent' : '/agent'
             }`}
           >
             <Hotel />
@@ -39,7 +39,7 @@ const Menu = async () => {
             <Button asChild variant="ghost">
               <Link
                 href={`${
-                  !user || user.role !== 'OWNER' ? '/signup-owner' : '/owner'
+                  !user || user.role !== 'AGENT' ? '/signup-agent' : '/agent'
                 }`}
               >
                 <Hotel />

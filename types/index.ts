@@ -230,7 +230,7 @@ export const ALLOWED_FILE_TYPES = [
   'image/avif',
 ];
 
-export const ROLES = ['USER', 'OWNER', 'ADMIN'] as const;
+export const ROLES = ['USER', 'AGENT', 'ADMIN'] as const;
 export type Roles = (typeof ROLES)[number];
 export type User = z.infer<typeof userSchema>;
 export type signUpInput = z.infer<typeof signUpFormSchema>;
@@ -241,7 +241,7 @@ export type StateData = z.infer<typeof insertStateSchema>;
 export type CityData = z.infer<typeof insertCitySchema>;
 export type HotelAmenitiesType = z.infer<typeof hotelAmenitiesSchema>;
 
-export type AdminOwnerRole = 'ADMIN' | 'OWNER';
+export type AdminAgentRole = 'ADMIN' | 'AGENT';
 export type ApiSessionResponse = {
   data: Session;
 };

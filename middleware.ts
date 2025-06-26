@@ -8,11 +8,11 @@ const protectedPaths = [
   /\/profile/,
   /\/user\/(.*)/,
   /\/admin/,
-  /\/owner\/(.*)/,
+  /\/agent\/(.*)/,
 ];
 
 const adminPaths = [/\/admin/];
-const ownerPaths = [/\/owner/];
+const agentPaths = [/\/agent/];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -36,8 +36,8 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
     }
   }
-  if (ownerPaths.some(path => path.test(pathname))) {
-    if (decoded.role !== 'OWNER') {
+  if (agentPaths.some(path => path.test(pathname))) {
+    if (decoded.role !== 'AGENT') {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
     }
   }

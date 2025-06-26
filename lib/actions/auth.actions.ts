@@ -17,9 +17,9 @@ export async function signUpUser(formData: signUpInput) {
   }
 }
 
-export async function signUpOwner(formData: signUpInput) {
+export async function signupAgent(formData: signUpInput) {
   try {
-    const res = await axiosInstance.post('/auth/signup-owner', formData);
+    const res = await axiosInstance.post('/auth/signup-agent', formData);
     if (!res) throw new Error('An error occured while signing up');
 
     return { success: true, message: 'User registered successfully' };

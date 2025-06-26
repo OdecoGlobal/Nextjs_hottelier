@@ -15,7 +15,7 @@ import {
   generateSlug,
   getHotelCompletionProgress,
 } from '@/lib/utils';
-import { AdminOwnerRole, HotelItem } from '@/types';
+import { AdminAgentRole, HotelItem } from '@/types';
 import {
   ArrowRight,
   Building2,
@@ -33,7 +33,7 @@ const IncompleteHotelComponent = ({
 }: {
   incompleteHotels: HotelItem[];
   getStepName: (stepNumber: number) => string;
-  role: AdminOwnerRole;
+  role: AdminAgentRole;
 }) => {
   return (
     <>

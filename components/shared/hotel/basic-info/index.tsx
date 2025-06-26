@@ -10,7 +10,7 @@ import {
 } from '@/lib/actions/hotel.action';
 import { useRouter } from 'next/navigation';
 import HotelCreationSteps from '../creation-steps';
-import { AdminOwnerRole, HotelBasicInfoType } from '@/types';
+import { AdminAgentRole, HotelBasicInfoType } from '@/types';
 import { hotelBasicInfoSchema } from '@/lib/schemas/validator';
 import { defaultBasicInfo } from '@/lib/constants/hotel-default-values';
 import { useForm } from 'react-hook-form';
@@ -45,7 +45,7 @@ const MainBasicInfoPage = ({
   basicData,
   isUpdate = false,
 }: {
-  role: AdminOwnerRole;
+  role: AdminAgentRole;
   hotelId?: string;
   basicData?: HotelBasicInfoType;
   isUpdate?: boolean;

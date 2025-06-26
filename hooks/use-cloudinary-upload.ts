@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { uploadToCloudinary } from '@/lib/actions/cloudinary.actions';
 import { axiosInstance } from '@/lib/axios';
+import { z } from 'zod';
+import { cloudinaryImageSchema } from '@/lib/schemas/validator';
 
 export type CloudinaryImagePreviewType = {
   url: string;
@@ -16,6 +18,8 @@ export type CloudinaryImagePreviewType = {
   isUploading?: boolean;
   progress?: number;
 };
+
+type ImageObject = z.infer<typeof cloudinaryImageSchema>;
 
 export const useCloudImageUpload = <T extends FieldValues>(
   form: UseFormReturn<T>,
@@ -33,8 +37,8 @@ export const useCloudImageUpload = <T extends FieldValues>(
 
     setIsPending(true);
 
-    const currentUrls: string[] = form.getValues(fieldName) || [];
-    const uploadPromises: Promise<string | null>[] = [];
+    const currentImages: ImageObject[] = form.getValues(fieldName) || [];
+    const uploadPromises: Promise<ImageObject | null>[] = [];
     const tempPreviews: Array<{ id: string; url: string; file: File }> = [];
 
     for (const file of files) {
@@ -72,6 +76,7 @@ export const useCloudImageUpload = <T extends FieldValues>(
 
       const uploadPromise = uploadToCloudinary(file, folder)
         .then(({ secure_url, public_id }) => {
+          const imageObj = { imageUrl: secure_url, public_id };
           setImagePreviews(prev =>
             prev.map(p =>
               p.id === tempId
@@ -87,7 +92,7 @@ export const useCloudImageUpload = <T extends FieldValues>(
           );
 
           URL.revokeObjectURL(localUrl);
-          return secure_url;
+          return imageObj;
         })
         .catch(err => {
           clearInterval(progressInterval);
@@ -106,17 +111,17 @@ export const useCloudImageUpload = <T extends FieldValues>(
       const results = await Promise.allSettled(uploadPromises);
       const successfulUrls = results
         .filter(
-          (result): result is PromiseFulfilledResult<string> =>
+          (result): result is PromiseFulfilledResult<ImageObject> =>
             result.status === 'fulfilled' && result.value !== null
         )
         .map(result => result.value);
 
       if (successfulUrls.length > 0) {
         console.log('Successfully uploaded:', successfulUrls);
-        const updatedUrls = [...currentUrls, ...successfulUrls];
+        const updatedImages = [...currentImages, ...successfulUrls];
         form.setValue(
           fieldName,
-          updatedUrls as PathValue<T, typeof fieldName>,
+          updatedImages as PathValue<T, typeof fieldName>,
           {
             shouldValidate: true,
           }
@@ -148,11 +153,11 @@ export const useCloudImageUpload = <T extends FieldValues>(
     await axiosInstance.post('cloudinary/delete', {
       public_id: imageToRemove.public_id,
     });
-    const currentUrls: string[] = form.getValues(fieldName) || [];
-    const updatedUrls = currentUrls.filter(
+    const currentImages: ImageObject[] = form.getValues(fieldName) || [];
+    const updatedImages = currentImages.filter(
       (_, index) => index !== indexToRemove
     );
-    form.setValue(fieldName, updatedUrls as PathValue<T, typeof fieldName>, {
+    form.setValue(fieldName, updatedImages as PathValue<T, typeof fieldName>, {
       shouldValidate: true,
     });
 

@@ -16,7 +16,7 @@ import { useCallback, useRef, useState } from 'react';
 import HotelCreationSteps from '../creation-steps';
 import { addHotelImages } from '@/lib/actions/hotel.action';
 import { useToast } from '@/hooks/use-toast';
-import { AdminOwnerRole } from '@/types';
+import { AdminAgentRole } from '@/types';
 import { useRouter } from 'next/navigation';
 import CloudinaryImageUploader from '../../images/cloud-image-upload';
 import SmallCloudinaryUploadButton from '../../images/cloud-small-upload-button';
@@ -31,7 +31,7 @@ const UploadHotelPhotoForm = ({
 }: {
   hotelId: string;
   userName: string;
-  role: AdminOwnerRole;
+  role: AdminAgentRole;
 }) => {
   const router = useRouter();
   const [isUploading, setIsUploading] = useState({

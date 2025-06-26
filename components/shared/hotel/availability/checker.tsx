@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { cn } from '@/lib/utils';
-import { GetRoomType, AdminOwnerRole, AvailabilityType } from '@/types';
+import { GetRoomType, AdminAgentRole, AvailabilityType } from '@/types';
 import { formatDisplayDate, generateDateRange } from '@/utils/date-utils';
 import { Check, ChevronLeft, ChevronRight, X } from 'lucide-react';
 
@@ -22,7 +22,7 @@ type RoomAvailabilityProp = {
   room: GetRoomType;
   hotelId: string;
   roomId: string;
-  role: AdminOwnerRole;
+  role: AdminAgentRole;
 };
 
 const AvailabilityRoomSetter = ({

@@ -295,7 +295,7 @@ export const hotelItemSchema = z.object({
   currentStep: z.number(),
   totalSteps: z.number(),
   isFullyCompleted: z.boolean(),
-  ownerId: z.string().uuid(),
+  agentId: z.string().uuid(),
   basicInfo: basicInfoSchema,
 });
 

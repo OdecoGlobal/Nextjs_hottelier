@@ -47,7 +47,7 @@ export const DELETE = async (
 ) => {
   try {
     await protect(req);
-    restrictTo('OWNER', 'ADMIN')(req);
+    restrictTo('AGENT', 'ADMIN')(req);
     const { hotelId } = await params;
     if (!hotelId) throw new AppError('ID is required', 400);
     validateHotelAcces(req, hotelId);

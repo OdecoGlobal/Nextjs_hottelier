@@ -12,7 +12,7 @@ export const POST = async (
 ) => {
   try {
     await protect(req);
-    restrictTo('ADMIN', 'OWNER')(req);
+    restrictTo('ADMIN', 'AGENT')(req);
     const { hotelId } = await params;
 
     validateHotelAcces(req, hotelId);
@@ -55,7 +55,7 @@ export const PATCH = async (
 ) => {
   try {
     await protect(req);
-    restrictTo('ADMIN', 'OWNER')(req);
+    restrictTo('ADMIN', 'AGENT')(req);
     const { hotelId } = await params;
     validateHotelAcces(req, hotelId);
 
@@ -87,7 +87,7 @@ export const PUT = async (
 ) => {
   try {
     await protect(req);
-    restrictTo('ADMIN', 'OWNER')(req);
+    restrictTo('ADMIN', 'AGENT')(req);
     const { hotelId } = await params;
     validateHotelAcces(req, hotelId);
 
