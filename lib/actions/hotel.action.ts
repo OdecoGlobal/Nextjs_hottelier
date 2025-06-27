@@ -1,6 +1,5 @@
-'use server';
+import { formatError } from '@/utils/format-error';
 import { axiosInstance } from '../axios';
-import { formatError } from '../utils';
 import {
   AddRoomType,
   CreateHotelApiResponse,
@@ -16,7 +15,7 @@ export async function createNewHotel(formData: HotelBasicInfoType) {
   try {
     const res = await axiosInstance.post<CreateHotelApiResponse>(
       '/hotels',
-      formData
+      formData,
     );
     if (!res) throw new Error('An error occured while creating Hotel');
 
@@ -26,19 +25,18 @@ export async function createNewHotel(formData: HotelBasicInfoType) {
       hotel: res.data.data.hotel,
     };
   } catch (error) {
-    console.log(formatError(error));
     return { success: false, message: formatError(error) };
   }
 }
 
 export async function updateHotelBasicInfo(
   formData: HotelBasicInfoType,
-  hotelId: string
+  hotelId: string,
 ) {
   try {
     const res = await axiosInstance.patch(
       `/hotels/${hotelId}/basic-info`,
-      formData
+      formData,
     );
     if (!res) throw new Error('An error occured while creating Hotel');
 
@@ -48,7 +46,6 @@ export async function updateHotelBasicInfo(
       hotel: res.data.data.hotel,
     };
   } catch (error) {
-    console.log(formatError(error));
     return { success: false, message: formatError(error) };
   }
 }
@@ -69,12 +66,12 @@ export async function addRoom(data: AddRoomType, hotelId: string) {
 
 export async function updateHotelPolicies(
   formData: HotelPolicyType,
-  hotelId: string
+  hotelId: string,
 ) {
   try {
     const res = await axiosInstance.put(
       `/hotels/${hotelId}/policies`,
-      formData
+      formData,
     );
     if (!res) throw new Error('An error occured while updating hotel policy');
 
@@ -83,7 +80,6 @@ export async function updateHotelPolicies(
       message: 'Hotel policies updated successfully',
     };
   } catch (error) {
-    console.log(formatError(error));
     return { success: false, message: formatError(error) };
   }
 }
@@ -129,12 +125,12 @@ export async function getHotelPolicies(hotelId: string): Promise<{
 
 export async function updateHotelAmenities(
   formData: HotelAmenitiesType,
-  hotelId: string
+  hotelId: string,
 ) {
   try {
     const res = await axiosInstance.put(
       `/hotels/${hotelId}/amenities`,
-      formData
+      formData,
     );
     if (!res)
       throw new Error('An error occured while updating hotel amenities');
@@ -144,14 +140,13 @@ export async function updateHotelAmenities(
       message: 'Hotel amenities updated successfully',
     };
   } catch (error) {
-    console.log(formatError(error));
     return { success: false, message: formatError(error) };
   }
 }
 
 export async function addHotelImages(
   formData: HotelImageUploadBody,
-  hotelId: string
+  hotelId: string,
 ) {
   try {
     const res = await axiosInstance.post(`/hotels/${hotelId}/images`, formData);
@@ -162,7 +157,6 @@ export async function addHotelImages(
       message: 'Hotel images updated successfully',
     };
   } catch (error) {
-    console.log(formatError(error));
     return { success: false, message: formatError(error) };
   }
 }
@@ -187,8 +181,7 @@ export async function getIncompleteHotels(): Promise<IncompleteHotelApiResponse>
       throw new Error('Error fetching countries');
     }
     return res.data;
-  } catch (error) {
-    console.log(formatError(error));
+  } catch {
     return {
       data: [],
       status: 'error',

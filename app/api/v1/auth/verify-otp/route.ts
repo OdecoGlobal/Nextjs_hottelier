@@ -15,8 +15,8 @@ export const POST = async (req: NextRequest) => {
 
     const storedOtp = await redis.get(`otp:${email}`);
 
-    console.log(inputOTP, storedOtp);
-    if (storedOtp !== inputOTP)
+    console.log(inputOTP, String(storedOtp));
+    if (String(storedOtp) !== inputOTP)
       throw new AppError('Invalid or expired OTP', 400);
 
     const user = await prisma.user.update({

@@ -14,8 +14,7 @@ async function getAuthData() {
     });
     if (!user) throw new Error('Invalid token');
     return { user, token } as Session;
-  } catch (error) {
-    console.log(error);
+  } catch {
     return null;
   }
 }
@@ -24,7 +23,7 @@ export async function auth(): Promise<Session | null> {
   return new Promise(resolve =>
     setTimeout(() => {
       resolve(getAuthData());
-    }, 0)
+    }, 0),
   );
 }
 

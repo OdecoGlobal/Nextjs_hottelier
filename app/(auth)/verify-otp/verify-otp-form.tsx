@@ -16,7 +16,8 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { useToast } from '@/hooks/use-toast';
-import { resendOTP, verifyOtp } from '@/lib/actions/auth.actions';
+import { verifyOtp } from '@/lib/actions/auth.actions';
+import { resendOTP } from '@/lib/actions/util-actions';
 import { verifyOtpSchema } from '@/lib/schemas/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';

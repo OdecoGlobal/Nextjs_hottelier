@@ -1,10 +1,10 @@
 import { AvailabilityType, GetRoomType } from '@/types';
-import { formatError } from '../utils';
 import { axiosInstance } from '../axios';
+import { formatError } from '@/utils/format-error';
 
 export async function getRoomById(
   hotelId: string,
-  roomId: string
+  roomId: string,
 ): Promise<{
   room: GetRoomType | null;
   success: boolean;
@@ -25,12 +25,12 @@ export async function getRoomById(
 export async function updateRoomAvailability(
   data: AvailabilityType,
   hotelId: string,
-  roomId: string
+  roomId: string,
 ) {
   try {
     const res = await axiosInstance.put(
       `/hotels/${hotelId}/rooms/${roomId}/availability`,
-      data
+      data,
     );
     if (!res) throw new Error('No response from the server');
 

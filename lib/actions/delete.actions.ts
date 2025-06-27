@@ -1,8 +1,7 @@
 'use server';
 
+import { formatError } from '@/utils/format-error';
 import { axiosInstance } from '../axios';
-// import { fetchInstance } from '../fetch';
-import { formatError } from '../utils';
 
 export async function deleteRoom(hotelId: string, roomId: string) {
   try {

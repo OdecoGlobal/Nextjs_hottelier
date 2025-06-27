@@ -1,17 +1,15 @@
 import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
-import AppError from '@/lib/errors/app-error';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import { verifySignatureAppRouter } from '@upstash/qstash/nextjs';
 
-export async function POST(req: NextRequest) {
+export const POST = verifySignatureAppRouter(async () => {
   try {
-    const signature = req.headers.get('upstash-signature');
-    if (!signature) throw new AppError('unauthorized', 401);
     const res = await prisma.user.deleteMany({
       where: {
         isEmailVerified: false,
         createdAt: {
-          lt: new Date(Date.now() - 24 * 60 * 60 * 60),
+          lt: new Date(Date.now() - 24 * 60 * 60 * 1000),
         },
       },
     });
@@ -23,4 +21,4 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return formatApiError(error);
   }
-}
+});

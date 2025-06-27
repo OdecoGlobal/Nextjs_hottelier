@@ -12,7 +12,8 @@ export interface DecodedToken extends JWTPayload {
 
 const cookieOptions = {
   expires: new Date(
-    Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * 24 * 60 * 60 * 1000
+    Date.now() +
+      Number(process.env.JWT_COOKIE_EXPIRES_IN) * 24 * 60 * 60 * 1000,
   ),
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
@@ -31,7 +32,7 @@ export async function signToken(payload: DecodedToken) {
 }
 
 export const verifyTokenForEdge = async (
-  token: string
+  token: string,
 ): Promise<DecodedToken> => {
   const secretKey = new TextEncoder().encode(process.env.JWT_SECRET!);
   const { payload } = await jwtVerify(token, secretKey);
@@ -43,6 +44,7 @@ export const createSendToken = async (user: User, statusCode: number) => {
     id: user.id,
     role: user.role,
   });
+
   const cookiesStore = await cookies();
   cookiesStore.set('jwt', token, cookieOptions);
 
@@ -57,7 +59,7 @@ export const createSendToken = async (user: User, statusCode: number) => {
         user: userWithoutPassword,
       },
     },
-    { status: statusCode }
+    { status: statusCode },
   );
 
   response.cookies.set('jwt', token, cookieOptions);

@@ -1,12 +1,7 @@
-'use server';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
-import { formatError } from '../utils';
 import { axiosInstance } from '../axios';
 import { LoginInput, signUpInput, VeifyOTPType } from '@/types';
-import { generateOtp } from '@/utils/otp';
-import { sendEmail } from '@/utils/email';
-import ConfirmEmail from '@/emails/otp';
-import { rateLimit } from '../rate-limit';
+import { formatError } from '@/utils/format-error';
 
 export async function signUpUser(formData: signUpInput) {
   try {
@@ -49,26 +44,6 @@ export async function verifyOtp(formData: VeifyOTPType) {
       throw error;
     }
     return { success: false, message: formatError(error) };
-  }
-}
-const OTP_RESEND_LIMIT = 3;
-const OTP_RESEND_WINDOW = 60 * 60 * 1000;
-
-export async function resendOTP(email: string) {
-  try {
-    await rateLimit(`resend-otp:${email}`, OTP_RESEND_LIMIT, OTP_RESEND_WINDOW);
-
-    const otp = await generateOtp(email);
-    await sendEmail({
-      subject: 'OTP Resent',
-      component: ConfirmEmail({ validationCode: otp }),
-    });
-    return {
-      success: true,
-      message: 'One Time password has been resent successfully',
-    };
-  } catch (error) {
-    return { success: true, message: formatError(error) };
   }
 }
 

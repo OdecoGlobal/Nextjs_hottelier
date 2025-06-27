@@ -1,9 +1,8 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import slugify from 'slugify';
-import z, { ZodError } from 'zod';
+import z from 'zod';
 import { CompletionSteps } from '@/types';
-import { AxiosError } from 'axios';
 import { NextRequest } from 'next/server';
 
 export const pickKeys = <T extends z.ZodRawShape>(schema: z.ZodObject<T>) =>
@@ -59,67 +58,6 @@ const selectTime = generateTimeSlots();
 
 export { selectTime, timeNextDay };
 
-type CustomError = {
-  status?: number;
-  message?: string;
-  data?: {
-    message?: string;
-    error?: {
-      message?: string;
-    };
-  };
-};
-
-export function formatError(error: unknown): string {
-  if (!error || typeof error !== 'object') {
-    return String(error);
-  }
-
-  const err = error as Error;
-
-  // Zod Validation Error
-  if (error instanceof ZodError) {
-    const fieldsErrors = error.errors.map(e => e.message);
-    return fieldsErrors.join('. ');
-  }
-
-  // Axios Error
-  if (err instanceof AxiosError) {
-    if (err.response?.data?.message) {
-      return err.response.data.message;
-    }
-    if (err.message) {
-      return err.message;
-    }
-    return 'An error occurred while making a request.';
-  }
-
-  if (typeof error === 'object') {
-    const err = error as CustomError;
-    if (err.data?.message) {
-      return err.data.message;
-    }
-    if (err.data?.error?.message) {
-      return err.data.error.message;
-    }
-
-    if (err.message) {
-      return err.message;
-    }
-  }
-
-  // Default error.message
-  if (typeof err.message === 'string') {
-    return err.message;
-  }
-
-  // Fallback
-  try {
-    return JSON.stringify(err);
-  } catch {
-    return String(err);
-  }
-}
 export const formatDateTime = (dateString: Date | string) => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
     month: 'short', // abbreviated month name (e.g., 'Oct')

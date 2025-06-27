@@ -1,10 +1,12 @@
 import { prisma } from '@/db/prisma';
 import { signUpFormSchema } from '@/lib/schemas/validator';
 import bcrypt from 'bcryptjs';
-import { NextRequest } from 'next/server';
-import { User } from '@prisma/client';
+import { NextRequest, NextResponse } from 'next/server';
 import { formatApiError } from '@/lib/errors';
-import { createSendToken } from '@/lib/auth/verify';
+import ConfirmEmail from '@/emails/otp';
+import { sendEmail } from '@/utils/email';
+import { encryptEmail } from '@/utils/encrpyt';
+import { generateOtp } from '@/utils/otp';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -12,7 +14,7 @@ export const POST = async (req: NextRequest) => {
     const validatedData = signUpFormSchema.parse(body);
     const hashedPassword = await bcrypt.hash(validatedData.password, 12);
 
-    const newUser = await prisma.user.create({
+    await prisma.user.create({
       data: {
         userName: validatedData.userName,
         email: validatedData.email,
@@ -20,10 +22,21 @@ export const POST = async (req: NextRequest) => {
         role: 'AGENT',
       },
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...userWithoutPassword } = newUser;
+    const otp = await generateOtp(validatedData.email);
+    const encryptedEmail = encryptEmail(validatedData.email);
+    await sendEmail({
+      subject: 'Verify Your RoaméLux Account',
+      component: ConfirmEmail({ validationCode: otp }),
+    });
 
-    return createSendToken(userWithoutPassword as User, 201);
+    return NextResponse.json(
+      {
+        status: 'success',
+        message: 'Signup successful, check your email for verification code',
+        token: encryptedEmail,
+      },
+      { status: 201 },
+    );
   } catch (error) {
     return formatApiError(error);
   }
