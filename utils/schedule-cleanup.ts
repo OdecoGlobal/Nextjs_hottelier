@@ -6,7 +6,7 @@ const qstash = new Client({
 
 export async function scheduleDailyCleanup() {
   const response = await qstash.publish({
-    url: `https://nextjs-hottelier.vercel.app/api/v1/cleanup`,
+    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}cleanup`,
     // schedule: '0 0 1 * *',
     schedule: '*/2 * * * *',
     retries: 3,
