@@ -12,8 +12,8 @@ const HotelCreationSteps = ({
 }) => {
   const currentStepName = stepName || steps[current];
   return (
-    <aside>
-      <nav className=" md:hidden mb-2 border-b bg-card px-6 py-4">
+    <aside className=" md:mb-0">
+      <nav className=" md:hidden mb-2 border-b bg-card px-6 py-4 ">
         <h2 className="text-xl font-semibold text-muted-foreground">
           {currentStepName}
         </h2>

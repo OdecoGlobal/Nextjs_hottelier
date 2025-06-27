@@ -34,21 +34,21 @@ const SignUpForm = () => {
 
   const onSubmit = async (values: z.infer<typeof signUpFormSchema>) => {
     const res = await signUpUser(values);
-    if (!res.success) {
+    const { success, message, token } = res;
+    if (!success) {
       toast({
         title: 'Error',
-        description: res.message,
+        description: message,
         variant: 'destructive',
       });
     } else {
       toast({
         title: 'Success',
-        description: res.message,
+        description: message,
         variant: 'default',
       });
-      router.replace('/');
+      router.replace(`/verify-otp?token=${token}`);
     }
-    console.log(values);
   };
 
   return (

@@ -142,15 +142,15 @@ export const formatDateTime = (dateString: Date | string) => {
   };
   const formattedDateTime: string = new Date(dateString).toLocaleString(
     'en-US',
-    dateTimeOptions
+    dateTimeOptions,
   );
   const formattedDate: string = new Date(dateString).toLocaleString(
     'en-US',
-    dateOptions
+    dateOptions,
   );
   const formattedTime: string = new Date(dateString).toLocaleString(
     'en-US',
-    timeOptions
+    timeOptions,
   );
   return {
     dateTime: formattedDateTime,
@@ -160,7 +160,7 @@ export const formatDateTime = (dateString: Date | string) => {
 };
 
 export const getHotelCompletionProgress = (
-  completionSteps: CompletionSteps
+  completionSteps: CompletionSteps,
 ) => {
   const completed = Object.values(completionSteps).filter(Boolean).length;
   const totalSteps = Object.keys(completionSteps).length;
@@ -168,7 +168,7 @@ export const getHotelCompletionProgress = (
 };
 
 export const createObjectOptions = <T extends readonly string[]>(
-  constants: T
+  constants: T,
 ): Array<{ value: T[number]; label: string }> => {
   return constants.map(constant => ({
     value: constant,
@@ -215,7 +215,7 @@ export const formatValueString = (value: string) => {
     .join(' ');
 };
 export const createPricingOptions = <T extends readonly string[]>(
-  constants: T
+  constants: T,
 ): PricingOption<T[number]>[] => {
   return constants.map(constant => {
     const label =

@@ -56,7 +56,6 @@ export async function updateHotelBasicInfo(
 export async function addRoom(data: AddRoomType, hotelId: string) {
   try {
     const res = await axiosInstance.post(`/hotels/${hotelId}/rooms`, data);
-    console.log(res.data, 'server');
     if (!res) throw new Error('Error occured while creating room');
     return {
       room: res.data.data.room,

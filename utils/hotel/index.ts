@@ -50,7 +50,7 @@ export async function updateHotelProgress(
   const isFullyCompleted = completedCount === steps.length;
 
   let status = hotel.status;
-  if (isFullyCompleted && status === 'DRAFT') {
+  if (isFullyCompleted && status === 'IN_PROGRESS') {
     status = 'PENDING_REVIEW';
   } else if (completedCount > 0 && status === 'DRAFT') {
     status = 'IN_PROGRESS';

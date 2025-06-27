@@ -25,6 +25,7 @@ import { pickKeys } from '@/lib/utils';
 import { addRoom } from '@/lib/actions/hotel.action';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import z from 'zod';
 
 const stepFields = [
   pickKeys(StepOneAddRoomSchema),
@@ -42,13 +43,17 @@ export type AddRoomControl = {
 };
 
 const AddRoomComponent = ({
+  hotelTotalRooms,
   hotelId,
   userName,
   role,
+  roomsAssigned,
 }: {
   hotelId: string;
   userName: string;
   role: AdminAgentRole;
+  hotelTotalRooms: number;
+  roomsAssigned: number;
 }) => {
   const [step, setStep] = useState(0);
   const { toast } = useToast();
@@ -57,8 +62,17 @@ const AddRoomComponent = ({
 
   const [isUploading, setIsUploading] = useState(false);
 
+  const remainingRooms = hotelTotalRooms - roomsAssigned;
+
+  const maxRoomSchema = completeRoomSchema.extend({
+    totalRooms: z.coerce
+      .number()
+      .min(1, 'Rooms cannot be less than one')
+      .max(hotelTotalRooms, `Only ${remainingRooms} room(s) left to allocate`),
+  });
+
   const form = useForm<AddRoomType>({
-    resolver: zodResolver(completeRoomSchema),
+    resolver: zodResolver(maxRoomSchema),
     defaultValues: defaultRooomValues,
     shouldUnregister: false,
   });

@@ -1,0 +1,261 @@
+[
+  {
+    "name": "Abia",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "303",
+    "state_code": "AB"
+  },
+  {
+    "name": "Abuja Federal Capital Territory",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "293",
+    "state_code": "FC"
+  },
+  {
+    "name": "Adamawa",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "320",
+    "state_code": "AD"
+  },
+  {
+    "name": "Akwa Ibom",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "304",
+    "state_code": "AK"
+  },
+  {
+    "name": "Anambra",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "315",
+    "state_code": "AN"
+  },
+  {
+    "name": "Bauchi",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "312",
+    "state_code": "BA"
+  },
+  {
+    "name": "Bayelsa",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "305",
+    "state_code": "BY"
+  },
+  {
+    "name": "Benue",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "291",
+    "state_code": "BE"
+  },
+  {
+    "name": "Borno",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "307",
+    "state_code": "BO"
+  },
+  {
+    "name": "Cross River",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "314",
+    "state_code": "CR"
+  },
+  {
+    "name": "Delta",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "316",
+    "state_code": "DE"
+  },
+  {
+    "name": "Ebonyi",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "311",
+    "state_code": "EB"
+  },
+  {
+    "name": "Edo",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "318",
+    "state_code": "ED"
+  },
+  {
+    "name": "Ekiti",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "309",
+    "state_code": "EK"
+  },
+  {
+    "name": "Enugu",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "289",
+    "state_code": "EN"
+  },
+  {
+    "name": "Gombe",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "310",
+    "state_code": "GO"
+  },
+  {
+    "name": "Imo",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "308",
+    "state_code": "IM"
+  },
+  {
+    "name": "Jigawa",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "288",
+    "state_code": "JI"
+  },
+  {
+    "name": "Kaduna",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "294",
+    "state_code": "KD"
+  },
+  {
+    "name": "Kano",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "300",
+    "state_code": "KN"
+  },
+  {
+    "name": "Katsina",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "313",
+    "state_code": "KT"
+  },
+  {
+    "name": "Kebbi",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "290",
+    "state_code": "KE"
+  },
+  {
+    "name": "Kogi",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "298",
+    "state_code": "KO"
+  },
+  {
+    "name": "Kwara",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "295",
+    "state_code": "KW"
+  },
+  {
+    "name": "Lagos",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "306",
+    "state_code": "LA"
+  },
+  {
+    "name": "Nasarawa",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "301",
+    "state_code": "NA"
+  },
+  {
+    "name": "Niger",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "317",
+    "state_code": "NI"
+  },
+  {
+    "name": "Ogun",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "323",
+    "state_code": "OG"
+  },
+  {
+    "name": "Ondo",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "321",
+    "state_code": "ON"
+  },
+  {
+    "name": "Osun",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "322",
+    "state_code": "OS"
+  },
+  {
+    "name": "Oyo",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "296",
+    "state_code": "OY"
+  },
+  {
+    "name": "Plateau",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "302",
+    "state_code": "PL"
+  },
+  {
+    "name": "Rivers",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "4926",
+    "state_code": "RI"
+  },
+  {
+    "name": "Sokoto",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "292",
+    "state_code": "SO"
+  },
+  {
+    "name": "Taraba",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "319",
+    "state_code": "TA"
+  },
+  {
+    "name": "Yobe",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "297",
+    "state_code": "YO"
+  },
+  {
+    "name": "Zamfara",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "id": "299",
+    "state_code": "ZA"
+  }
+]

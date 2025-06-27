@@ -18,6 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import SubmitFormButton from '@/components/submit-form-button';
 import { pickKeys } from '@/lib/utils';
+import { Card, CardContent } from '@/components/ui/card';
 
 const stepOneSchema = hotelBasicInfoSchema.pick({
   name: true,
@@ -107,36 +108,40 @@ const MainBasicInfoPage = ({
   const lat = form.watch('lat');
   const lng = form.watch('lng');
   return (
-    <section className="flex flex-col md:flex-row space-y-3  min-h-screen">
+    <section className="flex flex-col md:flex-row space-y-3 min-h-screen mb-7">
       <HotelCreationSteps current={0} />
 
-      <div className="flex-1 flex flex-col justify-center space-y-7  ">
-        <Form {...form}>
-          <form
-            className="w-full max-w-sm md:max-w-md self-center space-y-4"
-            onSubmit={e => {
-              e.preventDefault();
-              handleNext();
-            }}
-          >
-            {step === 0 && <HotelBasicInfoStepOne form={form} />}
+      <main className="px-5 flex-1 flex flex-col mx-auto justify-center items-center ">
+        <Card className="w-full md:max-w-4xl ">
+          <CardContent>
+            <Form {...form}>
+              <form
+                className="space-y-4"
+                onSubmit={e => {
+                  e.preventDefault();
+                  handleNext();
+                }}
+              >
+                {step === 0 && <HotelBasicInfoStepOne form={form} />}
 
-            {step === 1 && <HotelBasicInfoStepTwo form={form} />}
+                {step === 1 && <HotelBasicInfoStepTwo form={form} />}
 
-            {step === 2 && <HotelBasicInfoStepThree form={form} />}
-            <SubmitFormButton
-              action={isLastStep ? 'Submit' : 'Next'}
-              isPending={isPending}
-              disabled={isLastStep && (!lat || !lng)}
-              showPrevious={step > 0}
-              showSteps
-              onPrevious={handleBack}
-              currentStep={step + 1}
-              totalSteps={stepFields.length}
-            />
-          </form>
-        </Form>
-      </div>
+                {step === 2 && <HotelBasicInfoStepThree form={form} />}
+                <SubmitFormButton
+                  action={isLastStep ? 'Submit' : 'Next'}
+                  isPending={isPending}
+                  disabled={isLastStep && (!lat || !lng)}
+                  showPrevious={step > 0}
+                  showSteps
+                  onPrevious={handleBack}
+                  currentStep={step + 1}
+                  totalSteps={stepFields.length}
+                />
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </main>
     </section>
   );
 };

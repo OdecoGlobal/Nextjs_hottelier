@@ -19,6 +19,7 @@ import {
   completeRoomSchema,
   getRoomSchema,
   availabilitySchema,
+  verifyOtpSchema,
 } from '@/lib/schemas/validator';
 import { z } from 'zod';
 
@@ -240,6 +241,7 @@ export type CountryData = z.infer<typeof insertCountrySchema>;
 export type StateData = z.infer<typeof insertStateSchema>;
 export type CityData = z.infer<typeof insertCitySchema>;
 export type HotelAmenitiesType = z.infer<typeof hotelAmenitiesSchema>;
+export type VeifyOTPType = z.infer<typeof verifyOtpSchema>;
 
 export type AdminAgentRole = 'ADMIN' | 'AGENT';
 export type ApiSessionResponse = {

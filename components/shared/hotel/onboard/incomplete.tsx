@@ -42,6 +42,8 @@ const IncompleteHotelComponent = ({
           const progress = getHotelCompletionProgress(hotel.completionSteps);
           const nextStep = getStepName(hotel.currentStep);
           const basicInfo = hotel.basicInfo;
+          const { isFullyCompleted } = hotel;
+
           const deleteAction = async () => {
             'use server';
             return await deletHotel(hotel.id);
@@ -103,18 +105,24 @@ const IncompleteHotelComponent = ({
                 </div>
               </CardContent>
               <CardFooter>
-                <Button>
-                  <Link
-                    href={`/${role.toLowerCase()}/onboarding/${
-                      hotel.id
-                    }/${generateSlug(nextStep)}`}
-                  >
-                    Continue
-                  </Link>
-                  <ArrowRight
-                    size={16}
-                    className="ml-2 group-hover:translate-x-1 transition-transform"
-                  />
+                <Button disabled={isFullyCompleted}>
+                  {isFullyCompleted ? (
+                    'Pending Review'
+                  ) : (
+                    <>
+                      <Link
+                        href={`/${role.toLowerCase()}/onboarding/${
+                          hotel.id
+                        }/${generateSlug(nextStep)}`}
+                      >
+                        Continue
+                      </Link>
+                      <ArrowRight
+                        size={16}
+                        className="ml-2 group-hover:translate-x-1 transition-transform"
+                      />
+                    </>
+                  )}
                 </Button>
                 <DeleteDialog action={deleteAction} />
               </CardFooter>

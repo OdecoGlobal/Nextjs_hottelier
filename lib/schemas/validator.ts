@@ -86,10 +86,16 @@ export const baseHotelSchema = z.object({
 });
 
 export const hotelBasicInfoSchema = baseHotelSchema.extend({
+  countryCode: z.string().nullish(),
   countryId: z.string().nullish(),
   stateId: z.string().nullish(),
+  stateCode: z.string().nullish(),
 });
 
+export const verifyOtpSchema = z.object({
+  inputOTP: z.string().min(6, 'One Time Password must be least 6 digits'),
+  email: z.string().email(),
+});
 export const baseHotelPolicySchema = z.object({
   paymentMethods: z
     .array(z.enum(PAYMENT_METHODS))
@@ -253,7 +259,7 @@ export const baseRoomSchema = z.object({
   pricingModel: z.enum(PRICING_MODEL_TYPE),
   roomImages: ImageObjectArraySchema.refine(
     data => data.length > 0,
-    'Add at least one image'
+    'Add at least one image',
   ),
 });
 

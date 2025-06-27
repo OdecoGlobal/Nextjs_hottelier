@@ -24,6 +24,7 @@ export const POST = async (req: NextRequest) => {
     ) {
       throw new AppError('Invalid Credentials', 401);
     }
+    if (!user.isEmailVerified) throw new AppError('User not verified', 401);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user;
     return createSendToken(userWithoutPassword as User, 200);
