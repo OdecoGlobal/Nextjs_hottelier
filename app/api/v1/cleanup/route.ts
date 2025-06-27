@@ -9,7 +9,7 @@ export const POST = verifySignatureAppRouter(async () => {
       where: {
         isEmailVerified: false,
         createdAt: {
-          lt: new Date(Date.now() - 1 * 60 * 60 * 1000),
+          lt: new Date(Date.now() - 2 * 60 * 60 * 1000),
         },
       },
     });
