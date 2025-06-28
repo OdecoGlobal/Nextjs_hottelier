@@ -3,7 +3,7 @@ import { Session } from './types';
 import { verifyTokenForEdge } from './lib/auth/verify';
 import { prisma } from './db/prisma';
 
-async function getAuthData() {
+export async function auth() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('jwt')?.value;
@@ -19,6 +19,8 @@ async function getAuthData() {
   }
 }
 
+/*
+
 export async function auth(): Promise<Session | null> {
   return new Promise(resolve =>
     setTimeout(() => {
@@ -26,8 +28,6 @@ export async function auth(): Promise<Session | null> {
     }, 0),
   );
 }
-
-/*
 
 export async function auth(): Promise<Session | null> {
   try {

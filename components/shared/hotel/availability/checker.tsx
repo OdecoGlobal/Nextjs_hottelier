@@ -73,7 +73,7 @@ const AvailabilityRoomSetter = ({
   }[range];
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={5} />
+      <HotelCreationSteps current={5} role={role} />
       <div className=" flex-1 py-10 px-5">
         <Card className="w-full  mx-auto mt-4 p-4">
           <div className="flex justify-between items-center mb-4">
@@ -124,7 +124,7 @@ const AvailabilityRoomSetter = ({
                   key={i}
                   className={cn(
                     'flex items-center justify-center py-3 border-r border-b cursor-pointer hover:opacity-80',
-                    entry.isAvailable ? 'bg-green-500' : 'bg-destructive'
+                    entry.isAvailable ? 'bg-green-500' : 'bg-destructive',
                   )}
                   onClick={() => setSelectedAvailability(entry)}
                 >

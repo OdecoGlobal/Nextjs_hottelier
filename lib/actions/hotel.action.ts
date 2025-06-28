@@ -2,6 +2,8 @@ import { formatError } from '@/utils/format-error';
 import { axiosInstance } from '../axios';
 import {
   AddRoomType,
+  AvailabilityType,
+  CompletionSteps,
   CreateHotelApiResponse,
   GetRoomType,
   HotelAmenitiesType,
@@ -83,11 +85,18 @@ export async function updateHotelPolicies(
     return { success: false, message: formatError(error) };
   }
 }
-type HotelResponse = {
-  policies: HotelPolicyType;
+export type HotelResponse = {
+  id: string;
   basicInfo: HotelBasicInfoType;
+  policies: HotelPolicyType;
+  completionSteps: CompletionSteps;
   amenities: HotelAmenitiesType;
+  hotelImages: HotelImageUploadBody;
   rooms: GetRoomType[];
+  availability: AvailabilityType[];
+  isFullyCompleted: boolean;
+
+  currentStep: number;
 };
 
 export async function getHotelById(hotelId: string): Promise<{

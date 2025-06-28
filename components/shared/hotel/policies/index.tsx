@@ -127,7 +127,7 @@ const MainPolicyForm = ({
           variant: 'default',
         });
         router.replace(
-          `/${role.toLowerCase()}/onboarding/${hotelId}/amenities`
+          `/${role.toLowerCase()}/onboarding/${hotelId}/amenities`,
         );
       }
     });
@@ -150,7 +150,7 @@ const MainPolicyForm = ({
   const isLastStep = step === stepFields.length - 1;
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={1} />
+      <HotelCreationSteps current={1} role={role} />
 
       <Form {...form}>
         <form
