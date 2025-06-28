@@ -90,7 +90,7 @@ export const steps = [
   'Policies',
   'Amenities',
   'Photos',
-  'Rooms and Rates',
+  'Rooms',
   'Rates and Availability',
   'Review',
 ];

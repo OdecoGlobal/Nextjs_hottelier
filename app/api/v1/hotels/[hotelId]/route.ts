@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
     const { hotelId } = await params;
@@ -27,6 +27,9 @@ export const GET = async (
           },
         },
       },
+      cacheStrategy: {
+        ttl: 10 * 60,
+      },
     });
     if (!hotel) throw new AppError('Hotel not found', 404);
     return NextResponse.json(
@@ -34,7 +37,7 @@ export const GET = async (
         data: { hotel },
         status: 'success',
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);
@@ -43,7 +46,7 @@ export const GET = async (
 
 export const DELETE = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
     await protect(req);

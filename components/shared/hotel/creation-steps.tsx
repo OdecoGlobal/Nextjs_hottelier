@@ -1,16 +1,23 @@
 import { steps } from '@/lib/constants';
-import { cn } from '@/lib/utils';
+import { cn, generateSlug } from '@/lib/utils';
+import { AdminAgentRole } from '@/types';
 import { Check } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react';
 
 const HotelCreationSteps = ({
   current = 0,
   stepName,
+  hotelId,
+  role,
 }: {
   stepName?: string;
   current: number;
+  hotelId?: string;
+  role: AdminAgentRole;
 }) => {
   const currentStepName = stepName || steps[current];
+  current = current - 1;
   return (
     <aside className=" md:mb-0">
       <nav className=" md:hidden mb-2 border-b bg-card px-6 py-4 ">
@@ -32,11 +39,19 @@ const HotelCreationSteps = ({
                     isCompleted
                       ? 'bg-blue-700 text-white'
                       : isCurrent
-                      ? 'bg-blue-700 text-white'
-                      : 'border border-blue-700'
+                        ? 'bg-blue-700 text-white'
+                        : 'border border-blue-700',
                   )}
                 >
-                  {isCompleted ? <Check /> : i + 1}
+                  {i === 0 ? (
+                    <>{isCompleted ? <Check /> : i + 1} </>
+                  ) : (
+                    <Link
+                      href={`/${role.toLowerCase()}/onboarding/${hotelId}/${generateSlug(step)}`}
+                    >
+                      {isCompleted ? <Check /> : i + 1}
+                    </Link>
+                  )}
                 </div>
                 <div className="pt-1 text-sm">
                   <div>{step}</div>
@@ -61,8 +76,8 @@ const HotelCreationSteps = ({
                   isCompleted
                     ? 'bg-blue-700 text-white'
                     : isCurrent
-                    ? 'bg-blue-700 text-white'
-                    : 'border border-blue-700'
+                      ? 'bg-blue-700 text-white'
+                      : 'border border-blue-700',
                 )}
               >
                 {isCompleted ? <Check className="" /> : i + 1}

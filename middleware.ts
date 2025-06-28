@@ -46,7 +46,12 @@ export async function middleware(req: NextRequest) {
 
   const cookiesStore = await cookies();
   const token = cookiesStore.get('jwt')?.value;
-  if (!token) throw new Error('User not authenticated');
+  if (!token) {
+    return NextResponse.redirect(
+      new URL('/login?reason=unauthenticated', req.url),
+    );
+  }
+
   const decoded = await verifyTokenForEdge(token);
 
   if (!decoded) {
@@ -70,6 +75,6 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     '/((?!api|_next/static|_next/image|favicon.ico|login|signup|public).*)',
-    '/api/v1/cleanup',
+    '/api/v1/',
   ],
 };
