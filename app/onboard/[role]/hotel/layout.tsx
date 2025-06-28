@@ -5,6 +5,7 @@ export const metadata: Metadata = {
     template: `Onboarding | %s  `,
     default: 'Onboarding',
   },
+  description: 'Build an amazing experience with us',
 };
 export default function AgentOnboardingLayout({
   children,

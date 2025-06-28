@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { HotelResponse } from '@/lib/actions/hotel.action';
+import { HotelResponse, submitHotel } from '@/lib/actions/hotel.action';
 import { AlertCircle, CheckCircle2, Loader } from 'lucide-react';
 import HotelCreationSteps from '../creation-steps';
 import OnboardReviewCard from './onboard-review-card';
@@ -15,6 +15,8 @@ import { AdminAgentRole } from '@/types';
 import { generateSlug } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useTransition } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const OnboardingReviewComponent = ({
   hotel,
@@ -25,6 +27,8 @@ const OnboardingReviewComponent = ({
 }) => {
   const { completionSteps, basicInfo, isFullyCompleted, currentStep, id } =
     hotel;
+  const { toast } = useToast();
+  const router = useRouter();
 
   const { step7_review, ...steps } = completionSteps;
   void step7_review;
@@ -35,7 +39,21 @@ const OnboardingReviewComponent = ({
 
   const handleSubmit = () => {
     startTransition(async () => {
-      console.log(steps);
+      const res = await submitHotel(hotel.id);
+      if (!res.success) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: res.message,
+        });
+      } else {
+        toast({
+          title: 'Success',
+          description: res.message,
+          variant: 'default',
+        });
+        router.replace(`/onboard/${role.toLowerCase()}`);
+      }
     });
   };
 

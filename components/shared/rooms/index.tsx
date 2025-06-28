@@ -37,7 +37,7 @@ const ShowRooms = ({ rooms, role, hotelId }: RoomProp) => {
               asChild
               className="w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center group"
             >
-              <Link href={`/agent/onboarding/${hotelId}/rooms`}>
+              <Link href={`/onboard/${role}/hotel/${hotelId}/rooms`}>
                 <House size={16} className="mr-2" />
                 Add Your First Room
               </Link>
@@ -130,7 +130,7 @@ const ShowRooms = ({ rooms, role, hotelId }: RoomProp) => {
                             className=""
                           >
                             <Link
-                              href={`/${role.toLowerCase()}/onboarding/${
+                              href={`/onboard/${role.toLowerCase()}/hotel/${
                                 room.hotelId
                               }/rooms/${room.id}/rates`}
                             >

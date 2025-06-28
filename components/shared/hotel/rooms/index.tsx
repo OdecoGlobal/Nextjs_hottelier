@@ -95,7 +95,7 @@ const AddRoomComponent = ({
           variant: 'default',
         });
         router.replace(
-          `/${role.toLowerCase()}/onboarding/${hotelId}/rooms/${
+          `/onboard/${role.toLowerCase()}/hotel/${hotelId}/rooms/${
             response?.room?.id
           }/rates`,
         );

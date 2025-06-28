@@ -80,7 +80,7 @@ const UploadHotelPhotoForm = ({
         description: res.message,
         variant: 'default',
       });
-      router.replace(`/${role.toLowerCase()}/onboarding/${hotelId}/rooms`);
+      router.replace(`/onboard/${role.toLowerCase()}/hotel/${hotelId}/rooms`);
     }
     form.reset();
     if (exteriorResetRef.current) exteriorResetRef.current();

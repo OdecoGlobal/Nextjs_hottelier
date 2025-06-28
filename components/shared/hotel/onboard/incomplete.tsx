@@ -111,7 +111,7 @@ const IncompleteHotelComponent = ({
                   ) : (
                     <>
                       <Link
-                        href={`/${role.toLowerCase()}/onboarding/${
+                        href={`/onboard/${role.toLowerCase()}/hotel/${
                           hotel.id
                         }/${generateSlug(nextStep)}`}
                       >
@@ -144,7 +144,7 @@ const IncompleteHotelComponent = ({
             asChild
             className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-8 rounded-lg transition-colors duration-200 flex items-center justify-center mx-auto group text-lg"
           >
-            <Link href={`/${role.toLowerCase()}/onboarding/basic-info`}>
+            <Link href={`/onboard/${role.toLowerCase()}/hotel/basic-info`}>
               <Plus size={20} className="mr-2" />
               Create Your First Hotel
             </Link>

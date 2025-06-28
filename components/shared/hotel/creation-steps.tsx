@@ -47,7 +47,7 @@ const HotelCreationSteps = ({
                     <>{isCompleted ? <Check /> : i + 1} </>
                   ) : (
                     <Link
-                      href={`/${role.toLowerCase()}/onboarding/${hotelId}/${generateSlug(step)}`}
+                      href={`/onboard/${role.toLowerCase()}/hotel/${hotelId}/${generateSlug(step)}`}
                     >
                       {isCompleted ? <Check /> : i + 1}
                     </Link>

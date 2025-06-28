@@ -44,7 +44,7 @@ const RoomAvailabilityForm = ({
       .min(0, 'Inventory cannot be negative')
       .max(
         room.totalRooms,
-        `Room inventory cannot exceed ${room.totalRooms} total rooms`
+        `Room inventory cannot exceed ${room.totalRooms} total rooms`,
       ),
   });
   const form = useForm<AvailabilityType>({
@@ -74,7 +74,7 @@ const RoomAvailabilityForm = ({
         description: res.message,
         variant: 'default',
       });
-      router.replace(`/${role.toLowerCase()}/onboarding/${hotelId}/reviews`);
+      router.replace(`/onboard/${role.toLowerCase()}/hotel/${hotelId}/reviews`);
     }
     onClose();
   };

@@ -170,6 +170,18 @@ export async function addHotelImages(
   }
 }
 
+export async function submitHotel(hotelId: string) {
+  try {
+    const res = await axiosInstance.post(`hotels/${hotelId}/submit`);
+    if (!res) throw new Error('An error occured while submitting hotel');
+    return {
+      success: true,
+      message: 'Hotel submitted successfully',
+    };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
+}
 export async function deletHotel(hotelId: string) {
   try {
     const res = await axiosInstance.delete(`hotels/${hotelId}`);

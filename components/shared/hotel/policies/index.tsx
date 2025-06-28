@@ -127,7 +127,7 @@ const MainPolicyForm = ({
           variant: 'default',
         });
         router.replace(
-          `/${role.toLowerCase()}/onboarding/${hotelId}/amenities`,
+          `/onboard/${role.toLowerCase()}/hotel/${hotelId}/amenities`,
         );
       }
     });

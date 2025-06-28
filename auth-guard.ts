@@ -1,6 +1,6 @@
 import { auth } from '@/auth';
-import { Session, User } from '@/types';
-import { redirect } from 'next/navigation';
+import { AdminAgentRole, Session, User } from '@/types';
+import { notFound, redirect } from 'next/navigation';
 
 export async function requireAuth(): Promise<Session> {
   const session = await auth();
@@ -22,9 +22,13 @@ export async function requireAdmin(): Promise<Session> {
   }
   return session as Session & { user: { role: 'ADMIN' } };
 }
-export async function requireAdminOrAgent(): Promise<Session> {
+export async function requireAdminOrAgent(param: string): Promise<Session> {
+  const role = param.toUpperCase() as AdminAgentRole;
+  const validRoles: AdminAgentRole[] = ['ADMIN', 'AGENT'];
+  if (!validRoles.includes(role)) {
+    notFound();
+  }
   const session = await auth();
-
   if (!session) {
     redirect('/login');
   }

@@ -47,7 +47,7 @@ const MainAmenitiesForm = ({
         description: res.message,
         variant: 'default',
       });
-      router.replace(`/${role.toLowerCase()}/onboarding/${hotelId}/photos`);
+      router.replace(`/onboard/${role.toLowerCase()}/hotel/${hotelId}/photos`);
     }
   };
   const { control, watch, formState } = form;

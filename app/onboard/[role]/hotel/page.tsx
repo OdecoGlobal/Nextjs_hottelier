@@ -1,15 +1,24 @@
-import { requireAgent } from '@/auth-guard';
+export const dynamic = 'force-dynamic';
+import { requireAdminOrAgent } from '@/auth-guard';
 import IncompleteHotelComponent from '@/components/shared/hotel/onboard/incomplete';
 import StartNewHotel from '@/components/shared/hotel/onboard/start-new-hotel';
 import { getIncompleteHotels } from '@/lib/actions/hotel.action';
-
 import { steps } from '@/lib/constants';
+import { AdminAgentRole } from '@/types';
+import { Metadata } from 'next';
 import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
+export const metadata: Metadata = {
+  title: 'Onboard',
+};
 
-const OnboardingPage = async () => {
-  const agent = await requireAgent();
+const OnboardingPage = async ({
+  params,
+}: {
+  params: Promise<{ role: AdminAgentRole }>;
+}) => {
+  const { role } = await params;
+  const session = await requireAdminOrAgent(role);
 
   const res = await getIncompleteHotels();
   const incompleteHotels = res.data;
@@ -32,9 +41,9 @@ const OnboardingPage = async () => {
           <IncompleteHotelComponent
             incompleteHotels={incompleteHotels}
             getStepName={getStepName}
-            role={agent.user.role as 'AGENT'}
+            role={session.user.role as AdminAgentRole}
           />
-          <StartNewHotel />
+          <StartNewHotel role={session.user.role as AdminAgentRole} />
 
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-500">

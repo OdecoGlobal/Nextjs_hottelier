@@ -85,7 +85,7 @@ const MainBasicInfoPage = ({
           variant: 'default',
         });
         router.replace(
-          `/${role.toLowerCase()}/onboarding/${response.hotel?.id}/policies`,
+          `/onboard/${role.toLowerCase()}/hotel/${response.hotel?.id}/policies`,
         );
       }
     });
