@@ -55,7 +55,7 @@ const MainAmenitiesForm = ({
 
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={2} role={role} />
+      <HotelCreationSteps current={2} role={role} hotelId={hotelId} />
 
       <div className=" flex-1 py-10 px-5">
         <Form {...form}>

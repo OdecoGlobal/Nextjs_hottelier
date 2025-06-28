@@ -150,7 +150,7 @@ const MainPolicyForm = ({
   const isLastStep = step === stepFields.length - 1;
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={1} role={role} />
+      <HotelCreationSteps current={1} role={role} hotelId={hotelId} />
 
       <Form {...form}>
         <form

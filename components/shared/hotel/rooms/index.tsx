@@ -97,7 +97,7 @@ const AddRoomComponent = ({
         router.replace(
           `/${role.toLowerCase()}/onboarding/${hotelId}/rooms/${
             response?.room?.id
-          }/rates`
+          }/rates`,
         );
       }
     });
@@ -122,7 +122,7 @@ const AddRoomComponent = ({
 
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={4} />
+      <HotelCreationSteps current={4} role={role} hotelId={hotelId} />
       <Form {...form}>
         <form
           className="flex-1 my-5 px-5 w-full max-w-3xl mx-auto space-y-4"

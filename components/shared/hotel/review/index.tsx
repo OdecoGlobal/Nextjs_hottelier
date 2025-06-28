@@ -8,12 +8,13 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { HotelResponse } from '@/lib/actions/hotel.action';
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Loader } from 'lucide-react';
 import HotelCreationSteps from '../creation-steps';
 import OnboardReviewCard from './onboard-review-card';
 import { AdminAgentRole } from '@/types';
 import { generateSlug } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { useTransition } from 'react';
 
 const OnboardingReviewComponent = ({
   hotel,
@@ -30,6 +31,13 @@ const OnboardingReviewComponent = ({
   const completedSteps = Object.values(steps).filter(step => step).length;
   const totalSteps = Object.keys(steps).length;
   const progress = Math.round((completedSteps / totalSteps) * 100);
+  const [isPending, startTransition] = useTransition();
+
+  const handleSubmit = () => {
+    startTransition(async () => {
+      console.log(steps);
+    });
+  };
 
   const onboardingSteps = [
     {
@@ -153,14 +161,23 @@ const OnboardingReviewComponent = ({
             </div>
             <Button
               type="button"
+              onClick={handleSubmit}
+              disabled={isPending || isFullyCompleted}
               className={` font-medium transition-all ${
                 !isFullyCompleted
                   ? 'bg-blue-600 hover:bg-blue-700 text-white'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
             >
-              {' '}
-              Submit
+              {isPending ? (
+                <>
+                  <Loader className="w-4 h-4 animate-spin" /> Submiting
+                </>
+              ) : isFullyCompleted ? (
+                'Already Submitted'
+              ) : (
+                'Submit'
+              )}
             </Button>
           </CardContent>
         </Card>

@@ -93,7 +93,7 @@ const UploadHotelPhotoForm = ({
 
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={3} role={role} />
+      <HotelCreationSteps current={3} role={role} hotelId={hotelId} />
       <div className=" flex-1 py-10  px-5 w-full">
         <Card className="max-w-md mx-auto bg-transparent">
           <CardHeader>

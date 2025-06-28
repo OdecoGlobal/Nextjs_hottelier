@@ -109,7 +109,7 @@ const MainBasicInfoPage = ({
   const lng = form.watch('lng');
   return (
     <section className="flex flex-col md:flex-row space-y-3 min-h-screen mb-7">
-      <HotelCreationSteps current={0} role={role} />
+      <HotelCreationSteps current={0} role={role} hotelId={hotelId} />
 
       <main className="px-5 flex-1 flex flex-col mx-auto justify-center items-center ">
         <Card className="w-full md:max-w-4xl ">

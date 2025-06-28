@@ -73,7 +73,7 @@ const AvailabilityRoomSetter = ({
   }[range];
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={5} role={role} />
+      <HotelCreationSteps current={5} role={role} hotelId={hotelId} />
       <div className=" flex-1 py-10 px-5">
         <Card className="w-full  mx-auto mt-4 p-4">
           <div className="flex justify-between items-center mb-4">
