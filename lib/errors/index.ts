@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 import AppError from './app-error';
 import { ZodError } from 'zod';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function formatApiError(err: any) {
   console.log('API ERROR', err);
 
   let error = err;
-  if (!error || typeof error !== 'object') {
+
+  if (error instanceof AppError) {
+    error = error;
+  } else if (!error || typeof error !== 'object') {
     error = new AppError(String(error), 500);
   } else if (error instanceof ZodError) {
     const fieldsErrors = error.errors.map(e => e.message).join('. ');
@@ -21,11 +24,13 @@ export function formatApiError(err: any) {
       error = new AppError(message, 400);
     } else if (err.code === 'P5010') {
       error = new AppError(
-        'Database connection timeout. Please try again later.',
-        503
+        'Server connection timeout. Please try again later.',
+        503,
       );
+    } else if (err.code === 'P2025') {
+      error = new AppError('Resource not found', 404);
     } else {
-      error = new AppError(err.message || 'Database error', 500);
+      error = new AppError(err.message || 'Internal server error', 500);
     }
   } else if (err.name === 'JsonWebTokenError') {
     error = new AppError('Invalid Token. Please log in again', 401);
@@ -33,12 +38,9 @@ export function formatApiError(err: any) {
     error = new AppError('Your token has expired! Please log in again.', 401);
   } else if (err.name === 'ValidationError' && err.errors) {
     const messages = Object.values(err.errors)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((el: any) => el.message)
       .join('. ');
     error = new AppError(`Invalid input data. ${messages}`, 400);
-  } else if (typeof error.message === 'string') {
-    error = new AppError(err.message, 500);
   } else {
     error = new AppError('Something went wrong', 500);
   }
@@ -54,7 +56,7 @@ export function formatApiError(err: any) {
         error,
         stack: error.stack,
       },
-      { status: statusCode }
+      { status: statusCode },
     );
   } else if (error.isOperational) {
     return NextResponse.json(
@@ -62,7 +64,7 @@ export function formatApiError(err: any) {
         status,
         message,
       },
-      { status: statusCode }
+      { status: statusCode },
     );
   } else {
     return NextResponse.json(
@@ -70,7 +72,7 @@ export function formatApiError(err: any) {
         status: 'error',
         message: 'Something went wrong',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,6 +1,5 @@
 import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
-import AppError from '@/lib/errors/app-error';
 import { HotelImageUploadBodySchema } from '@/lib/schemas/validator';
 import { protect, restrictTo, validateHotelAcces } from '@/middleware/auth';
 import { ImageType } from '@/types';
@@ -15,7 +14,7 @@ interface ImageUploadResult {
 
 const processImageArray = (
   images: { imageUrl: string; public_id: string }[],
-  imageType: ImageType
+  imageType: ImageType,
 ): ImageUploadResult[] => {
   return images.map(img => ({
     imageUrl: img.imageUrl,
@@ -26,22 +25,14 @@ const processImageArray = (
 
 export const POST = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('ADMIN', 'AGENT')(req);
+    const user = await protect(req);
+    restrictTo('ADMIN', 'AGENT')(user);
 
     const { hotelId } = await params;
     validateHotelAcces(req, hotelId);
-    if (!hotelId) throw new AppError('ID is required too upload images', 400);
-
-    const hotel = await prisma.hotelBasicInfo.findUnique({
-      where: { hotelId },
-      select: { hotelId: true },
-    });
-
-    if (!hotel) throw new AppError('Hotel not found', 400);
 
     const body = await req.json();
     const validatedData = HotelImageUploadBodySchema.parse(body);
@@ -66,7 +57,7 @@ export const POST = async (
 
     const existingUrls = new Set(existingImages.map(img => img.imageUrl));
     const newImages = imageUploadResults.filter(
-      img => !existingUrls.has(img.imageUrl)
+      img => !existingUrls.has(img.imageUrl),
     );
 
     if (newImages.length === 0) {
@@ -76,7 +67,7 @@ export const POST = async (
           message: 'All images already exist',
           data: { count: 0, duplicates: imageUploadResults.length },
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -96,7 +87,7 @@ export const POST = async (
       await updateHotelProgress(
         hotelId,
         'step4_hotel_images',
-        images.count > 0
+        images.count > 0,
       );
 
       return images;

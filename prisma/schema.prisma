@@ -58,6 +58,7 @@ model Hotel {
   updatedAt DateTime @updatedAt @db.Timestamp(6)
 
   status           HotelStatus @default(DRAFT)
+  rejectionReason  String?
   completionSteps  Json        @default("{}")
   currentStep      Int         @default(1)
   totalSteps       Int         @default(6)
@@ -75,6 +76,7 @@ model Hotel {
   // bookings    Booking[]
   // reviews     Review[]
 
+  @@index([status], map: "hotel_status")
   @@map("hotels")
 }
 

@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: Promise<{ roomId: string }> }
+  { params }: { params: Promise<{ roomId: string }> },
 ) => {
   try {
     const { roomId } = await params;
@@ -28,7 +28,7 @@ export const GET = async (
         data: { room },
         status: 'success',
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);
@@ -37,11 +37,11 @@ export const GET = async (
 
 export const DELETE = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string; roomId: string }> }
+  { params }: { params: Promise<{ hotelId: string; roomId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('AGENT', 'ADMIN')(req);
+    const user = await protect(req);
+    restrictTo('AGENT', 'ADMIN')(user);
     const { roomId, hotelId } = await params;
     if (!roomId) throw new AppError('ID is required', 400);
 

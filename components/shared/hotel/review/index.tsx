@@ -169,10 +169,10 @@ const OnboardingReviewComponent = ({
           );
         })}
         <Card>
-          <CardContent className="flex items-center justify-between">
+          <CardContent className="flex flex-col md:flex-row items-start md:items-center justify-between flex-wrap space-y-3 ">
             <div>
               <h3 className="font-semibold">Ready to submit</h3>
-              <p className="text-sm tracking-tight leading-none text-muted-foreground text-wrap">
+              <p className="text-sm tracking-tight text-muted-foreground text-wrap">
                 Once submitted, admin will review your hotel and notify you of
                 the status
               </p>
@@ -181,7 +181,7 @@ const OnboardingReviewComponent = ({
               type="button"
               onClick={handleSubmit}
               disabled={isPending || isFullyCompleted}
-              className={` font-medium transition-all ${
+              className={` font-medium transition-all self-end ${
                 !isFullyCompleted
                   ? 'bg-blue-600 hover:bg-blue-700 text-white'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'

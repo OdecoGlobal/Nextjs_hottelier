@@ -7,15 +7,14 @@ import { NextRequest } from 'next/server';
 
 export const protect = async (req: NextRequest) => {
   const { user } = await verifyAndGetUser(req);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password: _, ...safeUser } = user;
-  req.user = safeUser;
+  const { password, ...safeUser } = user;
+  void password;
+  return safeUser;
 };
 
 export const restrictTo = (...roles: Role[]) => {
-  return (req: NextRequest) => {
-    const authreq = req as AuthenticatedRequest;
-    if (!authreq.user || !roles.includes(authreq.user.role)) {
+  return (user: { role: Role }) => {
+    if (!user || !roles.includes(user.role)) {
       throw new AppError('Forbidden', 403);
     }
   };
@@ -24,7 +23,7 @@ export const restrictTo = (...roles: Role[]) => {
 export const validateHotelAcces = async (
   req: NextRequest,
   hotelId: string,
-  allowAdmin: boolean = true
+  allowAdmin: boolean = true,
 ) => {
   const authReq = req as AuthenticatedRequest;
   if (!hotelId) {
@@ -45,7 +44,5 @@ export const validateHotelAcces = async (
   if (!isAllowed) {
     throw new AppError('Access denied', 403);
   }
-  req.hotel = hotel;
+  return hotel;
 };
-
-// (options: ValidateHotelOptions = { : true }) =>

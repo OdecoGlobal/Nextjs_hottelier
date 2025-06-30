@@ -3,22 +3,22 @@ import { formatApiError } from '@/lib/errors';
 import AppError from '@/lib/errors/app-error';
 import { hotelImageUploadSchema } from '@/lib/schemas/validator';
 import { generateSlug } from '@/lib/utils';
+import { protect, restrictTo, validateHotelAcces } from '@/middleware/auth';
 import { uploadImages } from '@/middleware/images';
 import { updateHotelProgress } from '@/utils/hotel';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    const { hotelId } = await params;
-    if (!hotelId) throw new AppError('ID is required too upload images', 400);
+    const user = await protect(req);
+    restrictTo('ADMIN', 'AGENT')(user);
 
-    const hotel = await prisma.hotelBasicInfo.findUnique({
-      where: { hotelId },
-    });
-    if (!hotel) throw new AppError('Hotel not found', 400);
+    const { hotelId } = await params;
+    const hotel = await validateHotelAcces(req, hotelId);
+
     const formData = await req.formData();
 
     const rawFiles = {
@@ -41,7 +41,7 @@ export const POST = async (
     )
       throw new AppError('No images provided', 400);
 
-    const hotelName = generateSlug(hotel.name);
+    const hotelName = generateSlug(hotel.agentId);
     const baseFolder = `hotels/${hotelName}/${hotelId}`;
     const timestamp = Date.now();
 
@@ -55,7 +55,7 @@ export const POST = async (
       const urls = await uploadImages(
         files.hotelImages,
         `${baseFolder}/hotelImages`,
-        `hotelImages-${timestamp}`
+        `hotelImages-${timestamp}`,
       );
       urls.forEach(url => {
         imageUploadResults.push({
@@ -69,7 +69,7 @@ export const POST = async (
       const urls = await uploadImages(
         files.exterior,
         `${baseFolder}/exterior`,
-        `exterior-${timestamp}`
+        `exterior-${timestamp}`,
       );
       urls.forEach(url => {
         imageUploadResults.push({
@@ -83,7 +83,7 @@ export const POST = async (
       const urls = await uploadImages(
         files.interior,
         `${baseFolder}/interior`,
-        `interior-${timestamp}`
+        `interior-${timestamp}`,
       );
       urls.forEach(url => {
         imageUploadResults.push({
@@ -116,7 +116,7 @@ export const POST = async (
         status: 'success',
         data: result.count,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);

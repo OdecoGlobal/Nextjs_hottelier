@@ -1,27 +1,18 @@
 import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
 import { protect, restrictTo } from '@/middleware/auth';
-import { AuthenticatedRequest } from '@/types/custom';
+import { HotelStatus, HotelStatusType } from '@/types';
 import { NextRequest, NextResponse } from 'next/server';
-const validStatuses = [
-  'DRAFT',
-  'IN_PROGRESS',
-  'PENDING_REVIEW',
-  'APPROVED',
-  'REJECTED',
-  'ACTIVE',
-  'INACTIVE',
-] as const;
-type HotelStatus = (typeof validStatuses)[number];
 
 export const GET = async (req: NextRequest) => {
   try {
-    await protect(req);
-    restrictTo('AGENT', 'ADMIN')(req);
-    const authReq = req as AuthenticatedRequest;
-    const searchParams = req.nextUrl.searchParams;
-    const status = searchParams.get('status');
-    const agentId = authReq.user.id;
+    const user = await protect(req);
+    restrictTo('AGENT', 'ADMIN')(user);
+    const { searchParams } = req.nextUrl;
+
+    const rawStatus = searchParams.get('status');
+    const status = rawStatus?.toUpperCase;
+    const agentId = user.id;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const whereClause: any = {
@@ -31,9 +22,9 @@ export const GET = async (req: NextRequest) => {
     if (
       status &&
       typeof status === 'string' &&
-      validStatuses.includes(status as HotelStatus)
+      HotelStatus.includes(status as HotelStatusType)
     ) {
-      whereClause.status = status as HotelStatus;
+      whereClause.status = status as HotelStatusType;
     }
 
     const hotel = await prisma.hotel.findMany({

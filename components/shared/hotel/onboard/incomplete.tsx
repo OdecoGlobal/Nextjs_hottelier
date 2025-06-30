@@ -9,13 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { deletHotel } from '@/lib/actions/hotel.action';
 import {
   formatDateTime,
   generateSlug,
   getHotelCompletionProgress,
 } from '@/lib/utils';
-import { AdminAgentRole, HotelItem } from '@/types';
+import { AdminAgentRole, HotelType } from '@/types';
 import {
   ArrowRight,
   Building2,
@@ -31,7 +32,7 @@ const IncompleteHotelComponent = ({
   getStepName,
   role,
 }: {
-  incompleteHotels: HotelItem[];
+  incompleteHotels: HotelType[];
   getStepName: (stepNumber: number) => string;
   role: AdminAgentRole;
 }) => {
@@ -39,19 +40,26 @@ const IncompleteHotelComponent = ({
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {incompleteHotels.map(hotel => {
-          const progress = getHotelCompletionProgress(hotel.completionSteps);
-          const nextStep = getStepName(hotel.currentStep);
-          const basicInfo = hotel.basicInfo;
-          const { isFullyCompleted } = hotel;
+          const {
+            basicInfo,
+            isFullyCompleted,
+            id,
+            completionSteps,
+            currentStep,
+            status,
+            updatedAt,
+          } = hotel;
+          const progress = getHotelCompletionProgress(completionSteps);
+          const nextStep = getStepName(currentStep);
 
           const deleteAction = async () => {
             'use server';
-            return await deletHotel(hotel.id);
+            return await deletHotel(id);
           };
 
           return (
             <Card
-              key={hotel.id}
+              key={id}
               className="hover:shadow-lg transition-all duration-300"
             >
               <CardHeader className="pb-4">
@@ -70,12 +78,12 @@ const IncompleteHotelComponent = ({
                   </div>
                   <Badge
                     className={`${
-                      hotel.status === 'IN_PROGRESS'
+                      status === 'IN_PROGRESS'
                         ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-gray-100 text-gray-800'
                     }`}
                   >
-                    {hotel.status.replace('_', ' ')}
+                    {status.replace('_', ' ')}
                   </Badge>
                 </div>
               </CardHeader>
@@ -86,12 +94,7 @@ const IncompleteHotelComponent = ({
                     <span className="text-sm">Progress</span>
                     <span className="text-sm font-medium">{progress}%</span>
                   </div>
-                  <div className="bg-muted-foreground w-full rounded-full h-2">
-                    <div
-                      className=" bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${progress}%` }}
-                    ></div>
-                  </div>
+                  <Progress value={progress} className="[&>div]:bg-blue-600" />
                 </div>
                 <div className="flex items-center text-sm">
                   <Clock size={14} className="mr-2" />
@@ -99,9 +102,7 @@ const IncompleteHotelComponent = ({
                 </div>
                 <div className="flex items-center text-xs text-gray-500">
                   <Calendar size={12} className="mr-1" />
-                  <span>
-                    Updated {formatDateTime(hotel.updatedAt).dateOnly}
-                  </span>
+                  <span>Updated {formatDateTime(updatedAt).dateOnly}</span>
                 </div>
               </CardContent>
               <CardFooter>

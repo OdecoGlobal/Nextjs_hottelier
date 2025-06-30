@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic';
 import { requireAdminOrAgent } from '@/auth-guard';
 import IncompleteHotelComponent from '@/components/shared/hotel/onboard/incomplete';
 import StartNewHotel from '@/components/shared/hotel/onboard/start-new-hotel';
-import { getIncompleteHotels } from '@/lib/actions/hotel.action';
+import { getOnboardHotels } from '@/lib/actions/hotel.action';
 import { steps } from '@/lib/constants';
 import { AdminAgentRole } from '@/types';
 import { Metadata } from 'next';
@@ -20,7 +20,7 @@ const OnboardingPage = async ({
   const { role } = await params;
   const session = await requireAdminOrAgent(role);
 
-  const res = await getIncompleteHotels();
+  const res = await getOnboardHotels();
   const incompleteHotels = res.data;
 
   const getStepName = (stepNumber: number) =>

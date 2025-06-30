@@ -1,6 +1,5 @@
 import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
-import AppError from '@/lib/errors/app-error';
 import { completeRoomSchema } from '@/lib/schemas/validator';
 import { protect, restrictTo, validateHotelAcces } from '@/middleware/auth';
 import { updateHotelProgress } from '@/utils/hotel';
@@ -8,22 +7,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('AGENT', 'ADMIN')(req);
+    const user = await protect(req);
+    restrictTo('AGENT', 'ADMIN')(user);
 
     const { hotelId } = await params;
-    if (!hotelId) throw new AppError('ID is required', 400);
     validateHotelAcces(req, hotelId);
 
-    const hotel = await prisma.hotelBasicInfo.findUnique({
-      where: { hotelId },
-      select: { hotelId: true },
-    });
-
-    if (!hotel) throw new AppError('Hotel not found', 400);
     const body = await req.json();
     const validatedData = completeRoomSchema.parse(body);
     const {
@@ -113,7 +105,7 @@ export const POST = async (
         status: 'success',
         data: result,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     return formatApiError(error);

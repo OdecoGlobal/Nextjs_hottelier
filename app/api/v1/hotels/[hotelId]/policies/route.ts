@@ -8,11 +8,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('ADMIN', 'AGENT')(req);
+    const user = await protect(req);
+    restrictTo('ADMIN', 'AGENT')(user);
     const { hotelId } = await params;
 
     validateHotelAcces(req, hotelId);
@@ -32,7 +32,7 @@ export const POST = async (
       await updateHotelProgress(
         hotelId,
         'step2_policies',
-        policies.isCompleted
+        policies.isCompleted,
       );
       return policies;
     });
@@ -42,7 +42,7 @@ export const POST = async (
         success: true,
         data: result,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     return formatApiError(error);
@@ -51,11 +51,11 @@ export const POST = async (
 
 export const PATCH = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('ADMIN', 'AGENT')(req);
+    const user = await protect(req);
+    restrictTo('ADMIN', 'AGENT')(user);
     const { hotelId } = await params;
     validateHotelAcces(req, hotelId);
 
@@ -74,7 +74,7 @@ export const PATCH = async (
         success: true,
         data: policies,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);
@@ -83,11 +83,11 @@ export const PATCH = async (
 
 export const PUT = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('ADMIN', 'AGENT')(req);
+    const user = await protect(req);
+    restrictTo('ADMIN', 'AGENT')(user);
     const { hotelId } = await params;
     validateHotelAcces(req, hotelId);
 
@@ -111,7 +111,7 @@ export const PUT = async (
       await updateHotelProgress(
         hotelId,
         'step2_policies',
-        policies.isCompleted
+        policies.isCompleted,
       );
       return policies;
     });
@@ -121,7 +121,7 @@ export const PUT = async (
         success: true,
         data: result,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);
@@ -130,7 +130,7 @@ export const PUT = async (
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
     const { hotelId } = await params;
@@ -144,7 +144,7 @@ export const GET = async (
         status: 'success',
         data: policy,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);

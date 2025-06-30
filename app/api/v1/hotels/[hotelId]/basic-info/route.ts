@@ -7,21 +7,25 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
+    const user = await protect(req);
+    restrictTo('AGENT', 'ADMIN')(user);
+
     const { hotelId } = await params;
-    if (!hotelId) throw new AppError('ID is required', 400);
+    validateHotelAcces(req, hotelId);
     const basicInfo = await prisma.hotelBasicInfo.findUnique({
       where: { hotelId },
     });
+
     if (!basicInfo) throw new AppError('No hotel found', 400);
     return NextResponse.json(
       {
         status: 'success',
         data: basicInfo,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);
@@ -30,14 +34,14 @@ export const GET = async (
 
 export const PATCH = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('AGENT', 'ADMIN')(req);
+    const user = await protect(req);
+    restrictTo('AGENT', 'ADMIN')(user);
     const { hotelId } = await params;
+
     validateHotelAcces(req, hotelId);
-    if (!hotelId) throw new AppError('ID is required', 400);
     const body = await req.json();
     const updatedBasicInfoData = baseHotelSchema.partial().parse(body);
     const basicInfo = await prisma.hotelBasicInfo.update({
@@ -50,7 +54,7 @@ export const PATCH = async (
         status: 'success',
         data: basicInfo,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);

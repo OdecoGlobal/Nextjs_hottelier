@@ -1,9 +1,9 @@
 import {
   basicInfoSchema,
   completionStepsSchema,
-  hotelItemSchema,
+  hotelSchema,
   createHotelApiResponseSchema,
-  incompleteHotelApiResponseSchema,
+  onboardHotelApiResponseSchema,
   hotelAmenitiesSchema,
   hotelPolicySchema,
 } from '@/lib/schemas/grouped-validators';
@@ -233,6 +233,16 @@ export const ALLOWED_FILE_TYPES = [
 
 export const ROLES = ['USER', 'AGENT', 'ADMIN'] as const;
 export type Roles = (typeof ROLES)[number];
+export const HotelStatus = [
+  'DRAFT',
+  'IN_PROGRESS',
+  'PENDING_REVIEW',
+  'APPROVED',
+  'REJECTED',
+  'ACTIVE',
+  'INACTIVE',
+] as const;
+export type HotelStatusType = (typeof HotelStatus)[number];
 export type User = z.infer<typeof userSchema>;
 export type signUpInput = z.infer<typeof signUpFormSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
@@ -240,6 +250,7 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export type CountryData = z.infer<typeof insertCountrySchema>;
 export type StateData = z.infer<typeof insertStateSchema>;
 export type CityData = z.infer<typeof insertCitySchema>;
+
 export type HotelAmenitiesType = z.infer<typeof hotelAmenitiesSchema>;
 export type VeifyOTPType = z.infer<typeof verifyOtpSchema>;
 
@@ -263,14 +274,13 @@ export type HotelPolicyType = z.infer<typeof hotelPolicySchema>;
 export type AddRoomType = z.infer<typeof completeRoomSchema>;
 
 export type GetRoomType = z.infer<typeof getRoomSchema>;
-
 export type CompletionSteps = z.infer<typeof completionStepsSchema>;
-export type HotelItem = z.infer<typeof hotelItemSchema>;
+export type HotelType = z.infer<typeof hotelSchema>;
 export type CreateHotelApiResponse = z.infer<
   typeof createHotelApiResponseSchema
 >;
-export type IncompleteHotelApiResponse = z.infer<
-  typeof incompleteHotelApiResponseSchema
+export type OnboardHotelApiResponse = z.infer<
+  typeof onboardHotelApiResponseSchema
 >;
 
 export type HotelBasicInfoType = z.infer<typeof hotelBasicInfoSchema>;

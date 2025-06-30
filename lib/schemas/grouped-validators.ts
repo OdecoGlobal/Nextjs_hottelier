@@ -1,10 +1,11 @@
 import { z } from 'zod';
 import {
-  hotelBasicInfoSchema,
   baseHotelPolicySchema,
   baseHotelAmenitiesSchema,
   completeRoomSchema,
   baseRoomAmenitiesSchema,
+  hotelSchema,
+  basicInfoSchema,
 } from './validator';
 
 export const hotelPolicySchema = baseHotelPolicySchema.superRefine(
@@ -262,42 +263,8 @@ export const hotelPolicySchema = baseHotelPolicySchema.superRefine(
         });
       }
     }
-  }
+  },
 );
-
-export const completionStepsSchema = z.object({
-  step1_basic_info: z.boolean(),
-  step2_policies: z.boolean(),
-  step3_amenities: z.boolean(),
-  step4_hotel_images: z.boolean(),
-  step5_rooms: z.boolean(),
-  step6_rate_and_availability: z.boolean(),
-  step7_review: z.boolean(),
-});
-
-export const basicInfoSchema = hotelBasicInfoSchema.extend({
-  id: z.string().uuid(),
-  hotelId: z.string().uuid(),
-  slug: z.string(),
-  rating: z.string(),
-  isCompleted: z.boolean(),
-  completedAt: z.string().datetime(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-});
-
-export const hotelItemSchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-  status: z.enum(['IN_PROGRESS']),
-  completionSteps: completionStepsSchema,
-  currentStep: z.number(),
-  totalSteps: z.number(),
-  isFullyCompleted: z.boolean(),
-  agentId: z.string().uuid(),
-  basicInfo: basicInfoSchema,
-});
 
 export const hotelAmenitiesSchema = baseHotelAmenitiesSchema
   .transform(data => {
@@ -535,13 +502,14 @@ export const hotelAmenitiesSchema = baseHotelAmenitiesSchema
 export const createHotelApiResponseSchema = z.object({
   status: z.enum(['success', 'error', 'fail']),
   data: z.object({
-    hotel: hotelItemSchema.omit({ basicInfo: true }),
+    hotel: hotelSchema.omit({ basicInfo: true }),
     basicInfoData: basicInfoSchema,
   }),
 });
-export const incompleteHotelApiResponseSchema = z.object({
+
+export const onboardHotelApiResponseSchema = z.object({
   status: z.enum(['success', 'error', 'fail']),
-  data: z.array(hotelItemSchema),
+  data: z.array(hotelSchema),
 });
 
 export const StepOneAddRoomSchema = completeRoomSchema.pick({

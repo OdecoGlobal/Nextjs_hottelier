@@ -8,16 +8,16 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const PUT = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string; roomId: string }> }
+  { params }: { params: Promise<{ hotelId: string; roomId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('ADMIN', 'AGENT')(req);
+    const user = await protect(req);
+    restrictTo('ADMIN', 'AGENT')(user);
+
     const { roomId, hotelId } = await params;
-
     validateHotelAcces(req, hotelId);
-
     if (!roomId) throw new AppError('ID is required', 400);
+
     const body = await req.json();
     const parsedData = availabilitySchema.parse(body);
     const { date, price, inventory, isAvailable } = parsedData;
@@ -48,7 +48,7 @@ export const PUT = async (
       await updateHotelProgress(
         hotelId,
         'step6_rate_and_availability',
-        availability.isCompleted
+        availability.isCompleted,
       );
       return availability;
     });
@@ -58,7 +58,7 @@ export const PUT = async (
         status: 'success',
         data: result,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);

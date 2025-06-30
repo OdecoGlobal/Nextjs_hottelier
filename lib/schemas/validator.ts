@@ -33,6 +33,7 @@ import {
   WIFI_AREA_TYPE,
   PRICING_MODEL_TYPE,
   ROLES,
+  HotelStatus,
 } from '@/types';
 import z from 'zod';
 import { MAX_FILE_SIZE } from '../constants';
@@ -68,7 +69,6 @@ export const signUpFormSchema = z
   });
 
 // HOTELS ZOD SCHEMA
-
 export const baseHotelSchema = z.object({
   name: z.string().min(4, 'Hotel name must be at least 4 characters'),
   address: z.string().min(3, 'Address must be at least 3 characters'),
@@ -90,6 +90,38 @@ export const hotelBasicInfoSchema = baseHotelSchema.extend({
   countryId: z.string().nullish(),
   stateId: z.string().nullish(),
   stateCode: z.string().nullish(),
+});
+
+export const basicInfoSchema = hotelBasicInfoSchema.extend({
+  id: z.string().uuid(),
+  hotelId: z.string().uuid(),
+  slug: z.string(),
+  rating: z.string(),
+  isCompleted: z.boolean(),
+  completedAt: z.string().datetime(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+export const completionStepsSchema = z.object({
+  step1_basic_info: z.boolean(),
+  step2_policies: z.boolean(),
+  step3_amenities: z.boolean(),
+  step4_hotel_images: z.boolean(),
+  step5_rooms: z.boolean(),
+  step6_rate_and_availability: z.boolean(),
+  step7_review: z.boolean(),
+});
+export const hotelSchema = z.object({
+  id: z.string().uuid(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  status: z.enum(HotelStatus),
+  completionSteps: completionStepsSchema,
+  currentStep: z.number(),
+  totalSteps: z.number(),
+  isFullyCompleted: z.boolean(),
+  agentId: z.string().uuid(),
+  basicInfo: basicInfoSchema,
 });
 
 export const verifyOtpSchema = z.object({

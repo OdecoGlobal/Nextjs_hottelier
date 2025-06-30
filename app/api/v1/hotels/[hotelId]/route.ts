@@ -49,10 +49,9 @@ export const DELETE = async (
   { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('AGENT', 'ADMIN')(req);
+    const user = await protect(req);
+    restrictTo('AGENT', 'ADMIN')(user);
     const { hotelId } = await params;
-    if (!hotelId) throw new AppError('ID is required', 400);
     validateHotelAcces(req, hotelId);
 
     await prisma.hotel.delete({

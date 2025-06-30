@@ -7,11 +7,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('ADMIN', 'AGENT')(req);
+    const user = await protect(req);
+    restrictTo('ADMIN', 'AGENT')(user);
 
     const { hotelId } = await params;
 
@@ -31,7 +31,7 @@ export const POST = async (
       await updateHotelProgress(
         hotelId,
         'step3_amenities',
-        amenities.isCompleted
+        amenities.isCompleted,
       );
 
       return amenities;
@@ -42,7 +42,7 @@ export const POST = async (
         success: true,
         data: result,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     return formatApiError(error);
@@ -50,16 +50,15 @@ export const POST = async (
 };
 export const PATCH = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('ADMIN', 'AGENT')(req);
+    const user = await protect(req);
+    restrictTo('ADMIN', 'AGENT')(user);
     const { hotelId } = await params;
     validateHotelAcces(req, hotelId);
     const body = await req.json();
     const amenitiesData = baseHotelAmenitiesSchema.partial().parse(body);
-
     const amenities = await prisma.hotelAmenity.update({
       where: { hotelId },
       data: {
@@ -72,7 +71,7 @@ export const PATCH = async (
         success: true,
         data: amenities,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);
@@ -80,11 +79,11 @@ export const PATCH = async (
 };
 export const PUT = async (
   req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> }
+  { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
-    await protect(req);
-    restrictTo('ADMIN', 'AGENT')(req);
+    const user = await protect(req);
+    restrictTo('ADMIN', 'AGENT')(user);
     const { hotelId } = await params;
     validateHotelAcces(req, hotelId);
 
@@ -107,7 +106,7 @@ export const PUT = async (
       await updateHotelProgress(
         hotelId,
         'step3_amenities',
-        amenities.isCompleted
+        amenities.isCompleted,
       );
 
       return amenities;
@@ -118,7 +117,7 @@ export const PUT = async (
         success: true,
         data: result,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return formatApiError(error);

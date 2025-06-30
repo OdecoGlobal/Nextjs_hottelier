@@ -10,8 +10,22 @@ import {
   HotelBasicInfoType,
   HotelImageUploadBody,
   HotelPolicyType,
-  IncompleteHotelApiResponse,
+  OnboardHotelApiResponse,
 } from '@/types';
+import { serverFetch } from '../fetch';
+
+export type HotelResponse = {
+  id: string;
+  basicInfo: HotelBasicInfoType;
+  policies: HotelPolicyType;
+  completionSteps: CompletionSteps;
+  amenities: HotelAmenitiesType;
+  hotelImages: HotelImageUploadBody;
+  rooms: GetRoomType[];
+  availability: AvailabilityType[];
+  isFullyCompleted: boolean;
+  currentStep: number;
+};
 
 export async function createNewHotel(formData: HotelBasicInfoType) {
   try {
@@ -85,19 +99,6 @@ export async function updateHotelPolicies(
     return { success: false, message: formatError(error) };
   }
 }
-export type HotelResponse = {
-  id: string;
-  basicInfo: HotelBasicInfoType;
-  policies: HotelPolicyType;
-  completionSteps: CompletionSteps;
-  amenities: HotelAmenitiesType;
-  hotelImages: HotelImageUploadBody;
-  rooms: GetRoomType[];
-  availability: AvailabilityType[];
-  isFullyCompleted: boolean;
-
-  currentStep: number;
-};
 
 export async function getHotelById(hotelId: string): Promise<{
   hotel: HotelResponse | null;
@@ -195,13 +196,18 @@ export async function deletHotel(hotelId: string) {
   }
 }
 
-export async function getIncompleteHotels(): Promise<IncompleteHotelApiResponse> {
+export async function getOnboardHotels(): Promise<OnboardHotelApiResponse> {
   try {
-    const res = await axiosInstance('hotels/onboard/incomplete');
-    if (res.status !== 200) {
-      throw new Error('Error fetching countries');
-    }
-    return res.data;
+    // const res = await axiosInstance<OnboardHotelApiResponse>('hotels/onboard');
+    // if (res.status !== 200) {
+    //   throw new Error('Error fetching countries');
+    // }
+    const data = await serverFetch.get('hotels/onboard', {
+      cache: 'force-cache',
+      next: { revalidate: 1 * 60 * 60, tags: ['hotel_onboard'] },
+    });
+
+    return data;
   } catch {
     return {
       data: [],
