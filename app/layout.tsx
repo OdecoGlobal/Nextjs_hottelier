@@ -3,7 +3,8 @@ import { Roboto_Condensed, Roboto } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from '@/lib/constants';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from '@/providers/theme-provider';
+import TanstackProvider from '@/providers/tanstack-provider';
 
 const robotoSans = Roboto({
   variable: '--font-roboto-sans',
@@ -40,8 +41,10 @@ export default function MainRootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Toaster />
-          {children}
+          <TanstackProvider>
+            <Toaster />
+            {children}
+          </TanstackProvider>
         </ThemeProvider>
       </body>
     </html>

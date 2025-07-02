@@ -3,16 +3,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-}
-
 @theme inline {
-  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-100: var(--brand-primary-100);
+  --color-brand-primary-200: var(--brand-primary-200);
   --color-brand-secondary: var(--brand-secondary);
-  --color-brand-bg: var(--brand-bg);
-  --color-brand-sidebar-dark: #1e1b4b;
-  --color-brand-sidebar-dark2: #312e81;
-  --color-brand-sidebar-gradient: linear-gradient(180deg, #1e1b4b, #312e81);
+  --color-brand-bg-100: var(--brand-bg-100);
+  --color-brand-bg-200: var(--brand-bg-200);
+  --color-glass-bg: var(--glass-bg);
+  --color-text-brand: var(--text-brand);
+  --color-glow: var(--glow);
+  --color-bg-glow: var(--bg-glow);
+
+  /* CUSTOM */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -51,11 +53,21 @@
 }
 
 :root {
-  --brand-sidebar-gradient: (180deg, #1e1b4b, #312e81);
-  --brand-bg: #1e1b4b;
-  --brand-bg-darker: #16213e;
-  --brand-primary: #8b5cf6;
+  --brand-primary-100: #8b5cf6;
+  --brand-primary-200: #7c3aed;
   --brand-secondary: #c084fc;
+  --brand-bg-100: #f1f5f9;
+  --brand-bg-200: #e2e8f0;
+  --glass-bg: rgba(139, 92, 246, 0.1);
+  --backdrop-blur: blur(10px);
+  --gradient-100: 45deg, #8b5cf6, #c084fc;
+  --gradient-200: 180deg, #1e1b4b, #312e81;
+  --gradient-300: 135deg, #1a1a2e, #16213e;
+  --bg-glow: #ddd6fe;
+
+  --text-brand: #7c3aed;
+  --glow: #5b21b6;
+  /* CUSTOM */
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -91,9 +103,12 @@
 }
 
 .dark {
-  --brand-bg: #221f42;
-  --brand-primary: #7c3aed;
-  --brand-secondary: #a855f7;
+  --brand-bg-100: #221f42;
+  --brand-bg-200: #16213e;
+  --text-brand: #c084fc;
+  --bg-glow: #5b21b6;
+
+  /* CUSTOM */
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -151,9 +166,32 @@
   .flex-between {
     @apply flex items-center justify-between;
   }
-}
+  .dialog-div {
+    @apply rounded-xl w-full p-4 bg-card shadow-card capitalize;
+  }
+  .dialog-h3{
+    @apply text-muted-foreground font-bold
+  }
+  .bg-gradient-100 {
+    background: var(--bg-gradient-100);
+  }
+  .bg-gradient-200 {
+    background: var(--bg-gradient-200);
+  }
+  .bg-gradient-300 {
+    background: var(--bg-gradient-300);
+  }
+  .bg-glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--backdrop-blur);
+  }
+  .btn-brand {
+    background: var(--brand-primary);
+    color: white;
+    transition: all 0.2s ease;
+  }
 
-/*  --brand-logo-gradient: linear-gradient(45deg, #8b5cf6, #c084fc);
-  --brand-bg-gradient: linear-gradient(135deg, #1a1a2e, #16213e);
-  --brand-modal-gradient: linear-gradient(135deg, #1e1b4b, #312e81)
-    --brand-sidebar-gradient: linear-gradient(180deg, #1e1b4b, #312e81); */
+  .btn-brand:hover {
+    background: var(--brand-primary-hover);
+  }
+}

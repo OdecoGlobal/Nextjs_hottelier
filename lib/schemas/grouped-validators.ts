@@ -509,7 +509,7 @@ export const createHotelApiResponseSchema = z.object({
 
 export const onboardHotelApiResponseSchema = z.object({
   status: z.enum(['success', 'error', 'fail']),
-  data: z.array(hotelSchema),
+  data: hotelSchema,
 });
 
 export const StepOneAddRoomSchema = completeRoomSchema.pick({

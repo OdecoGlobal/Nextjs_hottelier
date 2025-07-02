@@ -8,9 +8,8 @@ import {
   HotelImageUploadBody,
   HotelPolicyType,
   HotelResponse,
-  OnboardHotelApiResponse,
 } from '@/types';
-import { serverFetch } from '../fetch';
+import { fetchInstance } from '../fetch';
 
 export async function createNewHotel(formData: HotelBasicInfoType) {
   try {
@@ -181,40 +180,64 @@ export async function deletHotel(hotelId: string) {
   }
 }
 
-export async function getOnboardHotels(): Promise<OnboardHotelApiResponse> {
+type ApiResponse = {
+  data: HotelResponse[];
+  totalPages: number;
+  totalCount: number;
+};
+
+export async function getOnboardHotels({
+  queryKey,
+}: {
+  queryKey: [
+    string,
+    {
+      search?: string;
+      page?: string;
+      limit?: string;
+      status?: string;
+    },
+  ];
+}): Promise<ApiResponse> {
   try {
-    // const res = await axiosInstance<OnboardHotelApiResponse>('hotels/onboard');
-    // if (res.status !== 200) {
-    //   throw new Error('Error fetching countries');
-    // }
-    const data = await serverFetch.get('hotels/onboard', {
+    const [key, { search, page, status, limit }] = queryKey;
+    void key;
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (status) params.append('status', status);
+    if (limit) params.append('limit', limit);
+    if (page) params.append('page', page);
+
+    const res = await fetchInstance.get(`hotels/onboard?${params.toString()}`, {
       cache: 'force-cache',
       next: { revalidate: 1 * 60 * 60, tags: ['hotel_onboard'] },
     });
 
-    return data;
-  } catch {
-    return {
-      data: [],
-      status: 'error',
-    };
+    return res;
+  } catch (error) {
+    throw formatError(error);
   }
 }
 
-export async function getOnboardHotelById(hotelId: string): Promise<{
-  hotel: HotelResponse | null;
-  success: boolean;
-  message?: string;
+export async function getOnboardHotelById({
+  queryKey,
+}: {
+  queryKey: [string, { hotelId: string }];
+}): Promise<{
+  hotel: HotelResponse;
 }> {
   try {
-    const res = await serverFetch.get(`hotels/onboard/${hotelId}`, {
+    const [key, { hotelId }] = queryKey;
+    void key;
+    const res = await fetchInstance.get(`hotels/onboard/${hotelId}`, {
       cache: 'force-cache',
       next: { revalidate: 1 * 60 * 60, tags: ['hotel_onboard_id'] },
     });
-    const hotel = res.data;
-    console.log('API ONBOARD:', hotel);
-    return { hotel, success: true };
+    console.log(res.data, 'API');
+    // const { hotel } = res.data;
+
+    return res.data;
   } catch (error) {
-    return { hotel: null, success: false, message: formatError(error) };
+    throw formatError(error);
   }
 }

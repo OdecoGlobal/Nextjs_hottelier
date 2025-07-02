@@ -214,20 +214,52 @@ export const getQueryParams = (req: NextRequest) => {
   const search = searchParams.get('search') || undefined;
   const limit = searchParams.get('limit');
   const page = searchParams.get('page');
-  const sortBy = searchParams.get('sortBy') || undefined;
-  const sortOrder = searchParams.get('sortOrder');
+  const sort = searchParams.get('sort') || undefined;
   const limitNum = Math.min(parseInt(limit || '10', 10) || 10, 100);
   const pageNum = Math.max(parseInt(page || '1', 10) || 1, 1);
   const skip = (pageNum - 1) * limitNum;
-  const validatedSortOrder = sortOrder === 'desc' ? 'desc' : 'asc';
   return {
     search,
     limit,
     page,
-    sortBy,
-    sortOrder: validatedSortOrder,
+    sort,
     skip,
     limitNum,
     pageNum,
   };
 };
+
+export function getVisiblePages(
+  current: number,
+  total: number,
+): (number | 'ellipsis')[] {
+  const pages: (number | 'ellipsis')[] = [];
+
+  if (total <= 5) {
+    for (let i = 1; i <= total; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  pages.push(1);
+
+  if (current > 3) {
+    pages.push('ellipsis');
+  }
+
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i);
+  }
+
+  if (current < total - 2) {
+    pages.push('ellipsis');
+  }
+
+  pages.push(total);
+
+  return pages;
+}

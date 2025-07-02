@@ -63,6 +63,7 @@ export const GET = async (req: NextRequest) => {
       status: 'success',
       data: hotel,
       totalPages,
+      totalCount,
     });
   } catch (error) {
     return formatApiError(error);

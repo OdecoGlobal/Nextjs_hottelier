@@ -8,7 +8,7 @@ import { formatApiError } from '@/lib/errors';
 import { createSendToken } from '@/lib/auth/verify';
 import { getClientIp } from '@/utils/get-client-ip';
 import { rateLimit } from '@/lib/rate-limit';
-const LOGIN_LIMIT = 5;
+const LOGIN_LIMIT = 10;
 const LOGIN_WINDOW_MS = 3 * 60 * 60 * 1000;
 
 export const POST = async (req: NextRequest) => {

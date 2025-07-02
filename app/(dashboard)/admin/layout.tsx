@@ -2,14 +2,14 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    template: ` Dashboard | %s  `,
-    default: 'Dasboard',
+    template: ` Admin | %s  `,
+    default: 'Admin',
   },
 };
-export default function MainDashboardLayout({
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main>{children}</main>;
+  return <main className="wrapper">{children}</main>;
 }
