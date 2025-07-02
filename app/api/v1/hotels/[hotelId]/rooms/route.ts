@@ -14,7 +14,7 @@ export const POST = async (
     restrictTo('AGENT', 'ADMIN')(user);
 
     const { hotelId } = await params;
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
 
     const body = await req.json();
     const validatedData = completeRoomSchema.parse(body);

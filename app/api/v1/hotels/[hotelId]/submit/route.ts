@@ -12,7 +12,7 @@ export const POST = async (
     const user = await protect(req);
     restrictTo('AGENT', 'ADMIN')(user);
     const { hotelId } = await params;
-    const hotel = await validateHotelAcces(req, hotelId);
+    const hotel = await await validateHotelAcces(hotelId, user);
 
     if (['PENDING_REVIEW', 'APPROVED', 'ACTIVE'].includes(hotel.status)) {
       throw new AppError(

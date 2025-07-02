@@ -1,7 +1,7 @@
 import { prisma } from '@/db/prisma';
 import { verifyAndGetUser } from '@/lib/auth/util';
 import AppError from '@/lib/errors/app-error';
-import { AuthenticatedRequest } from '@/types/custom';
+import { User } from '@/types';
 import { Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
 
@@ -21,11 +21,10 @@ export const restrictTo = (...roles: Role[]) => {
 };
 
 export const validateHotelAcces = async (
-  req: NextRequest,
   hotelId: string,
+  user: User,
   allowAdmin: boolean = true,
 ) => {
-  const authReq = req as AuthenticatedRequest;
   if (!hotelId) {
     throw new AppError('Hotel ID is required', 400);
   }
@@ -35,8 +34,6 @@ export const validateHotelAcces = async (
   if (!hotel) {
     throw new AppError('Hotel not found', 404);
   }
-
-  const { user } = authReq;
   const isAllowed = allowAdmin
     ? hotel.agentId === user.id || user.role === 'ADMIN'
     : hotel.agentId === user.id;

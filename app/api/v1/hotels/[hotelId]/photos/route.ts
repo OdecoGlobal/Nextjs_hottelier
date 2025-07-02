@@ -17,7 +17,7 @@ export const POST = async (
     restrictTo('ADMIN', 'AGENT')(user);
 
     const { hotelId } = await params;
-    const hotel = await validateHotelAcces(req, hotelId);
+    const hotel = await await validateHotelAcces(hotelId, user);
 
     const formData = await req.formData();
 

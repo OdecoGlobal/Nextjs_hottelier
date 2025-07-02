@@ -1,23 +1,23 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
-import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from "@/lib/constants";
-import { ThemeProvider } from "@/components/theme-provider";
+import type { Metadata } from 'next';
+import { Roboto_Condensed, Roboto } from 'next/font/google';
+import './globals.css';
+import { Toaster } from '@/components/ui/toaster';
+import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from '@/lib/constants';
+import { ThemeProvider } from '@/components/theme-provider';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const robotoSans = Roboto({
+  variable: '--font-roboto-sans',
+  subsets: ['latin'],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const robotoMono = Roboto_Condensed({
+  variable: '--font-roboto-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
   title: {
-    template: `%s | Hotellier`,
+    template: `%s | ${APP_NAME}`,
     default: APP_NAME,
   },
   description: APP_DESCRIPTION,
@@ -32,7 +32,7 @@ export default function MainRootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${robotoSans.variable} ${robotoMono.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"

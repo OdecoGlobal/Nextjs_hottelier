@@ -45,7 +45,8 @@ export const DELETE = async (
     const { roomId, hotelId } = await params;
     if (!roomId) throw new AppError('ID is required', 400);
 
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
+
     await deleteRoomWithImages(roomId);
 
     return new NextResponse(null, { status: 204 });

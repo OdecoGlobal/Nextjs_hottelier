@@ -2,14 +2,14 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    template: `Onboarding | %s  `,
-    default: 'Onboarding',
+    template: ` | %s  `,
+    default: 'Dasboard',
   },
 };
-export default function MainAgentLayout({
+export default function MainDashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main>{children}</main>;
+  return <main className="wrapper">{children}</main>;
 }

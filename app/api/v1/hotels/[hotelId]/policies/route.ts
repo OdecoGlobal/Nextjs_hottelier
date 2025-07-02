@@ -15,7 +15,7 @@ export const POST = async (
     restrictTo('ADMIN', 'AGENT')(user);
     const { hotelId } = await params;
 
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
 
     const body = await req.json();
     const policiesData = baseHotelPolicySchema.parse(body);
@@ -57,7 +57,7 @@ export const PATCH = async (
     const user = await protect(req);
     restrictTo('ADMIN', 'AGENT')(user);
     const { hotelId } = await params;
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
 
     const body = await req.json();
     const policiesData = baseHotelPolicySchema.partial().parse(body);
@@ -89,7 +89,7 @@ export const PUT = async (
     const user = await protect(req);
     restrictTo('ADMIN', 'AGENT')(user);
     const { hotelId } = await params;
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
 
     const body = await req.json();
     const policiesData = baseHotelPolicySchema.parse(body);

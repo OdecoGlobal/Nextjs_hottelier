@@ -15,7 +15,8 @@ export const POST = async (
 
     const { hotelId } = await params;
 
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
+
     const body = await req.json();
     const amenitiesData = baseHotelAmenitiesSchema.parse(body);
 
@@ -56,7 +57,7 @@ export const PATCH = async (
     const user = await protect(req);
     restrictTo('ADMIN', 'AGENT')(user);
     const { hotelId } = await params;
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
     const body = await req.json();
     const amenitiesData = baseHotelAmenitiesSchema.partial().parse(body);
     const amenities = await prisma.hotelAmenity.update({
@@ -85,7 +86,7 @@ export const PUT = async (
     const user = await protect(req);
     restrictTo('ADMIN', 'AGENT')(user);
     const { hotelId } = await params;
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
 
     const body = await req.json();
     const amenitiesData = baseHotelAmenitiesSchema.parse(body);

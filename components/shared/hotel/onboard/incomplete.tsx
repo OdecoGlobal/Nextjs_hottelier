@@ -1,5 +1,5 @@
 import DeleteDialog from '@/components/delete.dialog';
-import { Badge } from '@/components/ui/badge';
+import StatusBadge from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -76,15 +76,7 @@ const IncompleteHotelComponent = ({
                       </CardDescription>
                     )}
                   </div>
-                  <Badge
-                    className={`${
-                      status === 'IN_PROGRESS'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}
-                  >
-                    {status.replace('_', ' ')}
-                  </Badge>
+                  <StatusBadge status={status} />
                 </div>
               </CardHeader>
 

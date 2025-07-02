@@ -15,7 +15,8 @@ export const PUT = async (
     restrictTo('ADMIN', 'AGENT')(user);
 
     const { roomId, hotelId } = await params;
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
+
     if (!roomId) throw new AppError('ID is required', 400);
 
     const body = await req.json();

@@ -1,7 +1,4 @@
 import {
-  basicInfoSchema,
-  completionStepsSchema,
-  hotelSchema,
   createHotelApiResponseSchema,
   onboardHotelApiResponseSchema,
   hotelAmenitiesSchema,
@@ -20,6 +17,9 @@ import {
   getRoomSchema,
   availabilitySchema,
   verifyOtpSchema,
+  basicInfoSchema,
+  completionStepsSchema,
+  hotelSchema,
 } from '@/lib/schemas/validator';
 import { z } from 'zod';
 
@@ -242,6 +242,19 @@ export const HotelStatus = [
   'ACTIVE',
   'INACTIVE',
 ] as const;
+
+export type HotelResponse = {
+  id: string;
+  basicInfo: HotelBasicInfoType;
+  policies: HotelPolicyType;
+  completionSteps: CompletionSteps;
+  amenities: HotelAmenitiesType;
+  hotelImages: HotelImageUploadBody;
+  rooms: GetRoomType[];
+  availability: AvailabilityType[];
+  isFullyCompleted: boolean;
+  currentStep: number;
+};
 export type HotelStatusType = (typeof HotelStatus)[number];
 export type User = z.infer<typeof userSchema>;
 export type signUpInput = z.infer<typeof signUpFormSchema>;

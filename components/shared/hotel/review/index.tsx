@@ -7,11 +7,11 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { HotelResponse, submitHotel } from '@/lib/actions/hotel.action';
+import { submitHotel } from '@/lib/actions/hotel.action';
 import { AlertCircle, CheckCircle2, Loader } from 'lucide-react';
 import HotelCreationSteps from '../creation-steps';
 import OnboardReviewCard from './onboard-review-card';
-import { AdminAgentRole } from '@/types';
+import { AdminAgentRole, HotelResponse } from '@/types';
 import { generateSlug } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useTransition } from 'react';

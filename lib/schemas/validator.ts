@@ -34,6 +34,7 @@ import {
   PRICING_MODEL_TYPE,
   ROLES,
   HotelStatus,
+  ImageType,
 } from '@/types';
 import z from 'zod';
 import { MAX_FILE_SIZE } from '../constants';
@@ -110,18 +111,6 @@ export const completionStepsSchema = z.object({
   step5_rooms: z.boolean(),
   step6_rate_and_availability: z.boolean(),
   step7_review: z.boolean(),
-});
-export const hotelSchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-  status: z.enum(HotelStatus),
-  completionSteps: completionStepsSchema,
-  currentStep: z.number(),
-  totalSteps: z.number(),
-  isFullyCompleted: z.boolean(),
-  agentId: z.string().uuid(),
-  basicInfo: basicInfoSchema,
 });
 
 export const verifyOtpSchema = z.object({
@@ -212,23 +201,14 @@ export const baseHotelAmenitiesSchema = z.object({
   breakfastEndTime: z.string().nullish(),
 });
 
-// export const ImageUrlSchema = z
-//   .string()
-//   .url('Invalid URL format')
-//   .min(1, 'URL cannot be empty')
-//   .refine(url => {
-//     const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
-//     const cloudinaryPattern = /cloudinary\.com/;
-//     return cloudinaryPattern.test(url) || imageExtensions.test(url);
-//   }, 'URL must be a valid image URL');
-
-// export const ImageArraySchema = z
-//   .array(ImageUrlSchema)
-//   .transform(arr => arr?.filter(Boolean));
-
 export const cloudinaryImageSchema = z.object({
   imageUrl: z.string().url('Invalid image URL'),
   public_id: z.string().min(1, 'Missing public_id'),
+});
+export const HotelImageSchema = z.object({
+  imageUrl: z.string(),
+  public_id: z.string(),
+  imageType: ImageType,
 });
 
 export const ImageObjectArraySchema = z
@@ -378,4 +358,19 @@ export const hotelImageUploadSchema = z.object({
   hotelImages: z.array(imageFileSchema).min(1, 'Select at least one image'),
   exterior: z.array(imageFileSchema).min(1, 'Select at least one image'),
   interior: z.array(imageFileSchema).min(1, 'Select at least one image'),
+});
+
+export const hotelSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  status: z.enum(HotelStatus),
+  completionSteps: completionStepsSchema,
+  currentStep: z.number(),
+  totalSteps: z.number(),
+  isFullyCompleted: z.boolean(),
+  agentId: z.string().uuid(),
+  basicInfo: basicInfoSchema,
+  images: z.array(HotelImageSchema),
 });

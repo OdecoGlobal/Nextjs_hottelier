@@ -15,6 +15,7 @@ export const POST = async (req: NextRequest) => {
     const result = await prisma.$transaction(async tx => {
       const hotel = await tx.hotel.create({
         data: {
+          name: basicInfoData.name,
           agentId: user.id,
           status: 'IN_PROGRESS',
           completionSteps: {

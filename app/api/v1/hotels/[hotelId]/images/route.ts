@@ -32,7 +32,7 @@ export const POST = async (
     restrictTo('ADMIN', 'AGENT')(user);
 
     const { hotelId } = await params;
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
 
     const body = await req.json();
     const validatedData = HotelImageUploadBodySchema.parse(body);

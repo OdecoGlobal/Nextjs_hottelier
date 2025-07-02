@@ -12,9 +12,9 @@ export const GET = async (
   try {
     const user = await protect(req);
     restrictTo('AGENT', 'ADMIN')(user);
-
     const { hotelId } = await params;
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
+
     const basicInfo = await prisma.hotelBasicInfo.findUnique({
       where: { hotelId },
     });
@@ -41,7 +41,8 @@ export const PATCH = async (
     restrictTo('AGENT', 'ADMIN')(user);
     const { hotelId } = await params;
 
-    validateHotelAcces(req, hotelId);
+    await validateHotelAcces(hotelId, user);
+
     const body = await req.json();
     const updatedBasicInfoData = baseHotelSchema.partial().parse(body);
     const basicInfo = await prisma.hotelBasicInfo.update({

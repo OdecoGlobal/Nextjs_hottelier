@@ -1,23 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-// generator client {
-//   provider = "prisma-client-js"
-//   output   = "../lib/generated/prisma"
-// }
-
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
 generator client {
   provider = "prisma-client-js"
   output   = "../node_modules/.prisma/client"
-  // previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -30,9 +13,6 @@ model User {
   userName          String         @default("NO_NAME")
   email             String         @unique(map: "user_email_idx")
   emailVerified     DateTime?      @db.Timestamp(6)
-  isEmailVerified   Boolean        @default(false)
-  isActive          Boolean        @default(true)
-  isSuspended       Boolean        @default(false)
   image             String?
   password          String?
   passwordChangedAt DateTime?
@@ -40,73 +20,293 @@ model User {
   paymentMethod     PaymentMethod?
   createdAt         DateTime       @default(now()) @db.Timestamp(6)
   updatedAt         DateTime       @updatedAt
+  isActive          Boolean        @default(true)
+  isEmailVerified   Boolean        @default(false)
+  isSuspended       Boolean        @default(false)
   hotels            Hotel[]        @relation("AgentHotels")
-
-  // bookings  Booking[]
-  // reviews   Review[]
-}
-
-enum Role {
-  USER
-  AGENT
-  ADMIN
 }
 
 model Hotel {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  status           HotelStatus @default(DRAFT)
-  rejectionReason  String?
-  completionSteps  Json        @default("{}")
-  currentStep      Int         @default(1)
-  totalSteps       Int         @default(6)
-  isFullyCompleted Boolean     @default(false)
-
-  agentId String @db.Uuid
-  agent   User   @relation("AgentHotels", fields: [agentId], references: [id])
-
-  basicInfo HotelBasicInfo?
-  policies  HotelPolicy?
-  rooms     Room[]
-  amenities HotelAmenity?
-  images    HotelImages[]
-
-  // bookings    Booking[]
-  // reviews     Review[]
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String          @unique(map: "hotel_official_name_idx")
+  slug             String?
+  createdAt        DateTime        @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime        @updatedAt @db.Timestamp(6)
+  status           HotelStatus     @default(DRAFT)
+  completionSteps  Json            @default("{}")
+  currentStep      Int             @default(1)
+  totalSteps       Int             @default(6)
+  isFullyCompleted Boolean         @default(false)
+  agentId          String          @db.Uuid
+  additionalNotes  String?
+  amenities        HotelAmenity?
+  basicInfo        HotelBasicInfo?
+  images           HotelImages[]
+  policies         HotelPolicy?
+  agent            User            @relation("AgentHotels", fields: [agentId], references: [id])
+  rooms            Room[]
 
   @@index([status], map: "hotel_status")
   @@map("hotels")
 }
 
 model HotelBasicInfo {
-  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  hotelId String @unique @db.Uuid
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  hotelId          String    @unique @db.Uuid
   name             String    @unique(map: "hotel_name_idx")
   slug             String    @unique(map: "hotel_slug_idx")
   rating           Decimal   @default(0) @db.Decimal(3, 2)
   hotelType        HotelType
   roomUnitTotal    Int       @default(0)
   acceptedCurrency Currency  @default(NGN)
-
-  address String
-  city    String
-  state   String
-  country String
-  zipCode String
-  lat     Float?
-  lng     Float?
-
-  isCompleted Boolean   @default(false)
-  completedAt DateTime?
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
+  address          String
+  city             String
+  state            String
+  country          String
+  zipCode          String
+  lat              Float?
+  lng              Float?
+  isCompleted      Boolean   @default(false)
+  completedAt      DateTime?
+  createdAt        DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime  @updatedAt @db.Timestamp(6)
+  hotel            Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
   @@map("hotel_basic_info")
+}
+
+model HotelPolicy {
+  id                        String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  hotelId                   String                @unique @db.Uuid
+  isFrontDesk               Boolean               @default(false)
+  isFrontDeskEveryDay       Boolean?              @default(false)
+  isFrontDeskOpen24Hours    Boolean?              @default(false)
+  frontDeskScheduleStartDay Days?
+  frontDeskScheduleEndDay   Days?
+  frontDeskStartTime        String?
+  frontDeskEndTime          String?
+  isSelfCheckIn             Boolean
+  selfCheckInType           SelfCheckInType?
+  checkInStartTime          String
+  checkInEndTime            String?
+  isOpen24Hours             Boolean?              @default(false)
+  isLateCheckIn             Boolean?              @default(false)
+  lateCheckInType           LateCheckInFeeType?
+  surchargeType             SurchargeType?
+  surchargeAmount           Decimal?
+  lateCheckInStartTime      String?
+  lateCheckInEndTime        String?
+  isAdvancedNoticeCheckIn   Boolean?              @default(false)
+  advanceNoticeCheckInTime  String?
+  checkOutTime              String
+  minCheckInAgeAllowed      Int
+  isPetAllowed              Boolean
+  isPetSurcharged           Boolean?              @default(false)
+  petSurchargeAmount        Decimal?
+  petSurchargeType          PetSurchargeType?
+  petSurchargeDuration      PetFeeDuration?
+  isMaxFeePerStay           Boolean?              @default(false)
+  maxFeePerStayAmount       Decimal?
+  isPetFeeVaried            Boolean?              @default(false)
+  allowedPetType            AllowedPetType?
+  isPetRestricted           Boolean?              @default(false)
+  petRestrictionType        PetRestrictionType[]  @default([])
+  isMaxWeightPerPet         Boolean?              @default(false)
+  petMaxWeight              Decimal?
+  isPetDeposit              Boolean?
+  petDepositType            PetFeeDuration?
+  petDepositAmount          Decimal?
+  isPetCleaningFee          Boolean?              @default(false)
+  petCleaningFee            Decimal?
+  petFriendlyFeatures       PetFriendlyFeatures[] @default([])
+  paymentMethods            PaymentMethod[]
+  isDepositRequired         Boolean               @default(false)
+  depositAmount             Decimal?
+  cancellationPolicy        CancellationPolicy
+  cancellationFeeType       CancellationFeeType?
+  isTaxIncludedInRoomRates  Boolean
+  smokingPolicy             SmokingPolicy         @default(NO_SMOKING)
+  hasAdditionalPolicy       Boolean               @default(false)
+  additionalPolicy          Json[]                @default([])
+  isCompleted               Boolean               @default(false)
+  completedAt               DateTime?
+  createdAt                 DateTime              @default(now()) @db.Timestamp(6)
+  updatedAt                 DateTime              @updatedAt @db.Timestamp(6)
+  hotel                     Hotel                 @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@map("hotel_policies")
+}
+
+model HotelImages {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  hotelId     String    @db.Uuid
+  imageType   ImageType
+  imageUrl    String
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @updatedAt @db.Timestamp(6)
+  public_id   String
+  hotel       Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@map("hotel_images")
+}
+
+model HotelAmenity {
+  id                          String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  hotelId                     String                  @unique @db.Uuid
+  isWifi                      Boolean
+  wifiArea                    WifiAreaType[]
+  roomWifiChargeType          HotelAmenityChargeType?
+  roomWifiSpeed               WifiSpeedType?
+  roomWifiSurchargeAmout      Decimal?
+  roomDeviceLimited           Boolean?
+  roomWifiSurchargeDuration   WifiSurchargeDuration?
+  roomDeviceLimitNumber       Int?
+  publicWifiSurchargeAmout    Decimal?
+  publicWifiChargeType        HotelAmenityChargeType?
+  publicWifiSpeed             WifiSpeedType?
+  publicWifiSurchargeDuration WifiSurchargeDuration?
+  publicDeviceLimited         Boolean?
+  publicDeviceLimitNumber     Int?
+  isBreakfast                 Boolean
+  breakfastChargeType         HotelAmenityChargeType?
+  breakfastSurchargeAmount    Decimal?
+  breakfastSchedule           BreakfastSchedule?
+  breakfastStartTime          String?
+  breakfastEndTime            String?
+  isCompleted                 Boolean                 @default(false)
+  completedAt                 DateTime?
+  createdAt                   DateTime                @default(now()) @db.Timestamp(6)
+  updatedAt                   DateTime                @updatedAt @db.Timestamp(6)
+  hotel                       Hotel                   @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@map("hotel_amenities")
+}
+
+model Room {
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  hotelId          String             @db.Uuid
+  name             String             @unique(map: "room_name_idx")
+  roomType         RoomType
+  roomClass        RoomClass?
+  maxOccupancy     Int
+  bedType          BedType
+  bedTotal         Int                @default(1)
+  totalRooms       Int                @default(1)
+  peopleInBaseRate Int                @default(1)
+  baseRate         Decimal            @default(0) @db.Decimal(12, 2)
+  pricingModel     PricingModelType
+  isCompleted      Boolean            @default(false)
+  completedAt      DateTime?
+  createdAt        DateTime           @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime           @updatedAt @db.Timestamp(6)
+  amenities        RoomAmenity?
+  roomAvailability RoomAvailability[]
+  roomImages       RoomImages[]
+  hotel            Hotel              @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@unique([roomType, roomClass])
+  @@map("rooms")
+}
+
+model RoomAmenity {
+  id               String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roomId           String               @unique @db.Uuid
+  bathroomType     BathroomType
+  bathroomNumber   Decimal              @default(1)
+  showerType       ShowerType
+  roomEssential    RoomEssentials[]
+  isTowelProvided  Boolean
+  climateControl   ClimateControlType[] @default([])
+  airConditionType AirConditioningType?
+  heatingType      HeatingType?
+  isRoomView       Boolean
+  roomViewType     RoomViewType?
+  roomSize         Decimal
+  roomSizeUnit     RoomSizeUnitType
+  isOutDoorSpace   Boolean
+  outDoorSpaceType OutDoorSpaceType?
+  roomLayout       RoomLayoutType[]     @default([])
+  createdAt        DateTime             @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime             @updatedAt @db.Timestamp(6)
+  room             Room                 @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@map("room_amenities")
+}
+
+model RoomImages {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roomId    String   @db.Uuid
+  imageUrl  String
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @db.Timestamp(6)
+  public_id String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@map("room_images")
+}
+
+model RoomAvailability {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roomId      String    @db.Uuid
+  date        DateTime  @db.Date
+  isAvailable Boolean   @default(true)
+  inventory   Int?
+  price       Decimal?
+  currency    String?
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @updatedAt @db.Timestamp(6)
+  completedAt DateTime?
+  isCompleted Boolean   @default(false)
+  room        Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, date])
+  @@map("room_availability")
+}
+
+model Country {
+  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String  @unique(map: "country_name_idx")
+  iso2         String  @unique(map: "country_iso2_idx")
+  iso3         String
+  phoneCode    String?
+  capital      String?
+  currency     String?
+  currencyName String?
+  region       String?
+  nationality  String?
+  states       State[]
+}
+
+model State {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  stateId     Int     @unique(map: "state_id_idx")
+  stateCode   String?
+  countryCode String?
+  countryName String?
+  countryId   String  @db.Uuid
+  cities      City[]
+  country     Country @relation(fields: [countryId], references: [id])
+}
+
+model City {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  cityId      Int     @unique(map: "city_id_idx")
+  name        String
+  stateId     String  @db.Uuid
+  stateCode   String?
+  stateName   String?
+  stateUqId   Int
+  countryName String?
+  state       State   @relation(fields: [stateId], references: [id])
+}
+
+enum Role {
+  USER
+  AGENT
+  ADMIN
 }
 
 enum SelfCheckInType {
@@ -161,136 +361,6 @@ enum PetFriendlyFeatures {
   PET_GROOMING_SERVICES
 }
 
-model HotelPolicy {
-  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  hotelId String @unique @db.Uuid
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
-  // Front desk
-  isFrontDesk               Boolean  @default(false)
-  isFrontDeskEveryDay       Boolean? @default(false)
-  isFrontDeskOpen24Hours    Boolean? @default(false)
-  frontDeskScheduleStartDay Days?
-  frontDeskScheduleEndDay   Days?
-  frontDeskStartTime        String?
-  frontDeskEndTime          String?
-
-  // Self CheckIn
-  isSelfCheckIn   Boolean
-  selfCheckInType SelfCheckInType?
-
-  checkInStartTime String
-  checkInEndTime   String?
-  isOpen24Hours    Boolean?            @default(false)
-  isLateCheckIn    Boolean?            @default(false)
-  lateCheckInType  LateCheckInFeeType?
-  surchargeType    SurchargeType?
-  surchargeAmount  Decimal?
-
-  lateCheckInStartTime     String?
-  lateCheckInEndTime       String?
-  isAdvancedNoticeCheckIn  Boolean? @default(false)
-  advanceNoticeCheckInTime String?
-  checkOutTime             String
-
-  minCheckInAgeAllowed Int
-
-  isPetAllowed         Boolean
-  isPetSurcharged      Boolean?          @default(false)
-  petSurchargeAmount   Decimal?
-  petSurchargeType     PetSurchargeType?
-  petSurchargeDuration PetFeeDuration?
-  isMaxFeePerStay      Boolean?          @default(false)
-  maxFeePerStayAmount  Decimal?
-  isPetFeeVaried       Boolean?          @default(false)
-
-  allowedPetType      AllowedPetType?
-  isPetRestricted     Boolean?              @default(false)
-  petRestrictionType  PetRestrictionType[]  @default([])
-  isMaxWeightPerPet   Boolean?              @default(false)
-  petMaxWeight        Decimal?
-  isPetDeposit        Boolean?
-  petDepositType      PetFeeDuration?
-  petDepositAmount    Decimal?
-  isPetCleaningFee    Boolean?              @default(false)
-  petCleaningFee      Decimal?
-  petFriendlyFeatures PetFriendlyFeatures[] @default([])
-
-  paymentMethods    PaymentMethod[]
-  isDepositRequired Boolean         @default(false)
-  depositAmount     Decimal?
-
-  cancellationPolicy       CancellationPolicy
-  cancellationFeeType      CancellationFeeType?
-  isTaxIncludedInRoomRates Boolean
-
-  smokingPolicy SmokingPolicy @default(NO_SMOKING)
-
-  hasAdditionalPolicy Boolean @default(false)
-  additionalPolicy    Json[]  @default([])
-
-  isCompleted Boolean   @default(false)
-  completedAt DateTime?
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  @@map("hotel_policies")
-}
-
-model HotelImages {
-  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  hotelId String @db.Uuid
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
-  imageType   ImageType
-  imageUrl    String
-  public_id   String
-  isCompleted Boolean   @default(false)
-  completedAt DateTime?
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  @@map("hotel_images")
-}
-
-model HotelAmenity {
-  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  hotelId String @unique @db.Uuid
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
-  isWifi                    Boolean
-  wifiArea                  WifiAreaType[]
-  roomWifiChargeType        HotelAmenityChargeType?
-  roomWifiSpeed             WifiSpeedType?
-  roomWifiSurchargeAmout    Decimal?
-  roomDeviceLimited         Boolean?
-  roomWifiSurchargeDuration WifiSurchargeDuration?
-  roomDeviceLimitNumber     Int?
-
-  publicWifiSurchargeAmout    Decimal?
-  publicWifiChargeType        HotelAmenityChargeType?
-  publicWifiSpeed             WifiSpeedType?
-  publicWifiSurchargeDuration WifiSurchargeDuration?
-  publicDeviceLimited         Boolean?
-  publicDeviceLimitNumber     Int?
-
-  isBreakfast              Boolean
-  breakfastChargeType      HotelAmenityChargeType?
-  breakfastSurchargeAmount Decimal?
-  breakfastSchedule        BreakfastSchedule?
-  breakfastStartTime       String?
-  breakfastEndTime         String?
-  isCompleted              Boolean                 @default(false)
-  completedAt              DateTime?
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  @@map("hotel_amenities")
-}
-
 enum BedType {
   SINGLE_OR_TWIN
   LARGE_SINGLE_OR_LARGE_TWIN
@@ -306,141 +376,6 @@ enum PricingModelType {
   OCCUPANCY_BASE
 }
 
-model Room {
-  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  hotelId String @db.Uuid
-  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-
-  name             String     @unique(map: "room_name_idx")
-  roomType         RoomType
-  roomClass        RoomClass?
-  maxOccupancy     Int
-  bedType          BedType
-  bedTotal         Int        @default(1)
-  totalRooms       Int        @default(1)
-  peopleInBaseRate Int        @default(1)
-  baseRate         Decimal    @default(0) @db.Decimal(12, 2)
-
-  amenities        RoomAmenity?
-  roomImages       RoomImages[]
-  roomAvailability RoomAvailability[]
-  pricingModel     PricingModelType
-
-  isCompleted Boolean   @default(false)
-  completedAt DateTime?
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  // bookings      Booking[]
-  @@unique([roomType, roomClass])
-  @@map("rooms")
-}
-
-model RoomAmenity {
-  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  roomId          String           @unique @db.Uuid
-  room            Room             @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  bathroomType    BathroomType
-  bathroomNumber  Decimal          @default(1)
-  showerType      ShowerType
-  roomEssential   RoomEssentials[]
-  isTowelProvided Boolean
-
-  climateControl   ClimateControlType[] @default([])
-  airConditionType AirConditioningType?
-  heatingType      HeatingType?
-  isRoomView       Boolean
-  roomViewType     RoomViewType?
-  roomSize         Decimal
-  roomSizeUnit     RoomSizeUnitType
-  isOutDoorSpace   Boolean
-  outDoorSpaceType OutDoorSpaceType?
-  roomLayout       RoomLayoutType[]     @default([])
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  @@map("room_amenities")
-}
-
-model RoomImages {
-  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  roomId String @db.Uuid
-  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
-
-  imageUrl  String
-  public_id String
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  @@map("room_images")
-}
-
-model RoomAvailability {
-  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  roomId String @db.Uuid
-  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
-
-  date        DateTime @db.Date
-  isAvailable Boolean  @default(true)
-  inventory   Int?
-  price       Decimal?
-  currency    String?
-
-  isCompleted Boolean   @default(false)
-  completedAt DateTime?
-
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @db.Timestamp(6)
-
-  @@unique([roomId, date])
-  @@map("room_availability")
-}
-
-model Country {
-  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name         String  @unique(map: "country_name_idx")
-  iso2         String  @unique(map: "country_iso2_idx")
-  iso3         String
-  phoneCode    String?
-  capital      String?
-  currency     String?
-  currencyName String?
-  region       String?
-  nationality  String?
-
-  states State[]
-}
-
-model State {
-  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  stateId     Int     @unique(map: "state_id_idx")
-  stateCode   String?
-  countryCode String?
-  countryName String?
-  countryId   String  @db.Uuid
-  country     Country @relation(fields: [countryId], references: [id])
-
-  cities City[]
-}
-
-model City {
-  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  cityId      Int     @unique(map: "city_id_idx")
-  name        String
-  stateId     String  @db.Uuid
-  stateCode   String?
-  stateName   String?
-  stateUqId   Int
-  countryName String?
-
-  state State @relation(fields: [stateId], references: [id])
-}
-
-// ENUMS
 enum HotelStatus {
   DRAFT
   IN_PROGRESS
@@ -661,69 +596,3 @@ enum RoomLayoutType {
   LAPTOP_FRIENDLY_WORK_SPACE
   PRIVATE_POOL
 }
-
-/**
- * model Booking {
- * id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
- * userId             String   @db.Uuid
- * roomId             String   @db.Uuid
- * checkInDate        DateTime @db.Date
- * checkOutDate       DateTime @db.Date
- * quantity           Int
- * totalPrice         Decimal  @db.Decimal(10, 2)
- * paymentMethod      PaymentMethod
- * status             BookingStatus @default(PENDING)
- * // Cancellation tracking
- * cancelledAt        DateTime?
- * cancelledByUser    Boolean? @default(false)
- * cancellationFee    Decimal? @db.Decimal(10, 2)
- * cancellationReason String?
- * createdAt          DateTime @default(now())
- * updatedAt          DateTime @updatedAt
- * room               Room @relation(fields: [roomId], references: [id])
- * user               User @relation(fields: [userId], references: [id])
- * }
- * model Booking {
- * id        String        @id @default(cuid())
- * hotelId   String
- * hotel     Hotel         @relation(fields: [hotelId], references: [id])
- * roomId    String
- * room      Room          @relation(fields: [roomId], references: [id])
- * checkIn   DateTime
- * checkOut  DateTime
- * guests    Int
- * status    BookingStatus @default(PENDING)
- * createdAt DateTime      @default(now())
- * updatedAt DateTime      @updatedAt
- * @@map("bookings")
- * }
- * model Booking {
- * id          String   @id @default(uuid())
- * userId      String
- * roomId      String
- * hotelId     String
- * checkIn     DateTime
- * checkOut    DateTime
- * status      BookingStatus @default(PENDING)
- * user        User     @relation(fields: [userId], references: [id])
- * room        Room     @relation(fields: [roomId], references: [id])
- * hotel       Hotel    @relation(fields: [hotelId], references: [id])
- * createdAt   DateTime @default(now())
- * }
- * enum BookingStatus {
- * PENDING
- * CONFIRMED
- * CANCELLED
- * COMPLETED
- * }
- * model Review {
- * id        String   @id @default(uuid())
- * userId    String
- * hotelId   String
- * rating    Int      // 1-5
- * comment   String?
- * user      User     @relation(fields: [userId], references: [id])
- * hotel     Hotel    @relation(fields: [hotelId], references: [id])
- * createdAt DateTime @default(now())
- * }
- */

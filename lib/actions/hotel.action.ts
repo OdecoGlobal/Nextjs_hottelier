@@ -2,30 +2,15 @@ import { formatError } from '@/utils/format-error';
 import { axiosInstance } from '../axios';
 import {
   AddRoomType,
-  AvailabilityType,
-  CompletionSteps,
   CreateHotelApiResponse,
-  GetRoomType,
   HotelAmenitiesType,
   HotelBasicInfoType,
   HotelImageUploadBody,
   HotelPolicyType,
+  HotelResponse,
   OnboardHotelApiResponse,
 } from '@/types';
 import { serverFetch } from '../fetch';
-
-export type HotelResponse = {
-  id: string;
-  basicInfo: HotelBasicInfoType;
-  policies: HotelPolicyType;
-  completionSteps: CompletionSteps;
-  amenities: HotelAmenitiesType;
-  hotelImages: HotelImageUploadBody;
-  rooms: GetRoomType[];
-  availability: AvailabilityType[];
-  isFullyCompleted: boolean;
-  currentStep: number;
-};
 
 export async function createNewHotel(formData: HotelBasicInfoType) {
   try {
@@ -213,5 +198,23 @@ export async function getOnboardHotels(): Promise<OnboardHotelApiResponse> {
       data: [],
       status: 'error',
     };
+  }
+}
+
+export async function getOnboardHotelById(hotelId: string): Promise<{
+  hotel: HotelResponse | null;
+  success: boolean;
+  message?: string;
+}> {
+  try {
+    const res = await serverFetch.get(`hotels/onboard/${hotelId}`, {
+      cache: 'force-cache',
+      next: { revalidate: 1 * 60 * 60, tags: ['hotel_onboard_id'] },
+    });
+    const hotel = res.data;
+    console.log('API ONBOARD:', hotel);
+    return { hotel, success: true };
+  } catch (error) {
+    return { hotel: null, success: false, message: formatError(error) };
   }
 }

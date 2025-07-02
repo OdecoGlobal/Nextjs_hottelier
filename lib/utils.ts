@@ -211,20 +211,21 @@ export const createPricingOptions = <T extends readonly string[]>(
 
 export const getQueryParams = (req: NextRequest) => {
   const { searchParams } = req.nextUrl;
-  const search = searchParams.get('search');
-  const limit = searchParams.get('limit') || '10';
-  const page = searchParams.get('page') || '1';
-  const sortBy = searchParams.get('sortBy') || 'name';
-  const sortOrder = searchParams.get('sortOrder') || 'asc';
-  const limitNum = parseInt(limit as string, 10);
-  const pageNum = parseInt(page as string, 10);
+  const search = searchParams.get('search') || undefined;
+  const limit = searchParams.get('limit');
+  const page = searchParams.get('page');
+  const sortBy = searchParams.get('sortBy') || undefined;
+  const sortOrder = searchParams.get('sortOrder');
+  const limitNum = Math.min(parseInt(limit || '10', 10) || 10, 100);
+  const pageNum = Math.max(parseInt(page || '1', 10) || 1, 1);
   const skip = (pageNum - 1) * limitNum;
+  const validatedSortOrder = sortOrder === 'desc' ? 'desc' : 'asc';
   return {
     search,
     limit,
     page,
     sortBy,
-    sortOrder,
+    sortOrder: validatedSortOrder,
     skip,
     limitNum,
     pageNum,

@@ -9,12 +9,15 @@ export const GET = async (
   { params }: { params: Promise<{ hotelId: string }> },
 ) => {
   try {
+    const user = await protect(req);
+    restrictTo('AGENT', 'ADMIN')(user);
     const { hotelId } = await params;
-    if (!hotelId) throw new AppError('ID is required', 400);
+    await validateHotelAcces(hotelId, user);
 
-    const hotel = await prisma.hotel.findFirst({
-      where: { id: hotelId, status: 'ACTIVE' },
+    const hotel = await prisma.hotel.findUnique({
+      where: { id: hotelId },
       include: {
+        agent: true,
         basicInfo: true,
         policies: true,
         images: true,
@@ -39,26 +42,6 @@ export const GET = async (
       },
       { status: 200 },
     );
-  } catch (error) {
-    return formatApiError(error);
-  }
-};
-
-export const DELETE = async (
-  req: NextRequest,
-  { params }: { params: Promise<{ hotelId: string }> },
-) => {
-  try {
-    const user = await protect(req);
-    restrictTo('AGENT', 'ADMIN')(user);
-    const { hotelId } = await params;
-    await validateHotelAcces(hotelId, user);
-
-    await prisma.hotel.delete({
-      where: { id: hotelId },
-    });
-
-    return new NextResponse(null, { status: 204 });
   } catch (error) {
     return formatApiError(error);
   }
