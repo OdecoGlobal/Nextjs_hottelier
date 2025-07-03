@@ -16,6 +16,7 @@ export const POST = async (req: NextRequest) => {
       const hotel = await tx.hotel.create({
         data: {
           name: basicInfoData.name,
+          slug,
           agentId: user.id,
           status: 'IN_PROGRESS',
           completionSteps: {
