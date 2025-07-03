@@ -167,10 +167,16 @@
     @apply flex items-center justify-between;
   }
   .dialog-div {
-    @apply rounded-xl w-full p-4 bg-card shadow-card capitalize;
+    @apply rounded-xl w-full p-4 bg-card shadow-card capitalize space-y-2;
   }
-  .dialog-h3{
-    @apply text-muted-foreground font-bold
+  .dialog-h3 {
+    @apply text-muted-foreground font-bold;
+  }
+  .dialog-div p {
+    @apply text-sm font-semibold;
+  }
+  .brand-badge {
+    @apply text-brand-bg-200 bg-linear-(--gradient-100) border border-glow;
   }
   .bg-gradient-100 {
     background: var(--bg-gradient-100);

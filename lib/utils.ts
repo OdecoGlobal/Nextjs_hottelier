@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import slugify from 'slugify';
 import z from 'zod';
-import { CompletionSteps } from '@/types';
+import { CompletionSteps, CurrencyType, GeneratedTypes } from '@/types';
 import { NextRequest } from 'next/server';
 
 export const pickKeys = <T extends z.ZodRawShape>(schema: z.ZodObject<T>) =>
@@ -96,6 +96,39 @@ export const formatDateTime = (dateString: Date | string) => {
     timeOnly: formattedTime,
   };
 };
+
+// const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+//   currency: 'USD',
+//   style: 'currency',
+//   minimumFractionDigits: 2,
+// });
+
+export function formatCurrency(
+  amount: number | string | null | undefined,
+  currency: CurrencyType,
+): string {
+  const locale: string =
+    currency === 'NGN'
+      ? 'en-NG'
+      : currency === 'USD'
+        ? 'en-US'
+        : currency === 'EUR'
+          ? 'de-DE'
+          : 'en-GB';
+  const CURRENCY_FORMATTER = new Intl.NumberFormat(locale, {
+    currency,
+    style: 'currency',
+    minimumFractionDigits: 2,
+  });
+
+  if (typeof amount === 'number') {
+    return CURRENCY_FORMATTER.format(amount);
+  } else if (typeof amount === 'string') {
+    return CURRENCY_FORMATTER.format(Number(amount));
+  } else {
+    return 'NaN';
+  }
+}
 
 export const getHotelCompletionProgress = (
   completionSteps: CompletionSteps,
@@ -262,4 +295,19 @@ export function getVisiblePages(
   pages.push(total);
 
   return pages;
+}
+
+export function mapStringToLabel(
+  value: string,
+  options: GeneratedTypes[],
+): string | undefined {
+  return options.find(option => option.value === value)?.label;
+}
+export function mapArrayToLabels(
+  values: string[],
+  options: GeneratedTypes[],
+): string[] {
+  return values
+    .map(value => options.find(option => option.value === value)?.label)
+    .filter((label): label is string => Boolean(label));
 }

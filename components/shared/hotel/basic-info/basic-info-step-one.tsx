@@ -19,7 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { currency, hotelTypes } from '@/lib/constants';
+import { ACCEPTED_CURRENCIES, HOTEL_TYPES_OPTIONS } from '@/lib/constants';
 import { HotelBasicInfoType } from '@/types';
 
 import { Info } from 'lucide-react';
@@ -81,9 +81,9 @@ const HotelBasicInfoStepOne = ({
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {hotelTypes.map(type => (
+                {HOTEL_TYPES_OPTIONS.map(type => (
                   <SelectItem key={type.value} value={type.value}>
-                    {type.text}
+                    {type.label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -134,9 +134,9 @@ const HotelBasicInfoStepOne = ({
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {currency.map(type => (
+                {ACCEPTED_CURRENCIES.map(type => (
                   <SelectItem key={type.value} value={type.value}>
-                    {type.text}
+                    {type.label}
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -11,7 +11,7 @@ import { submitHotel } from '@/lib/actions/hotel.action';
 import { AlertCircle, CheckCircle2, Loader } from 'lucide-react';
 import HotelCreationSteps from '../creation-steps';
 import OnboardReviewCard from './onboard-review-card';
-import { AdminAgentRole, HotelResponse } from '@/types';
+import { AdminAgentRole, HotelType } from '@/types';
 import { generateSlug } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useTransition } from 'react';
@@ -22,7 +22,7 @@ const OnboardingReviewComponent = ({
   hotel,
   role,
 }: {
-  hotel: HotelResponse;
+  hotel: HotelType;
   role: AdminAgentRole;
 }) => {
   const { completionSteps, basicInfo, isFullyCompleted, currentStep, id } =

@@ -35,6 +35,7 @@ import {
   ROLES,
   HotelStatus,
   ImageType,
+  CURRENCIES,
 } from '@/types';
 import z from 'zod';
 import { MAX_FILE_SIZE } from '../constants';
@@ -69,6 +70,7 @@ export const signUpFormSchema = z
     path: ['confirmPassword'],
   });
 
+export const currencySchema = z.enum(CURRENCIES);
 // HOTELS ZOD SCHEMA
 export const baseHotelSchema = z.object({
   name: z.string().min(4, 'Hotel name must be at least 4 characters'),
@@ -83,7 +85,7 @@ export const baseHotelSchema = z.object({
   roomUnitTotal: z.coerce
     .number()
     .min(1, 'There must be at least one room or unit'),
-  acceptedCurrency: z.enum(['NGN', 'USD', 'EUR', 'GBP']),
+  acceptedCurrency: currencySchema,
 });
 
 export const hotelBasicInfoSchema = baseHotelSchema.extend({
@@ -373,4 +375,7 @@ export const hotelSchema = z.object({
   agentId: z.string().uuid(),
   basicInfo: basicInfoSchema,
   images: z.array(HotelImageSchema),
+  policies: baseHotelPolicySchema,
+  amenities: baseHotelAmenitiesSchema,
+  rooms: z.array(getRoomSchema),
 });

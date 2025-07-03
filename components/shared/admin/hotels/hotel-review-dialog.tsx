@@ -13,17 +13,12 @@ import { useOnboardHotelById } from '@/hooks/use-onboard-hotels';
 
 import { Edit, X } from 'lucide-react';
 import AdminOnboardBasicInfo from './details/basic-info';
+import AdminReviewPolicies from './details/admin-review-policies';
+import TanStackErrorComponent from '../../tan-error';
 
 const AdminHotelReviewDialog = ({ hotelId }: { hotelId: string }) => {
-  const { data, isPending, error } = useOnboardHotelById({ hotelId });
-  if (isPending) {
-    return <LoadingComponent />;
-  }
-  if (error) {
-    return <div>An error occured while getting data {error.message}</div>;
-  }
-  const { hotel } = data;
-  const { basicInfo, name, status } = hotel;
+  const { data, isPending, error, refetch } = useOnboardHotelById({ hotelId });
+
   return (
     <Dialog>
       <DialogTitle />
@@ -32,20 +27,28 @@ const AdminHotelReviewDialog = ({ hotelId }: { hotelId: string }) => {
       </DialogTrigger>
       <DialogContent
         showCloseButton={false}
-        className="max-w-[90vw] md:max-w-[80vw] lg:max-w-5xl w-full max-h-[90vh] overflow-y-auto pt-0"
+        className="h-full overflow-y-scroll pt-0 md:max-w-3xl"
       >
-        <DialogHeader className="bg-linear-(--gradient-200) sticky top-0 z-0 pt-6 px-6 -mx-6">
-          <DialogClose>
-            <X className="w-6 h-6 text-slate-50 hover:text-slate-200 ml-auto" />
+        <DialogHeader className="bg-linear-(--gradient-200)  px-6 -mx-6">
+          <DialogClose className=" mt-2 w-fit ml-auto cursor-pointer">
+            <X className="w-4 h-4 text-slate-50 hover:text-slate-200 " />
           </DialogClose>
           <DialogTitle className="text-2xl md:text-3xl font-bold text-brand-secondary">
-            {name}
+            Hotel Review
           </DialogTitle>
           <DialogDescription className="text-slate-50 text-base">
             Review Details
           </DialogDescription>
         </DialogHeader>
-        <AdminOnboardBasicInfo basicInfo={basicInfo} status={status} />
+
+        {isPending && <LoadingComponent />}
+        {error && <TanStackErrorComponent onRetry={() => refetch()} />}
+        {!isPending && !error && data?.hotel && (
+          <>
+            <AdminOnboardBasicInfo />
+            <AdminReviewPolicies />
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

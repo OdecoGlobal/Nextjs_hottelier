@@ -1,16 +1,17 @@
 'use client';
 import StatusBadge from '@/components/status-badge';
 
-import { BasicInfo, HotelStatusType } from '@/types';
 import AdminDialogCard from './dialog-card';
+import { ACCEPTED_CURRENCIES, HOTEL_TYPES_OPTIONS } from '@/lib/constants';
+import { mapStringToLabel } from '@/lib/utils';
+import { useOnboardHotelByIdStore } from '@/stores/use-onboard-hotel-store';
+import MissingStepNotice from './admin-missing-step-notice';
 
-const AdminOnboardBasicInfo = ({
-  basicInfo,
-  status,
-}: {
-  basicInfo: BasicInfo;
-  status: HotelStatusType;
-}) => {
+const AdminOnboardBasicInfo = () => {
+  const { hotel } = useOnboardHotelByIdStore();
+  const { basicInfo, status } = hotel! ?? {};
+
+  if (!basicInfo) return <MissingStepNotice step="Basic information" />;
   const {
     name,
     address,
@@ -29,7 +30,7 @@ const AdminOnboardBasicInfo = ({
       </div>
       <div className="dialog-div">
         <h3 className="dialog-h3">Type</h3>
-        <p>{hotelType}</p>
+        <p>{mapStringToLabel(hotelType, HOTEL_TYPES_OPTIONS)}</p>
       </div>
 
       <div className="dialog-div">
@@ -45,7 +46,7 @@ const AdminOnboardBasicInfo = ({
       </div>
       <div className="dialog-div">
         <h3 className="dialog-h3">Accepted currency</h3>
-        <p>{acceptedCurrency}</p>
+        <p>{mapStringToLabel(acceptedCurrency, ACCEPTED_CURRENCIES)}</p>
       </div>
       <div className="dialog-div">
         <h3 className="dialog-h3">Status</h3>

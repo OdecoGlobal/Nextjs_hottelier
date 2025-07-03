@@ -17,7 +17,18 @@ export const GET = async (
     const hotel = await prisma.hotel.findUnique({
       where: { id: hotelId },
       include: {
-        agent: true,
+        agent: {
+          select: {
+            email: true,
+            id: true,
+            isActive: true,
+            isEmailVerified: true,
+            isSuspended: true,
+            role: true,
+            image: true,
+            userName: true,
+          },
+        },
         basicInfo: true,
         policies: true,
         images: true,

@@ -7,9 +7,10 @@ import {
   HotelBasicInfoType,
   HotelImageUploadBody,
   HotelPolicyType,
-  HotelResponse,
+  HotelType,
 } from '@/types';
 import { fetchInstance } from '../fetch';
+import { CACHE_TIME_OUT } from '../constants';
 
 export async function createNewHotel(formData: HotelBasicInfoType) {
   try {
@@ -85,7 +86,7 @@ export async function updateHotelPolicies(
 }
 
 export async function getHotelById(hotelId: string): Promise<{
-  hotel: HotelResponse | null;
+  hotel: HotelType | null;
   success: boolean;
   message?: string;
 }> {
@@ -167,6 +168,7 @@ export async function submitHotel(hotelId: string) {
     return { success: false, message: formatError(error) };
   }
 }
+
 export async function deletHotel(hotelId: string) {
   try {
     const res = await axiosInstance.delete(`hotels/${hotelId}`);
@@ -181,7 +183,7 @@ export async function deletHotel(hotelId: string) {
 }
 
 type ApiResponse = {
-  data: HotelResponse[];
+  data: HotelType[];
   totalPages: number;
   totalCount: number;
 };
@@ -210,7 +212,19 @@ export async function getOnboardHotels({
 
     const res = await fetchInstance.get(`hotels/onboard?${params.toString()}`, {
       cache: 'force-cache',
-      next: { revalidate: 1 * 60 * 60, tags: ['hotel_onboard'] },
+      next: { revalidate: CACHE_TIME_OUT, tags: ['hotel_onboard'] },
+    });
+
+    return res;
+  } catch (error) {
+    throw formatError(error);
+  }
+}
+export async function getPreOnboardHotels(): Promise<ApiResponse> {
+  try {
+    const res = await fetchInstance.get(`hotels/onboard`, {
+      cache: 'force-cache',
+      next: { revalidate: CACHE_TIME_OUT, tags: ['hotel_onboard'] },
     });
 
     return res;
@@ -224,14 +238,14 @@ export async function getOnboardHotelById({
 }: {
   queryKey: [string, { hotelId: string }];
 }): Promise<{
-  hotel: HotelResponse;
+  hotel: HotelType;
 }> {
   try {
     const [key, { hotelId }] = queryKey;
     void key;
     const res = await fetchInstance.get(`hotels/onboard/${hotelId}`, {
       cache: 'force-cache',
-      next: { revalidate: 1 * 60 * 60, tags: ['hotel_onboard_id'] },
+      next: { revalidate: CACHE_TIME_OUT, tags: ['hotel_onboard_id'] },
     });
     console.log(res.data, 'API');
     // const { hotel } = res.data;

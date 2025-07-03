@@ -20,18 +20,20 @@ import {
   basicInfoSchema,
   completionStepsSchema,
   hotelSchema,
+  currencySchema,
 } from '@/lib/schemas/validator';
 import { z } from 'zod';
 
 export const HOTEL_TYPES = [
   'HOTEL',
   'MOTEL',
-  'GUESTHOUSE',
+  'GUEST_HOUSE',
   'INN',
   'APARTMENT',
 ] as const;
 export const CURRENCIES = ['NGN', 'USD', 'EUR', 'GBP'] as const;
 
+export type CurrencyType = z.infer<typeof currencySchema>;
 // ROOMS
 export const BATHROOM_TYPES = ['PRIVATE', 'PARTIALLY_OPEN', 'SHARED'] as const;
 export const SHOWER_TYPES = [
@@ -243,20 +245,10 @@ export const HotelStatus = [
   'INACTIVE',
 ] as const;
 
-export type HotelResponse = z.infer<typeof hotelSchema>;
-
-export type HotelStatusType = (typeof HotelStatus)[number];
 export type User = z.infer<typeof userSchema>;
 export type signUpInput = z.infer<typeof signUpFormSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
-
-export type CountryData = z.infer<typeof insertCountrySchema>;
-export type StateData = z.infer<typeof insertStateSchema>;
-export type CityData = z.infer<typeof insertCitySchema>;
-
-export type HotelAmenitiesType = z.infer<typeof hotelAmenitiesSchema>;
 export type VeifyOTPType = z.infer<typeof verifyOtpSchema>;
-
 export type AdminAgentRole = 'ADMIN' | 'AGENT';
 export type ApiSessionResponse = {
   data: Session;
@@ -265,27 +257,34 @@ export type Session = {
   user: User;
   token: string;
 };
+
+export type CountryData = z.infer<typeof insertCountrySchema>;
+export type StateData = z.infer<typeof insertStateSchema>;
+export type CityData = z.infer<typeof insertCitySchema>;
 export type GeneratedTypes = {
   label: string;
   value: string;
 };
-export const ImageType = z.enum(['COVER', 'EXTERIOR', 'INTERIOR']);
 
-export type ImageType = z.infer<typeof ImageType>;
+// HOTELS
+export type HotelType = z.infer<typeof hotelSchema>;
+export type HotelStatusType = (typeof HotelStatus)[number];
+export type HotelAmenitiesType = z.infer<typeof hotelAmenitiesSchema>;
 export type BasicInfo = z.infer<typeof basicInfoSchema>;
 export type HotelPolicyType = z.infer<typeof hotelPolicySchema>;
 export type AddRoomType = z.infer<typeof completeRoomSchema>;
-
 export type GetRoomType = z.infer<typeof getRoomSchema>;
 export type CompletionSteps = z.infer<typeof completionStepsSchema>;
-export type HotelType = z.infer<typeof hotelSchema>;
+export type HotelBasicInfoType = z.infer<typeof hotelBasicInfoSchema>;
+export type HotelImageUploadBody = z.infer<typeof HotelImageUploadBodySchema>;
+export type AvailabilityType = z.infer<typeof availabilitySchema>;
+
+export const ImageType = z.enum(['COVER', 'EXTERIOR', 'INTERIOR']);
+export type ImageType = z.infer<typeof ImageType>;
+
 export type CreateHotelApiResponse = z.infer<
   typeof createHotelApiResponseSchema
 >;
 export type OnboardHotelApiResponse = z.infer<
   typeof onboardHotelApiResponseSchema
 >;
-
-export type HotelBasicInfoType = z.infer<typeof hotelBasicInfoSchema>;
-export type HotelImageUploadBody = z.infer<typeof HotelImageUploadBodySchema>;
-export type AvailabilityType = z.infer<typeof availabilitySchema>;

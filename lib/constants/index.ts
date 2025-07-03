@@ -28,12 +28,16 @@ import {
   AIR_CONDITIONING_TYPE,
   HEATING_TYPE,
   PRICING_MODEL_TYPE,
+  HOTEL_TYPES,
+  SELF_CHECK_IN,
 } from '@/types';
 import { createObjectOptions, createPricingOptions } from '../utils';
 
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'RoaméLux';
 export const JWT_SECRET = process.env.JWT_SECRET!;
 export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
+
+export const CACHE_TIME_OUT = 30 * 60;
 
 export const APP_DESCRIPTION =
   process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
@@ -43,45 +47,22 @@ export const SERVER_URL =
 export const API_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || 'localhost:3000/api/v1';
 
-export const hotelTypes = [
-  {
-    value: 'HOTEL',
-    text: 'Hotel',
-  },
-  {
-    value: 'MOTEL',
-    text: 'Motel',
-  },
-  {
-    value: 'GUESTHOUSE',
-    text: 'Guest House',
-  },
-  {
-    value: 'APARTMENT',
-    text: 'Apartment',
-  },
-  {
-    value: 'INN',
-    text: 'Inn',
-  },
-];
-
-export const currency = [
+export const ACCEPTED_CURRENCIES = [
   {
     value: 'NGN',
-    text: 'Naira',
+    label: 'Naira',
   },
   {
     value: 'USD',
-    text: 'US Dollar',
+    label: 'US Dollar',
   },
   {
     value: 'EUR',
-    text: 'Euros',
+    label: 'Euros',
   },
   {
     value: 'GBP',
-    text: 'British Pounds Sterling',
+    label: 'British Pounds Sterling',
   },
 ];
 
@@ -96,6 +77,7 @@ export const steps = [
 ];
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const ALLOWED_PET_OPTIONS = createObjectOptions(ALLOWED_PET_TYPE);
+export const HOTEL_TYPES_OPTIONS = createObjectOptions(HOTEL_TYPES);
 export const WIFI_AREA_OPTIONS = createObjectOptions(WIFI_AREA_TYPE);
 export const HOTEL_AMENITY_CHARGE_OPTION = createObjectOptions(
   HOTEL_AMENITY_CHARGE_TYPE,
@@ -109,8 +91,6 @@ export const WIFI_SPEED_OPTIONS = createObjectOptions(WIFI_SPEED_TYPE).map(
     };
   },
 );
-
-// const wifiSpeedOptions = createObjectOptions(WIFI_SPEED_TYPE);
 
 export const PAYMENT_METHODS_OPTIONS = createObjectOptions(PAYMENT_METHODS);
 export const CANCELLATION_POLICIES_OPTIONS = createObjectOptions(
@@ -213,3 +193,5 @@ export const SELF_CHECK_IN_OPTIONS = {
     description: 'Self-service check-in process',
   },
 } as const;
+
+export const SELF_CHECK_IN_OPTIONS2 = createObjectOptions(SELF_CHECK_IN);

@@ -29,7 +29,8 @@ model User {
 model Hotel {
   id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name             String          @unique(map: "hotel_official_name_idx")
-  slug             String?
+  slug             String
+  description      String?
   createdAt        DateTime        @default(now()) @db.Timestamp(6)
   updatedAt        DateTime        @updatedAt @db.Timestamp(6)
   status           HotelStatus     @default(DRAFT)
