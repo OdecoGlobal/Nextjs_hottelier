@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from '@/lib/constants';
 import { ThemeProvider } from '@/providers/theme-provider';
 import TanstackProvider from '@/providers/tanstack-provider';
+import UserHydrator from '@/components/user-hydrator';
 
 const robotoSans = Roboto({
   variable: '--font-roboto-sans',
@@ -42,6 +43,7 @@ export default function MainRootLayout({
           disableTransitionOnChange
         >
           <TanstackProvider>
+            <UserHydrator />
             <Toaster />
             {children}
           </TanstackProvider>

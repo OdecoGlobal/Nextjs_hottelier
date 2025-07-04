@@ -21,6 +21,7 @@ import {
   completionStepsSchema,
   hotelSchema,
   currencySchema,
+  userRoleSchema,
 } from '@/lib/schemas/validator';
 import { z } from 'zod';
 
@@ -234,7 +235,7 @@ export const ALLOWED_FILE_TYPES = [
 ];
 
 export const ROLES = ['USER', 'AGENT', 'ADMIN'] as const;
-export type Roles = (typeof ROLES)[number];
+export type Roles = z.infer<typeof userRoleSchema>;
 export const HotelStatus = [
   'DRAFT',
   'IN_PROGRESS',

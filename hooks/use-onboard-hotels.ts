@@ -7,40 +7,7 @@ import {
 import { useOnboardHotelByIdStore } from '@/stores/use-onboard-hotel-store';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { useEffect } from 'react';
-// export async function getOnboardHotels({
-//   queryKey,
-// }: {
-//   queryKey: [
-//     string,
-//     {
-//       search?: string;
-//       page?: string;
-//       limit?: string;
-//       status?: string;
-//     },
-//   ];
-// }): Promise<OnboardHotelApiResponse> {
-//   try {
-//     const [key, { search, page, status, limit }] = queryKey;
-//     void key;
-//     const params = new URLSearchParams();
-//     if (search) params.append('search', search);
-//     if (status) params.append('status', status);
-//     if (limit) params.append('limit', limit);
-//     if (page) params.append('page', page);
-
-//     const res = await fetch(`${API_URL}hotels/onboard?${params.toString()}`);
-
-//     const data = await res.json();
-
-//     return data;
-//   } catch {
-//     return {
-//       data: [],
-//       status: 'error',
-//     };
-//   }
-// }
+import { API_CACHE_TIMEOUT } from '@/lib/constants';
 
 export function useOnboardHotel({
   search = '',
@@ -52,7 +19,7 @@ export function useOnboardHotel({
     queryKey: ['onboard-hotels', { search, page, limit, status }],
     queryFn: getOnboardHotels,
     placeholderData: keepPreviousData,
-    staleTime: 5 * 60 * 1000,
+    staleTime: API_CACHE_TIMEOUT,
   });
 }
 
@@ -62,11 +29,12 @@ export function useOnboardHotelById({ hotelId }: { hotelId: string }) {
     queryKey: ['onboard-hotels', { hotelId }],
     queryFn: getOnboardHotelById,
     placeholderData: keepPreviousData,
-    staleTime: 5 * 60 * 1000,
+    staleTime: API_CACHE_TIMEOUT,
+    enabled: !hotelId,
   });
   useEffect(() => {
     if (query.data && query.isSuccess) {
-      setHotel(query.data.hotel);
+      setHotel(query.data);
     }
   }, [query.data, query.isSuccess, setHotel]);
 

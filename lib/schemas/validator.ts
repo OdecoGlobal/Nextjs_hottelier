@@ -40,6 +40,7 @@ import {
 import z from 'zod';
 import { MAX_FILE_SIZE } from '../constants';
 
+export const userRoleSchema = z.enum(ROLES);
 export const userSchema = z.object({
   id: z.string().min(1, 'Id is required'),
   email: z.string().email('invalid email address'),
@@ -49,7 +50,7 @@ export const userSchema = z.object({
   image: z.string().nullish(),
   passwordChangedAt: z.date().nullish(),
   paymentMethod: z.enum(PAYMENT_METHODS).nullish(),
-  role: z.enum(ROLES),
+  role: userRoleSchema,
 });
 
 export const loginSchema = z.object({

@@ -16,18 +16,18 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatDateTime } from '@/lib/utils';
-import { Trash2 } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { ModeToggle } from '../../header/mode-toggle';
-import AdminHotelReviewDialog from './hotel-review-dialog';
 import { DynamicBreadcrumb } from '@/app/dynamic-breadcrumb';
 import { Input } from '@/components/ui/input';
 import { useOnboardHotel } from '@/hooks/use-onboard-hotels';
 import { useState } from 'react';
 import LoadingComponent from '@/components/loading-state';
 import PaginationComponent from '../../pagination';
+import Link from 'next/link';
 
-const HotelListingComponents = () => {
+const AdminHotelListComponent = () => {
   const [params, setParams] = useState({
     status: '',
     page: '1',
@@ -129,7 +129,12 @@ const HotelListingComponents = () => {
 
                     <TableCell>
                       <div className="flex gap-2">
-                        <AdminHotelReviewDialog hotelId={id} />
+                        <Link
+                          href={`/admin/hotels/${id}`}
+                          className="w-fit p-2 rounded-lg bg-brand-primary-200"
+                        >
+                          <Edit className="w-6 h-6" />
+                        </Link>
                         <div className="w-fit p-2 bg-destructive rounded-xl">
                           <Trash2 className="w-6 h-6" />
                         </div>
@@ -156,4 +161,4 @@ const HotelListingComponents = () => {
   );
 };
 
-export default HotelListingComponents;
+export default AdminHotelListComponent;

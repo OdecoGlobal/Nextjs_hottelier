@@ -1,7 +1,9 @@
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { axiosInstance } from '../axios';
-import { LoginInput, signUpInput, VeifyOTPType } from '@/types';
+import { LoginInput, signUpInput, User, VeifyOTPType } from '@/types';
 import { formatError } from '@/utils/format-error';
+import { fetchInstance } from '../fetch';
+import { API_CACHE_TIMEOUT } from '../constants';
 
 export async function signUpUser(formData: signUpInput) {
   try {
@@ -49,10 +51,14 @@ export async function verifyOtp(formData: VeifyOTPType) {
 
 export async function loginUser(formData: LoginInput) {
   try {
-    const res = await axiosInstance.post('/auth/login', formData);
+    const res = await axiosInstance.post<{ data: { user: User } }>(
+      '/auth/login',
+      formData,
+    );
     if (!res) throw new Error('An error occured while logging in');
-
-    return { success: true, message: 'User logged in successfully' };
+    const { user } = res.data.data;
+    console.log(user);
+    return { success: true, message: 'User logged in successfully', user };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
@@ -72,5 +78,18 @@ export async function logOut() {
       throw error;
     }
     return { success: false, message: formatError(error) };
+  }
+}
+
+export async function verifyUser(): Promise<User | null> {
+  try {
+    const res = await fetchInstance.get('auth/verify', {
+      cache: 'force-cache',
+      next: { revalidate: API_CACHE_TIMEOUT, tags: ['hotel_onboard'] },
+    });
+    const { user } = res.data;
+    return user;
+  } catch {
+    return null;
   }
 }

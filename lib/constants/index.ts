@@ -34,10 +34,11 @@ import {
 import { createObjectOptions, createPricingOptions } from '../utils';
 
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'RoaméLux';
+export const APP_LOGO = '/images/logo.svg';
 export const JWT_SECRET = process.env.JWT_SECRET!;
 export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
 
-export const CACHE_TIME_OUT = 30 * 60;
+export const API_CACHE_TIMEOUT = 30 * 60;
 
 export const APP_DESCRIPTION =
   process.env.NEXT_PUBLIC_APP_DESCRIPTION ||

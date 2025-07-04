@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { loginUser } from '@/lib/actions/auth.actions';
 import { loginSchema } from '@/lib/schemas/validator';
+import { useUserStore } from '@/stores/use-user-store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
@@ -22,6 +23,7 @@ import { z } from 'zod';
 const LoginForm = () => {
   const { toast } = useToast();
   const router = useRouter();
+  const { setUser, clearUser } = useUserStore.getState();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -32,14 +34,16 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    clearUser();
     const res = await loginUser(values);
-    if (!res.success) {
+    if (!res.success || !res.user) {
       toast({
         title: 'Error',
         description: res.message,
         variant: 'destructive',
       });
     } else {
+      setUser(res.user);
       toast({
         title: 'Success',
         description: res.message,
@@ -63,6 +67,7 @@ const LoginForm = () => {
                   placeholder="johndoe@gmail.com"
                   {...field}
                   type="email"
+                  autoComplete="email"
                 />
               </FormControl>
               <FormMessage />
@@ -76,7 +81,12 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="***********" {...field} type="password" />
+                <Input
+                  placeholder="***********"
+                  {...field}
+                  type="password"
+                  autoComplete="current-password"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

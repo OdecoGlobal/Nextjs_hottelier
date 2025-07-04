@@ -10,7 +10,7 @@ import {
   HotelType,
 } from '@/types';
 import { fetchInstance } from '../fetch';
-import { CACHE_TIME_OUT } from '../constants';
+import { API_CACHE_TIMEOUT } from '../constants';
 
 export async function createNewHotel(formData: HotelBasicInfoType) {
   try {
@@ -212,7 +212,7 @@ export async function getOnboardHotels({
 
     const res = await fetchInstance.get(`hotels/onboard?${params.toString()}`, {
       cache: 'force-cache',
-      next: { revalidate: CACHE_TIME_OUT, tags: ['hotel_onboard'] },
+      next: { revalidate: API_CACHE_TIMEOUT, tags: ['hotel_onboard'] },
     });
 
     return res;
@@ -224,7 +224,7 @@ export async function getPreOnboardHotels(): Promise<ApiResponse> {
   try {
     const res = await fetchInstance.get(`hotels/onboard`, {
       cache: 'force-cache',
-      next: { revalidate: CACHE_TIME_OUT, tags: ['hotel_onboard'] },
+      next: { revalidate: API_CACHE_TIMEOUT, tags: ['hotel_onboard'] },
     });
 
     return res;
@@ -237,20 +237,18 @@ export async function getOnboardHotelById({
   queryKey,
 }: {
   queryKey: [string, { hotelId: string }];
-}): Promise<{
-  hotel: HotelType;
-}> {
+}): Promise<HotelType> {
   try {
     const [key, { hotelId }] = queryKey;
     void key;
     const res = await fetchInstance.get(`hotels/onboard/${hotelId}`, {
       cache: 'force-cache',
-      next: { revalidate: CACHE_TIME_OUT, tags: ['hotel_onboard_id'] },
+      next: { revalidate: API_CACHE_TIMEOUT, tags: ['hotel_onboard_id'] },
     });
     console.log(res.data, 'API');
-    // const { hotel } = res.data;
+    const { hotel } = res.data;
 
-    return res.data;
+    return hotel;
   } catch (error) {
     throw formatError(error);
   }

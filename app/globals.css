@@ -178,6 +178,9 @@
   .brand-badge {
     @apply text-brand-bg-200 bg-linear-(--gradient-100) border border-glow;
   }
+  .btn-brand {
+    @apply bg-brand-primary-100 text-white transition;
+  }
   .bg-gradient-100 {
     background: var(--bg-gradient-100);
   }
@@ -190,11 +193,6 @@
   .bg-glass {
     background: var(--glass-bg);
     backdrop-filter: var(--backdrop-blur);
-  }
-  .btn-brand {
-    background: var(--brand-primary);
-    color: white;
-    transition: all 0.2s ease;
   }
 
   .btn-brand:hover {
