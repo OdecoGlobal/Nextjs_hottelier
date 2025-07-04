@@ -14,6 +14,7 @@ const AdminHotelDetailsComponent = ({ hotelId }: { hotelId: string }) => {
   const { data, isPending, error, refetch } = useOnboardHotelById({ hotelId });
   const [current, setCurrent] = useState('basic');
   const currentIndex = steps.findIndex(step => step === current);
+  console.log(data);
 
   const goToNext = () => {
     if (currentIndex < steps.length - 1) {

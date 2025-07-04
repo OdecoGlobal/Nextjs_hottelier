@@ -13,7 +13,6 @@ const UserHydrator = () => {
         const res = await verifyUser();
         if (!isMounted) return;
         if (res) setUser(res);
-        console.log(res, 'VErify user');
       } catch {
         if (isMounted) clearUser();
       } finally {

@@ -25,8 +25,10 @@ export async function signupAgent(formData: signUpInput) {
   try {
     const res = await axiosInstance.post('/auth/signup-agent', formData);
     if (!res) throw new Error('An error occured while signing up');
+    const data = res.data;
+    const { message, token } = data;
 
-    return { success: true, message: 'User registered successfully' };
+    return { success: true, message, token };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;

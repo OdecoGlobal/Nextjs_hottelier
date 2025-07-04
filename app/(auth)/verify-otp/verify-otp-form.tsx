@@ -72,7 +72,6 @@ const VerifyOTPForm = ({ email }: { email: string }) => {
       });
       router.replace('/');
     }
-    console.log(inputOTP, email);
   };
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

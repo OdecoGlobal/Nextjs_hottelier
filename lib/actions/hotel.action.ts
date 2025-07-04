@@ -9,7 +9,7 @@ import {
   HotelPolicyType,
   HotelType,
 } from '@/types';
-import { fetchInstance } from '../fetch';
+import { fetchInstance, serverFetch } from '../fetch';
 import { API_CACHE_TIMEOUT } from '../constants';
 
 export async function createNewHotel(formData: HotelBasicInfoType) {
@@ -222,7 +222,7 @@ export async function getOnboardHotels({
 }
 export async function getPreOnboardHotels(): Promise<ApiResponse> {
   try {
-    const res = await fetchInstance.get(`hotels/onboard`, {
+    const res = await serverFetch.get(`hotels/onboard`, {
       cache: 'force-cache',
       next: { revalidate: API_CACHE_TIMEOUT, tags: ['hotel_onboard'] },
     });
@@ -245,7 +245,6 @@ export async function getOnboardHotelById({
       cache: 'force-cache',
       next: { revalidate: API_CACHE_TIMEOUT, tags: ['hotel_onboard_id'] },
     });
-    console.log(res.data, 'API');
     const { hotel } = res.data;
 
     return hotel;

@@ -18,8 +18,6 @@ import {
 import { formatDateTime } from '@/lib/utils';
 import { Edit, Trash2 } from 'lucide-react';
 import Image from 'next/image';
-import { ModeToggle } from '../../header/mode-toggle';
-import { DynamicBreadcrumb } from '@/app/dynamic-breadcrumb';
 import { Input } from '@/components/ui/input';
 import { useOnboardHotel } from '@/hooks/use-onboard-hotels';
 import { useState } from 'react';
@@ -56,10 +54,6 @@ const AdminHotelListComponent = () => {
           <CardTitle className="text-brand-secondary font-bold text-xl md:text-2xl lg:text-3xl ">
             Hotel Management
           </CardTitle>
-          <CardDescription>
-            <DynamicBreadcrumb />
-          </CardDescription>
-          <ModeToggle />
         </CardHeader>
       </Card>
       <Card className="border-glow">
@@ -131,12 +125,12 @@ const AdminHotelListComponent = () => {
                       <div className="flex gap-2">
                         <Link
                           href={`/admin/hotels/${id}`}
-                          className="w-fit p-2 rounded-lg bg-brand-primary-200"
+                          className=" w-8 h-8  flex items-center justify-center rounded-lg bg-brand-primary-200/50"
                         >
-                          <Edit className="w-6 h-6" />
+                          <Edit className="w-5 h-5 text-slate-50" />
                         </Link>
-                        <div className="w-fit p-2 bg-destructive rounded-xl">
-                          <Trash2 className="w-6 h-6" />
+                        <div className="w-8 h-8  flex items-center justify-center rounded-lg  bg-red-100">
+                          <Trash2 className="w-5 h-5 text-red-500" />
                         </div>
                       </div>
                     </TableCell>

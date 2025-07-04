@@ -13,7 +13,7 @@ const AgentsHomePage = async () => {
     <div>
       <Button>
         <Plus className="flex gap-2 items-center" />
-        <Link href="/agent/onboarding">Create New Hotel</Link>
+        <Link href="/onboard/agent/hotel">Create New Hotel</Link>
       </Button>
     </div>
   );

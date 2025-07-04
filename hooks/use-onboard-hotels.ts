@@ -29,8 +29,8 @@ export function useOnboardHotelById({ hotelId }: { hotelId: string }) {
     queryKey: ['onboard-hotels', { hotelId }],
     queryFn: getOnboardHotelById,
     placeholderData: keepPreviousData,
-    staleTime: API_CACHE_TIMEOUT,
-    enabled: !hotelId,
+    staleTime: API_CACHE_TIMEOUT * 1000,
+    enabled: !!hotelId,
   });
   useEffect(() => {
     if (query.data && query.isSuccess) {

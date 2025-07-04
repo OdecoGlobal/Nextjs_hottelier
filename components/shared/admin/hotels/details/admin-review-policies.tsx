@@ -7,15 +7,17 @@ import {
 import {
   CANCELLATION_FEE_TYPE_OPTIONS,
   CANCELLATION_POLICIES_OPTIONS,
-  DAYS_OBJ,
   PAYMENT_METHODS_OPTIONS,
   SELF_CHECK_IN_OPTIONS2,
-  SURCHARGE_TYPE_OPTIONS,
 } from '@/lib/constants';
 import { Badge } from '@/components/ui/badge';
 import { useOnboardHotelByIdStore } from '@/stores/use-onboard-hotel-store';
 import { PolicyRow } from './policy-row';
 import MissingStepNotice from './admin-missing-step-notice';
+import AdminPolicyReview from './admin-policy-review/admin-check-in';
+import AdminFrontDeskReview from './admin-policy-review/admin-front-policy';
+import AdminSectionWrapper from './admin-policy-review/policy-section-wrapper';
+import AdminPetPolicyReview from './admin-policy-review/admin-pet-policy-review';
 
 const AdminReviewPolicies = () => {
   const { hotel } = useOnboardHotelByIdStore();
@@ -31,27 +33,9 @@ const AdminReviewPolicies = () => {
     paymentMethods,
     isDepositRequired,
     depositAmount,
-    checkInStartTime,
-    checkInEndTime,
-    isOpen24Hours,
-    lateCheckInEndTime,
-    lateCheckInStartTime,
-    isLateCheckIn,
-    lateCheckInType,
-    isAdvancedNoticeCheckIn,
-    advanceNoticeCheckInTime,
-    surchargeAmount,
-    surchargeType,
     checkOutTime,
     selfCheckInType,
     isSelfCheckIn,
-    isFrontDesk,
-    isFrontDeskEveryDay,
-    isFrontDeskOpen24Hours,
-    frontDeskEndTime,
-    frontDeskScheduleEndDay,
-    frontDeskScheduleStartDay,
-    frontDeskStartTime,
     cancellationPolicy,
     cancellationFeeType,
     minCheckInAgeAllowed,
@@ -62,8 +46,7 @@ const AdminReviewPolicies = () => {
   );
   return (
     <AdminDialogCard title="Hotel Policies">
-      <div className="dialog-div">
-        <h3 className="dialog-h3">Payment methods</h3>
+      <AdminSectionWrapper heading="Payment methods">
         <div className="flex flex-wrap gap-1">
           {paymentArray.map(pay => (
             <Badge key={pay} className="brand-badge">
@@ -71,9 +54,9 @@ const AdminReviewPolicies = () => {
             </Badge>
           ))}
         </div>
-      </div>
-      <div className="dialog-div">
-        <h3 className="dialog-h3">Deposit Policy</h3>
+      </AdminSectionWrapper>
+
+      <AdminSectionWrapper heading="Deposit Policy">
         <PolicyRow
           label="Is Deposit Required"
           value={isDepositRequired ? 'yes' : 'no'}
@@ -84,16 +67,15 @@ const AdminReviewPolicies = () => {
             value={formatCurrency(depositAmount, acceptedCurrency)}
           />
         )}
-      </div>
-      <div className="dialog-div">
-        <h3 className="dialog-h3">Tax Policy</h3>
+      </AdminSectionWrapper>
+      <AdminSectionWrapper heading="Tax Policy">
         <PolicyRow
           label="Is tax included on room rates"
           value={isTaxIncludedInRoomRates ? 'yes' : 'no'}
         />
-      </div>
-      <div className="dialog-div">
-        <h3 className="dialog-h3">Cancellation Policy</h3>
+      </AdminSectionWrapper>
+
+      <AdminSectionWrapper heading="Cancellation Policy">
         <PolicyRow
           label="Which type of cancellation policy do you have"
           value={mapStringToLabel(
@@ -110,7 +92,7 @@ const AdminReviewPolicies = () => {
             )}
           />
         )}
-      </div>
+      </AdminSectionWrapper>
       <div className="dialog-div">
         <h3 className="dialog-h3">Check-in Age</h3>
         <PolicyRow
@@ -119,8 +101,7 @@ const AdminReviewPolicies = () => {
         />
       </div>
 
-      <div className="dialog-div">
-        <h3 className="dialog-h3">Self check-in policy</h3>
+      <AdminSectionWrapper heading="Self check-in policy">
         <PolicyRow
           label="Do you offer self check-in"
           value={isSelfCheckIn ? 'yes' : 'no'}
@@ -132,142 +113,17 @@ const AdminReviewPolicies = () => {
             value={mapStringToLabel(selfCheckInType, SELF_CHECK_IN_OPTIONS2)}
           />
         )}
-      </div>
-      <div className="dialog-div">
-        <h3 className="dialog-h3">Check-in Policy</h3>
-        <PolicyRow
-          label="Are you opened 24 hours"
-          value={isOpen24Hours ? 'Yes' : 'No'}
-        />
-        {!isOpen24Hours && (
-          <div className="space-y-3">
-            <PolicyRow
-              label="When do your check in start"
-              value={checkInStartTime}
-            />
-            <PolicyRow
-              label="When do your check in end"
-              value={checkInEndTime}
-            />
+      </AdminSectionWrapper>
+      <AdminPolicyReview />
 
-            <PolicyRow
-              label=" Do you charge for late check-in"
-              value={isLateCheckIn ? 'Yes' : 'No'}
-            />
+      <AdminSectionWrapper heading="Check-out policy">
+        <PolicyRow label=" When is check-out" value={checkOutTime} />
+      </AdminSectionWrapper>
 
-            {isLateCheckIn && (
-              <div className="space-y-3">
-                <PolicyRow
-                  label="What's your late check-in type"
-                  value={lateCheckInType}
-                />
-                <PolicyRow
-                  label="When do your late check in start"
-                  value={lateCheckInStartTime}
-                />
-                <PolicyRow
-                  label="When do your late check in end"
-                  value={lateCheckInEndTime}
-                />
+      <AdminFrontDeskReview />
+      <AdminPetPolicyReview />
 
-                {lateCheckInType === 'SURCHARGE' &&
-                  surchargeType &&
-                  surchargeAmount && (
-                    <>
-                      <PolicyRow
-                        label="How do you surcharge for late check-in"
-                        value={mapStringToLabel(
-                          surchargeType,
-                          SURCHARGE_TYPE_OPTIONS,
-                        )}
-                      />
-                      <PolicyRow
-                        label="Late check-in surcharge fee"
-                        value={formatCurrency(
-                          surchargeAmount,
-                          acceptedCurrency,
-                        )}
-                      />
-                    </>
-                  )}
-              </div>
-            )}
-          </div>
-        )}
-        <PolicyRow
-          label=" Do you allow for advance notice before check-in"
-          value={isAdvancedNoticeCheckIn ? 'Yes' : 'No'}
-        />
-
-        {isAdvancedNoticeCheckIn && advanceNoticeCheckInTime && (
-          <PolicyRow
-            label="When do you allow for advanced notice"
-            value={advanceNoticeCheckInTime}
-          />
-        )}
-      </div>
-      <div className="dialog-div">
-        <h3 className="dialog-h3">Check-out policy</h3>
-        <p>
-          When is check-out:{' '}
-          <Badge className="brand-badge">{checkOutTime}</Badge>
-        </p>
-      </div>
-      <div className="dialog-div">
-        <h3 className="dialog-h3">Front desk policy</h3>
-        <PolicyRow
-          label="Do you have a front desk"
-          value={isFrontDesk ? 'yes' : 'no'}
-        />
-
-        {!isFrontDesk && (
-          <div className="space-y-4">
-            <PolicyRow
-              label="Is the front desk opened everyday"
-              value={isFrontDeskEveryDay ? 'yes' : 'no'}
-            />
-            {!isFrontDeskEveryDay &&
-              frontDeskScheduleStartDay &&
-              frontDeskScheduleEndDay && (
-                <>
-                  <PolicyRow
-                    label="What's the start day for your front desk"
-                    value={mapStringToLabel(
-                      frontDeskScheduleStartDay,
-                      DAYS_OBJ,
-                    )}
-                  />
-
-                  <PolicyRow
-                    label="What's the end day for your front desk"
-                    value={mapStringToLabel(frontDeskScheduleEndDay, DAYS_OBJ)}
-                  />
-                </>
-              )}
-            <PolicyRow
-              label="Is the front desk always available"
-              value={isFrontDeskOpen24Hours ? 'yes' : 'no'}
-            />
-
-            {!isFrontDeskOpen24Hours &&
-              frontDeskStartTime &&
-              frontDeskEndTime && (
-                <>
-                  <PolicyRow
-                    label="When do the front desk open"
-                    value={frontDeskStartTime}
-                  />
-                  <PolicyRow
-                    label="When do the front desk close"
-                    value={frontDeskEndTime}
-                  />
-                </>
-              )}
-          </div>
-        )}
-      </div>
-      <div className="dialog-div">
-        <h3 className="dialog-h3">Additional Policies</h3>
+      <AdminSectionWrapper heading="Additional Policies">
         {additionalPolicy && additionalPolicy.length > 0 ? (
           <>
             {additionalPolicy.map((policy, i) => (
@@ -280,7 +136,7 @@ const AdminReviewPolicies = () => {
             message="No additional policy"
           />
         )}
-      </div>
+      </AdminSectionWrapper>
     </AdminDialogCard>
   );
 };

@@ -7,14 +7,24 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { Home } from 'lucide-react';
+import { Home, Hotel, LayoutDashboard } from 'lucide-react';
 import { Metadata } from 'next';
 
 const AdminItems: SidebarNavType[] = [
   {
-    url: '/admin',
+    url: '/',
     icon: Home,
     title: 'Home',
+  },
+  {
+    url: '/admin',
+    icon: LayoutDashboard,
+    title: 'Dashboard',
+  },
+  {
+    url: '/admin/hotels',
+    icon: Hotel,
+    title: 'Hotels',
   },
 ];
 

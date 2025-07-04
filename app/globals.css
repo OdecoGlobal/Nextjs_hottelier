@@ -166,8 +166,15 @@
   .flex-between {
     @apply flex items-center justify-between;
   }
+  .dialog-section {
+    @apply space-y-3 mb-6 rounded-xl w-full p-4 bg-card shadow-card;
+  }
+
+  .dialog-header {
+    @apply text-lg font-bold text-muted-foreground  uppercase tracking-wide;
+  }
   .dialog-div {
-    @apply rounded-xl w-full p-4 bg-card shadow-card capitalize space-y-2;
+    @apply rounded-xl w-full p-4 capitalize space-y-2 border border-glow;
   }
   .dialog-h3 {
     @apply text-muted-foreground font-bold;

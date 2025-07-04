@@ -48,11 +48,17 @@ const OnboardingPage = async ({
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-500">
               Need help? Check out our{' '}
-              <Link href="/help#" className="text-blue-600 hover:underline">
+              <Link
+                href="/#help"
+                className="text-brand-secondary hover:underline"
+              >
                 setup guide
               </Link>{' '}
               or{' '}
-              <Link href="/contact#" className="text-blue-600 hover:underline">
+              <Link
+                href="/#contact"
+                className="text-brand-secondary hover:underline"
+              >
                 contact support
               </Link>
             </p>
