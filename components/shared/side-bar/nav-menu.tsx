@@ -5,7 +5,6 @@ import {
   Bell,
   ChevronsUpDown,
   Hotel,
-  LayoutDashboard,
   Loader,
   LogIn,
 } from 'lucide-react';
@@ -29,6 +28,7 @@ import {
 import { useUserStore } from '@/stores/use-user-store';
 import Link from 'next/link';
 import LogoutButton from '../header/logout-button';
+import { SidebarModeToggle } from './sidebar-mode-toogle';
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -38,8 +38,6 @@ export function NavUser() {
     userLoaded && user.image ? user?.image : 'https://github.com/shadcn.png';
   const email = userLoaded ? user.email : '';
   const userName = userLoaded ? user.userName : 'user';
-  const isAdmin = userLoaded && user.role === 'ADMIN';
-  const isAgent = userLoaded && user.role === 'AGENT';
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -80,13 +78,7 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              {(isAdmin || isAgent) && (
-                <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link href={isAdmin ? '/admin' : '/agent'}>
-                    <LayoutDashboard /> Dashboard
-                  </Link>
-                </DropdownMenuItem>
-              )}
+              <SidebarModeToggle />
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
 

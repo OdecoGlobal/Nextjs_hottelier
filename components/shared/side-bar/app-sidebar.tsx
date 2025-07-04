@@ -6,20 +6,11 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import MainSidebarNav from './main-nav';
-import { Home } from 'lucide-react';
+import MainSidebarNav, { SidebarNavType } from './main-nav';
 import { NavUser } from './nav-menu';
 import { APP_LOGO } from '@/lib/constants';
-import { ModeToggle } from '../header/mode-toggle';
-const AdminItems = [
-  {
-    url: '/admin',
-    icon: Home,
-    title: 'Home',
-  },
-];
 
-const AppSidebar = () => {
+const AppSidebar = ({ items }: { items: SidebarNavType[] }) => {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -29,10 +20,9 @@ const AppSidebar = () => {
         </Avatar>
       </SidebarHeader>
       <SidebarContent>
-        <MainSidebarNav items={AdminItems} />
+        <MainSidebarNav items={items} />
       </SidebarContent>
       <SidebarFooter>
-        <ModeToggle />
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

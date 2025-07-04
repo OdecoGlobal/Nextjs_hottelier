@@ -7,12 +7,12 @@ import {
 import { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 
-type ItemType = {
+export type SidebarNavType = {
   url: string;
   title: string;
   icon: LucideIcon;
 };
-const MainSidebarNav = ({ items }: { items: ItemType[] }) => {
+const MainSidebarNav = ({ items }: { items: SidebarNavType[] }) => {
   return (
     <SidebarGroup>
       <SidebarMenu>

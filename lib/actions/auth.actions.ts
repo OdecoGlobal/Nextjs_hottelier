@@ -85,7 +85,7 @@ export async function verifyUser(): Promise<User | null> {
   try {
     const res = await fetchInstance.get('auth/verify', {
       cache: 'force-cache',
-      next: { revalidate: API_CACHE_TIMEOUT, tags: ['hotel_onboard'] },
+      next: { revalidate: API_CACHE_TIMEOUT, tags: ['verify-user'] },
     });
     const { user } = res.data;
     return user;

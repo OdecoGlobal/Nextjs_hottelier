@@ -15,9 +15,8 @@ const LogoutButton = () => {
     startTransition(async () => {
       await logOut();
       clearUser();
+      router.replace('/');
     });
-
-    router.refresh();
   };
   return (
     <Button
@@ -25,6 +24,7 @@ const LogoutButton = () => {
       variant="ghost"
       disabled={isPending}
       onClick={handleLogout}
+      className="w-full justify-start gap-2 px-3 py-2 h-auto text-left font-normal data-[state=open]:bg-accent"
     >
       {isPending ? (
         <Loader className="w-4 h-4 animate-spin" />
