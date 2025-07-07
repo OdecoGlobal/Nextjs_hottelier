@@ -11,7 +11,7 @@ import { SelectFieldForm } from '@/components/select-field-form';
 import {
   PET_FEE_DURATION_OPTIONS,
   PET_SURCHARGE_TYPE_OPTIONS,
-  RADIO_BOOLEAN,
+  BOOLEAN_OPTIONS,
 } from '@/lib/constants';
 import { Checkbox } from '@/components/ui/checkbox';
 import { HotelPolicyProp } from '..';
@@ -34,7 +34,7 @@ const PetSurcharge = ({ control, watch }: HotelPolicyProp) => {
                     field={field}
                     label="Do you have a surcharge for pets?"
                     isBoolean={true}
-                    data={RADIO_BOOLEAN}
+                    data={BOOLEAN_OPTIONS}
                   />
                 </FormControl>
                 <FormMessage />

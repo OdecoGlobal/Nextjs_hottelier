@@ -6,11 +6,11 @@ import { verifyTokenForEdge } from './verify';
 
 export function changedPasswordAfter(
   user: User,
-  JWTTimestamp: number
+  JWTTimestamp: number,
 ): boolean {
   if (user.passwordChangedAt) {
     const changedTimestamp = Math.floor(
-      user.passwordChangedAt.getTime() / 1000
+      user.passwordChangedAt.getTime() / 1000,
     );
     return JWTTimestamp < changedTimestamp;
   }
@@ -34,6 +34,9 @@ export const verifyAndGetUser = async (req: NextRequest) => {
   const decoded = await verifyTokenForEdge(token);
   const user = await prisma.user.findUnique({
     where: { id: decoded.id },
+    cacheStrategy: {
+      ttl: 5 * 60,
+    },
   });
 
   if (!user) throw new AppError('User no longer exists', 401);

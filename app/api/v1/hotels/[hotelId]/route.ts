@@ -2,6 +2,7 @@ import { prisma } from '@/db/prisma';
 import { formatApiError } from '@/lib/errors';
 import AppError from '@/lib/errors/app-error';
 import { protect, restrictTo, validateHotelAcces } from '@/middleware/auth';
+import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (
@@ -58,6 +59,9 @@ export const DELETE = async (
       where: { id: hotelId },
     });
 
+    revalidateTag('hotel_onboard');
+    revalidateTag('hotel_onboard_id');
+    revalidateTag(`hotel_onboard_${hotelId}`);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     return formatApiError(error);

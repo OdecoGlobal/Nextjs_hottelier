@@ -8,13 +8,13 @@ import TanStackErrorComponent from '../../tan-error';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-const steps = ['basic', 'policies', 'amenenities', 'rooms'];
+import AdminReviewAmenities from './details/admin-hotel-amenities-review';
+const steps = ['basic', 'policies', 'amenities', 'photos', 'rooms'];
 
 const AdminHotelDetailsComponent = ({ hotelId }: { hotelId: string }) => {
   const { data, isPending, error, refetch } = useOnboardHotelById({ hotelId });
   const [current, setCurrent] = useState('basic');
   const currentIndex = steps.findIndex(step => step === current);
-  console.log(data);
 
   const goToNext = () => {
     if (currentIndex < steps.length - 1) {
@@ -52,6 +52,9 @@ const AdminHotelDetailsComponent = ({ hotelId }: { hotelId: string }) => {
             </TabsContent>
             <TabsContent value="policies">
               <AdminReviewPolicies />
+            </TabsContent>
+            <TabsContent value="amenities">
+              <AdminReviewAmenities />
             </TabsContent>
           </>
         )}

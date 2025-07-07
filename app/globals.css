@@ -56,8 +56,10 @@
   --brand-primary-100: #8b5cf6;
   --brand-primary-200: #7c3aed;
   --brand-secondary: #c084fc;
-  --brand-bg-100: #f1f5f9;
-  --brand-bg-200: #e2e8f0;
+  /* --brand-bg-100: #f1f5f9;
+  --brand-bg-200: #e2e8f0; */
+  --brand-bg-100: #221f42;
+  --brand-bg-200: #16213e;
   --glass-bg: rgba(139, 92, 246, 0.1);
   --backdrop-blur: blur(10px);
   --gradient-100: 45deg, #8b5cf6, #c084fc;
@@ -103,8 +105,6 @@
 }
 
 .dark {
-  --brand-bg-100: #221f42;
-  --brand-bg-200: #16213e;
   --text-brand: #c084fc;
   --bg-glow: #5b21b6;
 
@@ -178,6 +178,9 @@
   }
   .dialog-h3 {
     @apply text-muted-foreground font-bold;
+  }
+  .brand-input {
+    @apply focus-visible:border-glow;
   }
   .dialog-div p {
     @apply text-sm font-semibold;

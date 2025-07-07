@@ -2,44 +2,76 @@ import { formatError } from '@/utils/format-error';
 import { axiosInstance } from '../axios';
 import {
   AddRoomType,
-  CreateHotelApiResponse,
   HotelAmenitiesType,
   HotelBasicInfoType,
   HotelImageUploadBody,
   HotelPolicyType,
   HotelType,
+  NewHotelType,
 } from '@/types';
-import { fetchInstance, serverFetch } from '../fetch';
+import { serverFetch } from '../fetch/fetch';
 import { API_CACHE_TIMEOUT } from '../constants';
+import { fetchClient } from '../fetch/client';
 
-export async function createNewHotel(formData: HotelBasicInfoType) {
+type createHotelResponse = {
+  success: boolean;
+  message: string;
+  hotel: HotelType | null;
+};
+
+export async function createNewHotel(
+  data: NewHotelType,
+): Promise<createHotelResponse> {
   try {
-    const res = await axiosInstance.post<CreateHotelApiResponse>(
-      '/hotels',
-      formData,
-    );
+    const res = await fetchClient.post('/hotels', data);
     if (!res) throw new Error('An error occured while creating Hotel');
+    console.log('NewHotel', res);
 
     return {
       success: true,
-      message: 'Hotel basic info updated successfully',
-      hotel: res.data.data.hotel,
+      message:
+        'Congratulations!!!!🎉🎊: You just started you hotel onboarding process',
+      hotel: res.data,
+    };
+  } catch (error) {
+    return { success: false, message: formatError(error), hotel: null };
+  }
+}
+type HotelStepsResponse = {
+  success: boolean;
+  message: string;
+};
+export type CreateBasicInfoType = {
+  data: HotelBasicInfoType;
+  hotelId: string;
+};
+export async function addHotelBasicInfo({
+  data,
+  hotelId,
+}: CreateBasicInfoType): Promise<HotelStepsResponse> {
+  try {
+    const res = await fetchClient.post(`/hotels/${hotelId}/basic-info`, data);
+    if (!res) throw new Error('An error occured while adding hotel basic info');
+
+    return {
+      success: true,
+      message: 'Hotel basic info added successfully',
     };
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
 }
 
-export async function updateHotelBasicInfo(
-  formData: HotelBasicInfoType,
-  hotelId: string,
-) {
+export async function updateHotelBasicInfo({
+  data,
+  hotelId,
+}: CreateBasicInfoType) {
   try {
     const res = await axiosInstance.patch(
       `/hotels/${hotelId}/basic-info`,
-      formData,
+      data,
     );
-    if (!res) throw new Error('An error occured while creating Hotel');
+    if (!res) throw new Error('An error occured while updating Hotel');
 
     return {
       success: true,
@@ -51,14 +83,18 @@ export async function updateHotelBasicInfo(
   }
 }
 
-export async function addRoom(data: AddRoomType, hotelId: string) {
+export type AddPolicyType = {
+  data: HotelPolicyType;
+  hotelId: string;
+};
+export async function addHotelPolicies({ data, hotelId }: AddPolicyType) {
   try {
-    const res = await axiosInstance.post(`/hotels/${hotelId}/rooms`, data);
-    if (!res) throw new Error('Error occured while creating room');
+    const res = await axiosInstance.post(`/hotels/${hotelId}/policies`, data);
+    if (!res) throw new Error('An error occured while adding hotel policy');
+
     return {
-      room: res.data.data.room,
       success: true,
-      message: 'Room created successfully',
+      message: 'Hotel policies added successfully',
     };
   } catch (error) {
     return { success: false, message: formatError(error) };
@@ -79,6 +115,20 @@ export async function updateHotelPolicies(
     return {
       success: true,
       message: 'Hotel policies updated successfully',
+    };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
+}
+
+export async function addRoom(data: AddRoomType, hotelId: string) {
+  try {
+    const res = await axiosInstance.post(`/hotels/${hotelId}/rooms`, data);
+    if (!res) throw new Error('Error occured while creating room');
+    return {
+      room: res.data.data.room,
+      success: true,
+      message: 'Room created successfully',
     };
   } catch (error) {
     return { success: false, message: formatError(error) };
@@ -210,7 +260,7 @@ export async function getOnboardHotels({
     if (limit) params.append('limit', limit);
     if (page) params.append('page', page);
 
-    const res = await fetchInstance.get(`hotels/onboard?${params.toString()}`, {
+    const res = await fetchClient.get(`hotels/onboard?${params.toString()}`, {
       cache: 'force-cache',
       next: { revalidate: API_CACHE_TIMEOUT, tags: ['hotel_onboard'] },
     });
@@ -233,17 +283,32 @@ export async function getPreOnboardHotels(): Promise<ApiResponse> {
   }
 }
 
-export async function getOnboardHotelById({
-  queryKey,
-}: {
-  queryKey: [string, { hotelId: string }];
-}): Promise<HotelType> {
+export async function getOnboardHotelById(hotelId: string): Promise<HotelType> {
   try {
-    const [key, { hotelId }] = queryKey;
-    void key;
-    const res = await fetchInstance.get(`hotels/onboard/${hotelId}`, {
+    const res = await fetchClient.get(`hotels/onboard/${hotelId}`, {
+      // cache: 'force-cache',
+      // next: {
+      //   revalidate: API_CACHE_TIMEOUT,
+      //   tags: ['hotel_onboard_id', `hotel_onboard_${hotelId}`],
+      // },
+    });
+    const { hotel } = res.data;
+
+    return hotel;
+  } catch (error) {
+    throw formatError(error);
+  }
+}
+export async function getServerOnboardHotelById(
+  hotelId: string,
+): Promise<HotelType> {
+  try {
+    const res = await serverFetch.get(`hotels/onboard/${hotelId}`, {
       cache: 'force-cache',
-      next: { revalidate: API_CACHE_TIMEOUT, tags: ['hotel_onboard_id'] },
+      // next: {
+      //   revalidate: API_CACHE_TIMEOUT,
+      //   tags: ['hotel_onboard_id', `hotel_onboard_${hotelId}`],
+      // },
     });
     const { hotel } = res.data;
 

@@ -46,6 +46,7 @@ const AdminHotelListComponent = () => {
     return <div>An error occured while getting data {error.message}</div>;
   }
   const { data: hotels, totalPages } = data;
+  console.log(data);
 
   return (
     <section className="space-y-4">
@@ -82,9 +83,11 @@ const AdminHotelListComponent = () => {
 
             <TableBody>
               {hotels.map(hotel => {
-                const { basicInfo, id, status, updatedAt, images } = hotel;
-                const img = images.filter(img => img.imageType === 'COVER')[0]
-                  .imageUrl;
+                const { location, id, status, updatedAt, images, name } = hotel;
+                const coverImage = images.find(
+                  img => img.imageType === 'COVER',
+                );
+                const img = coverImage?.imageUrl;
 
                 return (
                   <TableRow
@@ -93,20 +96,27 @@ const AdminHotelListComponent = () => {
                   >
                     <TableCell>
                       <div className="flex flex-col lg:flex-row items-center gap-2">
-                        <Image
-                          priority
-                          src={img}
-                          alt={basicInfo.name}
-                          width={70}
-                          height={40}
-                          className="border border-brand-primary object-cover overflow-clip rounded-lg"
-                        />
+                        {img ? (
+                          <Image
+                            priority
+                            src={img}
+                            alt={name}
+                            width={70}
+                            height={40}
+                            className="border border-brand-primary object-cover overflow-clip rounded-lg"
+                          />
+                        ) : (
+                          <div className="w-[70px] h-[40px] bg-muted rounded-lg flex items-center justify-center text-xs text-muted-foreground">
+                            No image
+                          </div>
+                        )}
+
                         <div className="flex flex-col font-semibold">
-                          <span className="text-brand-secondary">
-                            {basicInfo.name}
-                          </span>
-                          <span className="text-muted-foreground text-xs">
-                            {basicInfo.address}, {basicInfo.city}
+                          <span className="text-brand-secondary">{name}</span>
+                          <span className="text-muted-foreground text-xs truncate">
+                            {location.length > 20
+                              ? `${location.substring(0, 20)}...`
+                              : location}
                           </span>
                         </div>
                       </div>

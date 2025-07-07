@@ -9,11 +9,11 @@ import MissingStepNotice from './admin-missing-step-notice';
 
 const AdminOnboardBasicInfo = () => {
   const { hotel } = useOnboardHotelByIdStore();
-  const { basicInfo, status } = hotel! ?? {};
+  const { basicInfo, status, name } = hotel! ?? {};
 
-  if (!basicInfo) return <MissingStepNotice step="Basic information" />;
+  if (!basicInfo || !status || !name)
+    return <MissingStepNotice step="Basic information" />;
   const {
-    name,
     address,
     acceptedCurrency,
     city,

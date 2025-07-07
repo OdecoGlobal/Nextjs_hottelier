@@ -2,7 +2,7 @@ import { useOnboardHotelByIdStore } from '@/stores/use-onboard-hotel-store';
 import { PolicyRow } from '../policy-row';
 import AdminSectionWrapper from './policy-section-wrapper';
 import { mapStringToLabel } from '@/lib/utils';
-import { DAYS_OBJ } from '@/lib/constants';
+import { BOOLEAN_OPTIONS, DAYS_OBJ } from '@/lib/constants';
 
 const AdminFrontDeskReview = () => {
   const { hotel } = useOnboardHotelByIdStore();
@@ -20,33 +20,37 @@ const AdminFrontDeskReview = () => {
     <AdminSectionWrapper heading="front desk policy">
       <PolicyRow
         label="Do you have a front desk"
-        value={isFrontDesk ? 'yes' : 'no'}
+        value={mapStringToLabel(String(isFrontDesk), BOOLEAN_OPTIONS)}
       />
 
       {!isFrontDesk && (
         <>
           <PolicyRow
             label="Is the front desk opened everyday"
-            value={isFrontDeskEveryDay ? 'yes' : 'no'}
-          />
-          {!isFrontDeskEveryDay &&
-            frontDeskScheduleStartDay &&
-            frontDeskScheduleEndDay && (
-              <>
-                <PolicyRow
-                  label="What's the start day for your front desk"
-                  value={mapStringToLabel(frontDeskScheduleStartDay, DAYS_OBJ)}
-                />
-
-                <PolicyRow
-                  label="What's the end day for your front desk"
-                  value={mapStringToLabel(frontDeskScheduleEndDay, DAYS_OBJ)}
-                />
-              </>
+            value={mapStringToLabel(
+              String(isFrontDeskEveryDay!),
+              BOOLEAN_OPTIONS,
             )}
+          />
+          {!isFrontDeskEveryDay && (
+            <>
+              <PolicyRow
+                label="What's the start day for your front desk"
+                value={mapStringToLabel(frontDeskScheduleStartDay!, DAYS_OBJ)}
+              />
+
+              <PolicyRow
+                label="What's the end day for your front desk"
+                value={mapStringToLabel(frontDeskScheduleEndDay!, DAYS_OBJ)}
+              />
+            </>
+          )}
           <PolicyRow
-            label="Is the front desk always available"
-            value={isFrontDeskOpen24Hours ? 'yes' : 'no'}
+            label="Is the front desk always open 24 hours"
+            value={mapStringToLabel(
+              String(isFrontDeskOpen24Hours!),
+              BOOLEAN_OPTIONS,
+            )}
           />
 
           {!isFrontDeskOpen24Hours &&

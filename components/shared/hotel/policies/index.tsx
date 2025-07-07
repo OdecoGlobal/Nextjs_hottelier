@@ -1,13 +1,11 @@
 'use client';
-import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+
+import { useState } from 'react';
 import HotelCreationSteps from '../creation-steps';
-import { AdminAgentRole, HotelPolicyType } from '@/types';
+import { HotelPolicyType } from '@/types';
 import StepOnePolicy from './step-one-policy';
 import StepThreePolicy from './step-three-policy';
 import StepTwoPolicy from './step-two-policies';
-import { updateHotelPolicies } from '@/lib/actions/hotel.action';
 import { hotelPolicySchema } from '@/lib/schemas/grouped-validators';
 import { Control, useForm, UseFormWatch } from 'react-hook-form';
 import { defaultPolicies } from '@/lib/constants/hotel-default-values';
@@ -16,6 +14,7 @@ import { Form } from '@/components/ui/form';
 import { baseHotelPolicySchema } from '@/lib/schemas/validator';
 import { pickKeys } from '@/lib/utils';
 import SubmitFormButton from '@/components/submit-form-button';
+import { useAddPolicy, useOnboardHotelById } from '@/hooks/use-onboard-hotels';
 
 export type HotelPolicyProp = {
   control: Control<HotelPolicyType>;
@@ -92,45 +91,28 @@ const stepFields = [
 
 const MainPolicyForm = ({
   hotelId,
-  role,
-  data,
+  policy,
 }: {
   hotelId: string;
-  role: AdminAgentRole;
-  data: HotelPolicyType;
+  policy: HotelPolicyType;
 }) => {
   const [step, setStep] = useState(0);
-  const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
+  const { data, isPending: dataLoading } = useOnboardHotelById({ hotelId });
+  const { mutate, isPending } = useAddPolicy();
   const form = useForm<HotelPolicyType>({
     resolver: zodResolver(hotelPolicySchema),
-    defaultValues: data ?? defaultPolicies,
+    defaultValues: policy ?? defaultPolicies,
     shouldUnregister: false,
   });
 
-  const handleSubmit = async () => {
-    const formData = form.getValues();
+  if (dataLoading || !data) {
+    return <>Loading</>;
+  }
+  const { status, completionSteps } = data! ?? {};
 
-    startTransition(async () => {
-      const response = await updateHotelPolicies(formData, hotelId);
-      if (!response?.success) {
-        toast({
-          title: 'Error',
-          variant: 'destructive',
-          description: response.message,
-        });
-      } else {
-        toast({
-          title: 'Success',
-          description: response.message,
-          variant: 'default',
-        });
-        router.replace(
-          `/onboard/${role.toLowerCase()}/hotel/${hotelId}/amenities`,
-        );
-      }
-    });
+  const handleSubmit = async () => {
+    const data = form.getValues();
+    mutate({ data, hotelId });
   };
 
   const handleNext = async () => {
@@ -150,7 +132,12 @@ const MainPolicyForm = ({
   const isLastStep = step === stepFields.length - 1;
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={1} role={role} hotelId={hotelId} />
+      <HotelCreationSteps
+        current={2}
+        status={status}
+        completedSteps={completionSteps}
+        hotelId={hotelId}
+      />
 
       <Form {...form}>
         <form

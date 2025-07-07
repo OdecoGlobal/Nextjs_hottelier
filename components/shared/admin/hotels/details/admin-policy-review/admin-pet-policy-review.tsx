@@ -116,7 +116,7 @@ const AdminPetPolicyReview = () => {
               {isMaxWeightPerPet && petMaxWeight && (
                 <PolicyRow
                   label="Whats the maximum weight in kg"
-                  value={`${petMaxWeight} kg`}
+                  value={`${petMaxWeight.toFixed(2)} kg`}
                 />
               )}
               {petRestrictionType && petRestrictionType.length > 0 && (

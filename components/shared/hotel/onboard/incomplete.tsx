@@ -16,7 +16,7 @@ import {
   generateSlug,
   getHotelCompletionProgress,
 } from '@/lib/utils';
-import { AdminAgentRole, HotelType } from '@/types';
+import { HotelType } from '@/types';
 import {
   ArrowRight,
   Building2,
@@ -30,18 +30,17 @@ import Link from 'next/link';
 const IncompleteHotelComponent = ({
   incompleteHotels,
   getStepName,
-  role,
 }: {
   incompleteHotels: HotelType[];
   getStepName: (stepNumber: number) => string;
-  role: AdminAgentRole;
 }) => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {incompleteHotels.map(hotel => {
           const {
-            basicInfo,
+            name,
+            location,
             isFullyCompleted,
             id,
             completionSteps,
@@ -65,14 +64,12 @@ const IncompleteHotelComponent = ({
               <CardHeader className="pb-4">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
-                    <CardTitle>{basicInfo.name || 'Unnamed Hotel'}</CardTitle>
+                    <CardTitle>{name || 'Unnamed Hotel'}</CardTitle>
 
-                    {basicInfo.address && (
+                    {location && (
                       <CardDescription className="flex items-center">
                         <MapPin size={14} className="mr-1" />
-                        <span>
-                          {basicInfo.city}, {basicInfo.state}
-                        </span>
+                        <span className="capitalize">{location}</span>
                       </CardDescription>
                     )}
                   </div>
@@ -86,13 +83,13 @@ const IncompleteHotelComponent = ({
                     <span className="text-sm">Progress</span>
                     <span className="text-sm font-medium">{progress}%</span>
                   </div>
-                  <Progress value={progress} className="[&>div]:bg-blue-600" />
+                  <Progress value={progress} className="[&>div]:bg-glow" />
                 </div>
                 <div className="flex items-center text-sm">
                   <Clock size={14} className="mr-2" />
                   <span>Next: {nextStep}</span>
                 </div>
-                <div className="flex items-center text-xs text-gray-500">
+                <div className="flex items-center text-xs text-muted-foreground">
                   <Calendar size={12} className="mr-1" />
                   <span>Updated {formatDateTime(updatedAt).dateOnly}</span>
                 </div>
@@ -104,7 +101,7 @@ const IncompleteHotelComponent = ({
                   ) : (
                     <>
                       <Link
-                        href={`/onboard/${role.toLowerCase()}/hotel/${
+                        href={`/onboard/hotel/${
                           hotel.id
                         }/${generateSlug(nextStep)}`}
                       >
@@ -135,9 +132,9 @@ const IncompleteHotelComponent = ({
           </p>
           <Button
             asChild
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-8 rounded-lg transition-colors duration-200 flex items-center justify-center mx-auto group text-lg"
+            className="bg-brand-primary-100 hover:bg-brand-primary-200 text-slate-50 font-medium py-4 px-8 rounded-lg transition-colors duration-200 flex items-center justify-center mx-auto group text-lg"
           >
-            <Link href={`/onboard/${role.toLowerCase()}/hotel/basic-info`}>
+            <Link href="/onboard/hotel/">
               <Plus size={20} className="mr-2" />
               Create Your First Hotel
             </Link>

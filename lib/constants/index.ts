@@ -3,13 +3,12 @@ import {
   CANCELLATION_POLICIES,
   CANCELLATION_FEE_TYPE,
   DAYS,
-  LATE_CHECK_IN_FEE_TYPE,
   SURCHARGE_TYPE,
   PET_SURCHARGE_TYPE,
   PET_FEE_DURATION,
   PET_FRIENDLY_FEATURES,
   WIFI_AREA_TYPE,
-  HOTEL_AMENITY_CHARGE_TYPE,
+  HOTEL_CHARGE_TYPE,
   WIFI_SPEED_TYPE,
   WIFI_SURCHARGE_DURATION_TYPE,
   BREAKFAST_SCHEDULE_TYPE,
@@ -31,14 +30,20 @@ import {
   HOTEL_TYPES,
   SELF_CHECK_IN,
 } from '@/types';
-import { createObjectOptions, createPricingOptions } from '../utils';
+import {
+  createObjectOptions,
+  createPricingOptions,
+  generateTimeSlots,
+} from '../utils';
 
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'RoaméLux';
 export const APP_LOGO = '/images/logo.svg';
 export const JWT_SECRET = process.env.JWT_SECRET!;
 export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
 
-export const API_CACHE_TIMEOUT = 30 * 60;
+export const API_CACHE_TIMEOUT = 3 * 60;
+export const TIME_SLOTS_STANDARD = generateTimeSlots();
+export const TIME_SLOTS_WITH_NEXT_DAY = generateTimeSlots(true);
 
 export const APP_DESCRIPTION =
   process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
@@ -68,6 +73,7 @@ export const ACCEPTED_CURRENCIES = [
 ];
 
 export const steps = [
+  'Init',
   'Basic Info',
   'Policies',
   'Amenities',
@@ -80,9 +86,7 @@ export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const ALLOWED_PET_OPTIONS = createObjectOptions(ALLOWED_PET_TYPE);
 export const HOTEL_TYPES_OPTIONS = createObjectOptions(HOTEL_TYPES);
 export const WIFI_AREA_OPTIONS = createObjectOptions(WIFI_AREA_TYPE);
-export const HOTEL_AMENITY_CHARGE_OPTION = createObjectOptions(
-  HOTEL_AMENITY_CHARGE_TYPE,
-);
+export const HOTEL_CHARGE_OPTION = createObjectOptions(HOTEL_CHARGE_TYPE);
 export const WIFI_SPEED_OPTIONS = createObjectOptions(WIFI_SPEED_TYPE).map(
   option => {
     const speed = option.value.split('_')[1];
@@ -102,9 +106,7 @@ export const CANCELLATION_FEE_TYPE_OPTIONS = createObjectOptions(
 );
 
 export const DAYS_OBJ = createObjectOptions(DAYS);
-export const LATE_CHECK_IN_FEE_TYPE_OPTIONS = createObjectOptions(
-  LATE_CHECK_IN_FEE_TYPE,
-);
+
 export const SURCHARGE_TYPE_OPTIONS = createObjectOptions(SURCHARGE_TYPE);
 export const PET_SURCHARGE_TYPE_OPTIONS =
   createObjectOptions(PET_SURCHARGE_TYPE);
@@ -129,13 +131,12 @@ export const AIR_CONDITIONING_OPTIONS = createObjectOptions(
   AIR_CONDITIONING_TYPE,
 );
 export const PRICING_MODEL_OPTIONS = createPricingOptions(PRICING_MODEL_TYPE);
-//
 export const HEATING_OPTION = createObjectOptions(HEATING_TYPE);
 export const GENERATED_NUMBERS = createObjectOptions(
   Array.from({ length: 10 }, (_, i) => (i + 1).toString()),
 );
 
-export const RADIO_BOOLEAN = [
+export const BOOLEAN_OPTIONS = [
   {
     label: 'Yes',
     value: 'true',

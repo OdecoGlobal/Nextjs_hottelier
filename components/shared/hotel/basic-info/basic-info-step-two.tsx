@@ -93,7 +93,11 @@ const HotelBasicInfoStepTwo = ({
           <FormItem className="space-y-2">
             <FormLabel> Street Address</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Enter your street address" />
+              <Input
+                {...field}
+                placeholder="Enter your street address"
+                autoComplete="property-address"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -107,7 +111,11 @@ const HotelBasicInfoStepTwo = ({
           <FormItem className="space-y-2">
             <FormLabel> Zip Code</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Enter your zip code" />
+              <Input
+                {...field}
+                placeholder="Enter your zip code"
+                autoComplete="zipcode"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

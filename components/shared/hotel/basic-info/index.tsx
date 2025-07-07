@@ -1,16 +1,10 @@
 'use client';
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 import HotelBasicInfoStepOne from './basic-info-step-one';
 import HotelBasicInfoStepTwo from './basic-info-step-two';
 import HotelBasicInfoStepThree from './basic-info-step-three';
-import { useToast } from '@/hooks/use-toast';
-import {
-  createNewHotel,
-  updateHotelBasicInfo,
-} from '@/lib/actions/hotel.action';
-import { useRouter } from 'next/navigation';
 import HotelCreationSteps from '../creation-steps';
-import { AdminAgentRole, HotelBasicInfoType } from '@/types';
+import { HotelBasicInfoType } from '@/types';
 import { hotelBasicInfoSchema } from '@/lib/schemas/validator';
 import { defaultBasicInfo } from '@/lib/constants/hotel-default-values';
 import { useForm } from 'react-hook-form';
@@ -19,12 +13,17 @@ import { Form } from '@/components/ui/form';
 import SubmitFormButton from '@/components/submit-form-button';
 import { pickKeys } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  useAddBasicInfo,
+  useOnboardHotelById,
+} from '@/hooks/use-onboard-hotels';
 
 const stepOneSchema = hotelBasicInfoSchema.pick({
-  name: true,
+  description: true,
   hotelType: true,
   roomUnitTotal: true,
   acceptedCurrency: true,
+  website: true,
 });
 
 const stepTwoSchema = hotelBasicInfoSchema.pick({
@@ -40,56 +39,38 @@ const stepThreeSchema = hotelBasicInfoSchema.pick({
   lng: true,
 });
 
+const stepFields = [
+  pickKeys(stepOneSchema),
+  pickKeys(stepTwoSchema),
+  pickKeys(stepThreeSchema),
+];
+
 const MainBasicInfoPage = ({
-  role,
   hotelId,
-  basicData,
-  isUpdate = false,
+  // isUpdate = false,
+  basicInfo,
 }: {
-  role: AdminAgentRole;
-  hotelId?: string;
-  basicData?: HotelBasicInfoType;
+  hotelId: string;
   isUpdate?: boolean;
+  basicInfo?: HotelBasicInfoType;
 }) => {
   const [step, setStep] = useState(0);
-  const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
-
-  const stepFields = [
-    pickKeys(stepOneSchema),
-    pickKeys(stepTwoSchema),
-    pickKeys(stepThreeSchema),
-  ];
+  const { data, isPending: dataLoading } = useOnboardHotelById({ hotelId });
+  const { mutate, isPending } = useAddBasicInfo();
 
   const form = useForm<HotelBasicInfoType>({
     resolver: zodResolver(hotelBasicInfoSchema),
-    defaultValues: isUpdate && basicData ? basicData : defaultBasicInfo,
+    defaultValues: basicInfo ? basicInfo : defaultBasicInfo,
   });
+  if (dataLoading || !data) {
+    return <>Loading</>;
+  }
+  const { status, completionSteps } = data! ?? {};
 
-  const handleSubmit = async (formData: HotelBasicInfoType) => {
-    startTransition(async () => {
-      const response = isUpdate
-        ? await updateHotelBasicInfo(formData, hotelId!)
-        : await createNewHotel(formData);
-      if (!response?.success) {
-        toast({
-          title: 'Error',
-          variant: 'destructive',
-          description: response.message,
-        });
-      } else {
-        toast({
-          title: 'Success',
-          description: response.message,
-          variant: 'default',
-        });
-        router.replace(
-          `/onboard/${role.toLowerCase()}/hotel/${response.hotel?.id}/policies`,
-        );
-      }
-    });
+  const handleSubmit = async (data: HotelBasicInfoType) => {
+    mutate({ data, hotelId });
   };
+
   const handleNext = async () => {
     const isValid = await form.trigger(stepFields[step], { shouldFocus: true });
     if (!isValid) return;
@@ -109,9 +90,14 @@ const MainBasicInfoPage = ({
   const lng = form.watch('lng');
   return (
     <section className="flex flex-col md:flex-row space-y-3 min-h-screen mb-7">
-      <HotelCreationSteps current={0} role={role} hotelId={hotelId} />
+      <HotelCreationSteps
+        current={1}
+        hotelId={hotelId}
+        status={status}
+        completedSteps={completionSteps}
+      />
 
-      <main className="px-5 flex-1 flex flex-col mx-auto justify-center items-center ">
+      <main className="flex-1 wrapper">
         <Card className="w-full md:max-w-4xl ">
           <CardContent>
             <Form {...form}>

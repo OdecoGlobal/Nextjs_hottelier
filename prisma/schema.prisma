@@ -27,36 +27,42 @@ model User {
 }
 
 model Hotel {
-  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name             String          @unique(map: "hotel_official_name_idx")
-  slug             String
-  description      String?
-  createdAt        DateTime        @default(now()) @db.Timestamp(6)
-  updatedAt        DateTime        @updatedAt @db.Timestamp(6)
-  status           HotelStatus     @default(DRAFT)
-  completionSteps  Json            @default("{}")
-  currentStep      Int             @default(1)
-  totalSteps       Int             @default(6)
-  isFullyCompleted Boolean         @default(false)
-  agentId          String          @db.Uuid
-  additionalNotes  String?
-  amenities        HotelAmenity?
-  basicInfo        HotelBasicInfo?
-  images           HotelImages[]
-  policies         HotelPolicy?
-  agent            User            @relation("AgentHotels", fields: [agentId], references: [id])
-  rooms            Room[]
+  id                   String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                 String          @unique(map: "hotel_name_idx")
+  slug                 String          @unique(map: "hotel_slug_idx")
+  officialEmail        String          @unique(map: "hotel_email_idx")
+  phoneNumber          String
+  location             String
+  hotelEmailVerified   DateTime?       @db.Timestamp(6)
+  isHotelEmailVerified Boolean         @default(false)
+  rating               Decimal         @default(0) @db.Decimal(3, 2)
+  createdAt            DateTime        @default(now()) @db.Timestamp(6)
+  updatedAt            DateTime        @updatedAt @db.Timestamp(6)
+  status               HotelStatus     @default(DRAFT)
+  completionSteps      Json            @default("{}")
+  currentStep          Int             @default(1)
+  totalSteps           Int             @default(6)
+  isFullyCompleted     Boolean         @default(false)
+  agentId              String          @db.Uuid
+  additionalNotes      String?
+  amenities            HotelAmenity?
+  basicInfo            HotelBasicInfo?
+  images               HotelImages[]
+  policies             HotelPolicy?
+  agent                User            @relation("AgentHotels", fields: [agentId], references: [id])
+  rooms                Room[]
 
   @@index([status], map: "hotel_status")
+  @@index([name], map: "hotel_name")
+  @@index([location], map: "location")
   @@map("hotels")
 }
 
 model HotelBasicInfo {
   id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   hotelId          String    @unique @db.Uuid
-  name             String    @unique(map: "hotel_name_idx")
-  slug             String    @unique(map: "hotel_slug_idx")
-  rating           Decimal   @default(0) @db.Decimal(3, 2)
+  description      String
+  website          String?
   hotelType        HotelType
   roomUnitTotal    Int       @default(0)
   acceptedCurrency Currency  @default(NGN)
@@ -73,6 +79,7 @@ model HotelBasicInfo {
   updatedAt        DateTime  @updatedAt @db.Timestamp(6)
   hotel            Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
+  @@index([city], map: "hotel_city")
   @@map("hotel_basic_info")
 }
 
@@ -90,9 +97,9 @@ model HotelPolicy {
   selfCheckInType           SelfCheckInType?
   checkInStartTime          String
   checkInEndTime            String?
-  isOpen24Hours             Boolean?              @default(false)
+  isOpen24Hours             Boolean               @default(false)
   isLateCheckIn             Boolean?              @default(false)
-  lateCheckInType           LateCheckInFeeType?
+  lateCheckInType           HotelChargeType?
   surchargeType             SurchargeType?
   surchargeAmount           Decimal?
   lateCheckInStartTime      String?
@@ -154,33 +161,33 @@ model HotelImages {
 }
 
 model HotelAmenity {
-  id                          String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  hotelId                     String                  @unique @db.Uuid
+  id                          String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  hotelId                     String                 @unique @db.Uuid
   isWifi                      Boolean
   wifiArea                    WifiAreaType[]
-  roomWifiChargeType          HotelAmenityChargeType?
+  roomWifiChargeType          HotelChargeType?
   roomWifiSpeed               WifiSpeedType?
   roomWifiSurchargeAmout      Decimal?
   roomDeviceLimited           Boolean?
   roomWifiSurchargeDuration   WifiSurchargeDuration?
   roomDeviceLimitNumber       Int?
   publicWifiSurchargeAmout    Decimal?
-  publicWifiChargeType        HotelAmenityChargeType?
+  publicWifiChargeType        HotelChargeType?
   publicWifiSpeed             WifiSpeedType?
   publicWifiSurchargeDuration WifiSurchargeDuration?
   publicDeviceLimited         Boolean?
   publicDeviceLimitNumber     Int?
   isBreakfast                 Boolean
-  breakfastChargeType         HotelAmenityChargeType?
+  breakfastChargeType         HotelChargeType?
   breakfastSurchargeAmount    Decimal?
   breakfastSchedule           BreakfastSchedule?
   breakfastStartTime          String?
   breakfastEndTime            String?
-  isCompleted                 Boolean                 @default(false)
+  isCompleted                 Boolean                @default(false)
   completedAt                 DateTime?
-  createdAt                   DateTime                @default(now()) @db.Timestamp(6)
-  updatedAt                   DateTime                @updatedAt @db.Timestamp(6)
-  hotel                       Hotel                   @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  createdAt                   DateTime               @default(now()) @db.Timestamp(6)
+  updatedAt                   DateTime               @updatedAt @db.Timestamp(6)
+  hotel                       Hotel                  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
   @@map("hotel_amenities")
 }
@@ -318,7 +325,7 @@ enum SelfCheckInType {
   EXPRESS_CHECKIN
 }
 
-enum LateCheckInFeeType {
+enum HotelChargeType {
   FREE
   SURCHARGE
 }
@@ -382,6 +389,7 @@ enum HotelStatus {
   IN_PROGRESS
   PENDING_REVIEW
   APPROVED
+  PROCESSING
   REJECTED
   ACTIVE
   INACTIVE
@@ -407,11 +415,6 @@ enum Currency {
 enum WifiAreaType {
   IN_PUBLIC_AREA
   IN_GUEST_ROOM
-}
-
-enum HotelAmenityChargeType {
-  FREE
-  SURCHARGE
 }
 
 enum WifiSpeedType {

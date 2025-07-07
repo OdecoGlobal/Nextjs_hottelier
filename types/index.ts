@@ -22,6 +22,7 @@ import {
   hotelSchema,
   currencySchema,
   userRoleSchema,
+  createHotelSchema,
 } from '@/lib/schemas/validator';
 import { z } from 'zod';
 
@@ -169,8 +170,6 @@ export const DAYS = [
   'SUNDAY',
 ] as const;
 
-export const LATE_CHECK_IN_FEE_TYPE = ['FREE', 'SURCHARGE'] as const;
-
 export const SURCHARGE_TYPE = ['AMOUNT', 'PERCENT', 'FEE_VARIES'] as const;
 export const PET_SURCHARGE_TYPE = ['PER_PET', 'PER_ACCOMODATION'] as const;
 export const PET_FEE_DURATION = [
@@ -180,6 +179,7 @@ export const PET_FEE_DURATION = [
   'PER_WEEK',
 ] as const;
 
+export const HOTEL_CHARGE_TYPE = ['FREE', 'SURCHARGE'] as const;
 export const ALLOWED_PET_TYPE = [
   'ONLY_DOGS',
   'ONLY_CATS',
@@ -203,8 +203,6 @@ export const PET_FRIENDLY_FEATURES = [
 
 // HOTEL AMENITIES
 export const WIFI_AREA_TYPE = ['IN_GUEST_ROOM', 'IN_PUBLIC_AREA'] as const;
-
-export const HOTEL_AMENITY_CHARGE_TYPE = ['FREE', 'SURCHARGE'] as const;
 
 export const WIFI_SPEED_TYPE = [
   'MBPS_25',
@@ -240,6 +238,7 @@ export const HotelStatus = [
   'DRAFT',
   'IN_PROGRESS',
   'PENDING_REVIEW',
+  'PROCESSING',
   'APPROVED',
   'REJECTED',
   'ACTIVE',
@@ -268,6 +267,7 @@ export type GeneratedTypes = {
 };
 
 // HOTELS
+export type NewHotelType = z.infer<typeof createHotelSchema>;
 export type HotelType = z.infer<typeof hotelSchema>;
 export type HotelStatusType = (typeof HotelStatus)[number];
 export type HotelAmenitiesType = z.infer<typeof hotelAmenitiesSchema>;
@@ -279,6 +279,16 @@ export type CompletionSteps = z.infer<typeof completionStepsSchema>;
 export type HotelBasicInfoType = z.infer<typeof hotelBasicInfoSchema>;
 export type HotelImageUploadBody = z.infer<typeof HotelImageUploadBodySchema>;
 export type AvailabilityType = z.infer<typeof availabilitySchema>;
+
+export type StepKey =
+  | 'step0_init'
+  | 'step1_basic_info'
+  | 'step2_policies'
+  | 'step3_amenities'
+  | 'step4_hotel_images'
+  | 'step5_rooms'
+  | 'step6_rates_and_availability'
+  | 'step7_review';
 
 export const ImageType = z.enum(['COVER', 'EXTERIOR', 'INTERIOR']);
 export type ImageType = z.infer<typeof ImageType>;

@@ -1,8 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { requireAdminOrAgent } from '@/auth-guard';
 import MainAmenitiesForm from '@/components/shared/hotel/amenities';
-import { getHotelById } from '@/lib/actions/hotel.action';
-import { AdminAgentRole } from '@/types';
+import { getServerOnboardHotelById } from '@/lib/actions/hotel.action';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -13,20 +12,16 @@ export const metadata: Metadata = {
 const AgentAmenitiesPage = async ({
   params,
 }: {
-  params: Promise<{ role: AdminAgentRole; hotelId: string }>;
+  params: Promise<{ hotelId: string }>;
 }) => {
-  const { hotelId, role } = await params;
-  const session = await requireAdminOrAgent(role);
+  const { hotelId } = await params;
+  await requireAdminOrAgent();
 
-  const { hotel } = await getHotelById(hotelId);
+  const hotel = await getServerOnboardHotelById(hotelId);
   if (!hotel) notFound();
 
   return (
-    <MainAmenitiesForm
-      hotelId={hotelId}
-      role={session.user.role as AdminAgentRole}
-      hotelAmenities={hotel.amenities}
-    />
+    <MainAmenitiesForm hotelId={hotelId} hotelAmenities={hotel.amenities} />
   );
 };
 export default AgentAmenitiesPage;

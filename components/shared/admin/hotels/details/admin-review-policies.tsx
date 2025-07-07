@@ -9,23 +9,23 @@ import {
   CANCELLATION_POLICIES_OPTIONS,
   PAYMENT_METHODS_OPTIONS,
   SELF_CHECK_IN_OPTIONS2,
+  TIME_SLOTS_STANDARD,
 } from '@/lib/constants';
 import { Badge } from '@/components/ui/badge';
 import { useOnboardHotelByIdStore } from '@/stores/use-onboard-hotel-store';
 import { PolicyRow } from './policy-row';
 import MissingStepNotice from './admin-missing-step-notice';
-import AdminPolicyReview from './admin-policy-review/admin-check-in';
 import AdminFrontDeskReview from './admin-policy-review/admin-front-policy';
 import AdminSectionWrapper from './admin-policy-review/policy-section-wrapper';
 import AdminPetPolicyReview from './admin-policy-review/admin-pet-policy-review';
+import AdminCheckInPolicyReview from './admin-policy-review/admin-check-in';
+import { mapBooleanToString } from '@/utils/value-label';
 
 const AdminReviewPolicies = () => {
   const { hotel } = useOnboardHotelByIdStore();
   const { policies, basicInfo } = hotel! ?? {};
-  if (!policies) return <MissingStepNotice step="Policies" />;
-  if (!basicInfo) return <MissingStepNotice step="Basic information" />;
+  if (!policies || !basicInfo) return <MissingStepNotice step="Policies" />;
   const { acceptedCurrency } = basicInfo ?? {};
-  console.log(policies);
 
   const {
     additionalPolicy,
@@ -59,7 +59,7 @@ const AdminReviewPolicies = () => {
       <AdminSectionWrapper heading="Deposit Policy">
         <PolicyRow
           label="Is Deposit Required"
-          value={isDepositRequired ? 'yes' : 'no'}
+          value={mapBooleanToString(isDepositRequired)}
         />
         {isDepositRequired && (
           <PolicyRow
@@ -71,7 +71,7 @@ const AdminReviewPolicies = () => {
       <AdminSectionWrapper heading="Tax Policy">
         <PolicyRow
           label="Is tax included on room rates"
-          value={isTaxIncludedInRoomRates ? 'yes' : 'no'}
+          value={mapBooleanToString(isTaxIncludedInRoomRates)}
         />
       </AdminSectionWrapper>
 
@@ -93,18 +93,17 @@ const AdminReviewPolicies = () => {
           />
         )}
       </AdminSectionWrapper>
-      <div className="dialog-div">
-        <h3 className="dialog-h3">Check-in Age</h3>
+      <AdminSectionWrapper heading="Check-in Age">
         <PolicyRow
           label="What's the minimum check-in age"
           value={minCheckInAgeAllowed}
         />
-      </div>
+      </AdminSectionWrapper>
 
       <AdminSectionWrapper heading="Self check-in policy">
         <PolicyRow
           label="Do you offer self check-in"
-          value={isSelfCheckIn ? 'yes' : 'no'}
+          value={mapBooleanToString(isSelfCheckIn)}
         />
 
         {isSelfCheckIn && selfCheckInType && (
@@ -114,10 +113,13 @@ const AdminReviewPolicies = () => {
           />
         )}
       </AdminSectionWrapper>
-      <AdminPolicyReview />
+      <AdminCheckInPolicyReview />
 
       <AdminSectionWrapper heading="Check-out policy">
-        <PolicyRow label=" When is check-out" value={checkOutTime} />
+        <PolicyRow
+          label=" When is check-out"
+          value={mapStringToLabel(checkOutTime, TIME_SLOTS_STANDARD)}
+        />
       </AdminSectionWrapper>
 
       <AdminFrontDeskReview />

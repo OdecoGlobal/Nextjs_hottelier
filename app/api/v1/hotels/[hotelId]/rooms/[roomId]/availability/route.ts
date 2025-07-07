@@ -48,7 +48,7 @@ export const PUT = async (
       });
       await updateHotelProgress(
         hotelId,
-        'step6_rate_and_availability',
+        'step6_rates_and_availability',
         availability.isCompleted,
       );
       return availability;

@@ -2,8 +2,6 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { axiosInstance } from '../axios';
 import { LoginInput, signUpInput, User, VeifyOTPType } from '@/types';
 import { formatError } from '@/utils/format-error';
-import { fetchInstance } from '../fetch';
-import { API_CACHE_TIMEOUT } from '../constants';
 
 export async function signUpUser(formData: signUpInput) {
   try {
@@ -80,18 +78,5 @@ export async function logOut() {
       throw error;
     }
     return { success: false, message: formatError(error) };
-  }
-}
-
-export async function verifyUser(): Promise<User | null> {
-  try {
-    const res = await fetchInstance.get('auth/verify', {
-      cache: 'force-cache',
-      next: { revalidate: API_CACHE_TIMEOUT, tags: ['verify-user'] },
-    });
-    const { user } = res.data;
-    return user;
-  } catch {
-    return null;
   }
 }

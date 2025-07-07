@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { Roboto_Condensed, Roboto } from 'next/font/google';
 import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster as OToaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/sonner';
 import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from '@/lib/constants';
 import { ThemeProvider } from '@/providers/theme-provider';
 import TanstackProvider from '@/providers/tanstack-provider';
@@ -44,7 +45,20 @@ export default function MainRootLayout({
         >
           <TanstackProvider>
             <UserHydrator />
-            <Toaster />
+            <Toaster
+              richColors
+              position="top-center"
+              toastOptions={{
+                classNames: {
+                  // toast: baseStyle,
+                  success: 'bg-green-100 text-green-900',
+                  error: 'bg-red-100 text-red-900',
+                  warning: 'bg-yellow-100 text-yellow-900',
+                  info: 'bg-blue-100 text-blue-900',
+                },
+              }}
+            />
+            <OToaster />
             {children}
           </TanstackProvider>
         </ThemeProvider>

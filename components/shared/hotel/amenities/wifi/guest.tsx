@@ -1,6 +1,6 @@
 /*
 
- wifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).optional(),
+ wifiChargeType: z.enum(HOTEL_CHARGE_TYPE).optional(),
   wifiSpeed: z.enum(WIFI_SPEED_TYPE).optional(),
   wifiSurchargeAmout: z.coerce.number().optional(),
   wifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).optional(),
@@ -18,7 +18,7 @@ import { HotelAmenitiesProps } from '..';
 import RadioForm from '@/components/radio-form';
 import {
   generateNumbers,
-  HOTEL_AMENITY_CHARGE_OPTION,
+  HOTEL_CHARGE_OPTION,
   WIFI_SPEED_OPTIONS,
   WIFI_SURCHARGE_DURATION_OPTIONS,
 } from '@/lib/constants';
@@ -37,7 +37,7 @@ const GuestRoomWifi = ({ control, watch }: HotelAmenitiesProps) => {
       render={({ field }) => (
         <div className="space-y-4">
           <FormItem>
-            <RadioForm field={field} data={HOTEL_AMENITY_CHARGE_OPTION} />
+            <RadioForm field={field} data={HOTEL_CHARGE_OPTION} />
             <FormMessage />
           </FormItem>
           {roomWifiChargeType === 'SURCHARGE' && (

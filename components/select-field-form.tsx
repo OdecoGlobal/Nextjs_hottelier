@@ -29,12 +29,12 @@ export const SelectFieldForm = <T extends FieldValues>({
 }: SelectFieldProps<T>) => {
   return (
     <FormItem className={cn(className)}>
+      <FormLabel>{label}</FormLabel>
       <Select
         onValueChange={field.onChange}
         disabled={disabled}
         value={field.value || ''}
       >
-        <FormLabel className="text-muted-foreground">{label}</FormLabel>
         <FormControl>
           <SelectTrigger className="w-full">
             <SelectValue placeholder={placeholder} />

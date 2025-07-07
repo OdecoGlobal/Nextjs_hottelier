@@ -46,9 +46,9 @@ const YesNoButton = <T extends FieldValues>({
             variant={field.value === true ? 'default' : 'outline'}
             className={cn(
               field.value === true
-                ? 'bg-blue-600 text-gray-100 hover:bg-blue-800'
+                ? 'bg-brand-primary-200 text-gray-100 hover:bg-glow'
                 : '',
-              className
+              className,
             )}
             onClick={() => field.onChange(true)}
           >
@@ -60,9 +60,9 @@ const YesNoButton = <T extends FieldValues>({
             variant={field.value === false ? 'default' : 'outline'}
             className={cn(
               field.value === false
-                ? 'bg-blue-600 text-gray-100 hover:bg-blue-800'
+                ? 'bg-brand-primary-200 text-gray-100 hover:bg-glow'
                 : '',
-              className
+              className,
             )}
             onClick={() => field.onChange(false)}
           >

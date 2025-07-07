@@ -4,7 +4,6 @@ import IncompleteHotelComponent from '@/components/shared/hotel/onboard/incomple
 import StartNewHotel from '@/components/shared/hotel/onboard/start-new-hotel';
 import { getPreOnboardHotels } from '@/lib/actions/hotel.action';
 import { steps } from '@/lib/constants';
-import { AdminAgentRole } from '@/types';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -12,19 +11,13 @@ export const metadata: Metadata = {
   title: 'Onboard',
 };
 
-const OnboardingPage = async ({
-  params,
-}: {
-  params: Promise<{ role: AdminAgentRole }>;
-}) => {
-  const { role } = await params;
-  const session = await requireAdminOrAgent(role);
-
+const HotelOnboardingPage = async () => {
+  await requireAdminOrAgent();
   const res = await getPreOnboardHotels();
   const incompleteHotels = res.data;
 
   const getStepName = (stepNumber: number) =>
-    steps[stepNumber - 1] || 'Unknown step';
+    steps[stepNumber] || 'Unknown step';
 
   return (
     <section className="min-h-screen py-8 px-4">
@@ -41,9 +34,8 @@ const OnboardingPage = async ({
           <IncompleteHotelComponent
             incompleteHotels={incompleteHotels}
             getStepName={getStepName}
-            role={session.user.role as AdminAgentRole}
           />
-          <StartNewHotel role={session.user.role as AdminAgentRole} />
+          <StartNewHotel />
 
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-500">
@@ -69,4 +61,4 @@ const OnboardingPage = async ({
   );
 };
 
-export default OnboardingPage;
+export default HotelOnboardingPage;

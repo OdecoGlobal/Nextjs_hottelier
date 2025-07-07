@@ -1,29 +1,22 @@
 import { prisma } from '@/db/prisma';
 import AppError from '@/lib/errors/app-error';
-
-type StepKey =
-  | 'step1_basic_info'
-  | 'step2_policies'
-  | 'step3_amenities'
-  | 'step4_hotel_images'
-  | 'step5_rooms'
-  | 'step6_rate_and_availability'
-  | 'step7_review';
+import { StepKey } from '@/types';
 
 const steps: StepKey[] = [
+  'step0_init',
   'step1_basic_info',
   'step2_policies',
   'step3_amenities',
   'step4_hotel_images',
   'step5_rooms',
-  'step6_rate_and_availability',
+  'step6_rates_and_availability',
   'step7_review',
 ];
 
 export async function updateHotelProgress(
   hotelId: string,
   stepKey: StepKey,
-  isCompleted: boolean
+  isCompleted: boolean,
 ) {
   const hotel = await prisma.hotel.findUnique({ where: { id: hotelId } });
 
@@ -38,7 +31,7 @@ export async function updateHotelProgress(
     if (!otherStepsCompleted) {
       throw new AppError(
         'You must complete all steps before submitting for review',
-        400
+        400,
       );
     }
   }
@@ -52,7 +45,11 @@ export async function updateHotelProgress(
   let status = hotel.status;
   if (isFullyCompleted && status === 'IN_PROGRESS') {
     status = 'PENDING_REVIEW';
-  } else if (completedCount > 0 && status === 'DRAFT') {
+  } else if (
+    stepKey === 'step1_basic_info' &&
+    isCompleted &&
+    status === 'DRAFT'
+  ) {
     status = 'IN_PROGRESS';
   }
 
@@ -74,7 +71,7 @@ export async function updateHotelProgress(
 }
 
 function calculateCurrentStep(
-  completionSteps: Record<string, boolean>
+  completionSteps: Record<string, boolean>,
 ): number {
   for (let i = 0; i < steps.length; i++) {
     if (!completionSteps[steps[i]]) {

@@ -9,7 +9,7 @@ import { HotelAmenitiesProps } from '..';
 import RadioForm from '@/components/radio-form';
 import {
   generateNumbers,
-  HOTEL_AMENITY_CHARGE_OPTION,
+  HOTEL_CHARGE_OPTION,
   WIFI_SPEED_OPTIONS,
   WIFI_SURCHARGE_DURATION_OPTIONS,
 } from '@/lib/constants';
@@ -35,7 +35,7 @@ const WifiTypeComponent = ({ control, watch, prefix }: WifiComponentProps) => {
       render={({ field }) => (
         <div className="space-y-4">
           <FormItem>
-            <RadioForm field={field} data={HOTEL_AMENITY_CHARGE_OPTION} />
+            <RadioForm field={field} data={HOTEL_CHARGE_OPTION} />
             <FormMessage />
           </FormItem>
           {wifiChargeType === 'SURCHARGE' && (
