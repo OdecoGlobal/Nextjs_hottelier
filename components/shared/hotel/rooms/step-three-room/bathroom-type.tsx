@@ -9,7 +9,7 @@ import { FormField } from '@/components/ui/form';
 import { SelectFieldForm } from '@/components/select-field-form';
 import {
   BATHROOM_OPTIONS,
-  RADIO_BOOLEAN,
+  BOOLEAN_OPTIONS,
   ROOM_ESSENTIALS_OPTIONS,
   SHOWER_OPTIONS,
 } from '@/lib/constants';
@@ -87,7 +87,7 @@ const BathRoomType = ({ control }: AddRoomControl) => {
             render={({ field }) => (
               <RadioForm
                 field={field}
-                data={RADIO_BOOLEAN}
+                data={BOOLEAN_OPTIONS}
                 isBoolean={true}
                 className="flex-col justify-start items-start"
                 label="Do you provide towels?"

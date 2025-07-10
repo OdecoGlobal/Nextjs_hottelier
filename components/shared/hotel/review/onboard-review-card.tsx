@@ -10,12 +10,14 @@ const OnboardReviewCard = ({
   description,
   isFullyCompleted,
   url,
+  hideEdit,
 }: {
   isCompleted: boolean;
   title: string;
   description: string;
   isFullyCompleted: boolean;
   url: string;
+  hideEdit: boolean;
 }) => {
   return (
     <Card>
@@ -42,16 +44,20 @@ const OnboardReviewCard = ({
             )}
           </div>
         </div>
-        <Button
-          className="bg-transparent text-blue-600 hover:bg-blue-50 rounded-lg transition-colors ml-auto"
-          disabled={isFullyCompleted}
-          onClick={() => (window.location.href = url)}
-        >
-          <Edit3 className="w-4 h-4" />
-          <span className="text-sm font-medium">
-            {isCompleted ? 'Edit' : 'Complete'}
-          </span>
-        </Button>
+        {!hideEdit && (
+          <Button
+            className="bg-transparent text-brand-primary-100 hover:text-brand-primary-200 rounded-lg transition-colors ml-auto"
+            disabled={isFullyCompleted}
+            onClick={() => (window.location.href = url)}
+            variant="ghost"
+            type="button"
+          >
+            <Edit3 className="w-4 h-4" />
+            <span className="text-sm font-medium">
+              {isCompleted ? 'Edit' : 'Complete'}
+            </span>
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

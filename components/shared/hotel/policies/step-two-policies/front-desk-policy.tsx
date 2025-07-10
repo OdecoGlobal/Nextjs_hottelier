@@ -9,11 +9,11 @@ import {
 } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { SelectDays, SelectTime } from '@/components/select-time';
-import { selectTime, timeNextDay } from '@/lib/utils';
 import YesNoButton from '@/components/yes-no-button';
 import SelfCheckInPolicy from './self-checkin-policy';
 import { Checkbox } from '@/components/ui/checkbox';
 import { HotelPolicyProp } from '..';
+import { TIME_SLOTS_STANDARD, TIME_SLOTS_WITH_NEXT_DAY } from '@/lib/constants';
 
 const FrontDeskPolicy = ({ control, watch }: HotelPolicyProp) => {
   const isFrontDesk = watch('isFrontDesk');
@@ -112,7 +112,7 @@ const FrontDeskPolicy = ({ control, watch }: HotelPolicyProp) => {
                     <SelectTime
                       field={field}
                       disabled={!isFrontDesk || isFrontDeskOpen24Hours}
-                      selectTime={selectTime}
+                      selectTime={TIME_SLOTS_STANDARD}
                       label="Desk Opens"
                     />
                     <FormMessage />
@@ -128,7 +128,7 @@ const FrontDeskPolicy = ({ control, watch }: HotelPolicyProp) => {
                     <SelectTime
                       field={field}
                       disabled={!isFrontDesk || isFrontDeskOpen24Hours}
-                      selectTime={timeNextDay}
+                      selectTime={TIME_SLOTS_WITH_NEXT_DAY}
                       label="Desk Closes"
                     />
                     <FormMessage />

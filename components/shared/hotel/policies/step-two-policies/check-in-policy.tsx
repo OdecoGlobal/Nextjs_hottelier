@@ -8,13 +8,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-import { selectTime, timeNextDay } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import YesNoButton from '@/components/yes-no-button';
 
 import {
-  LATE_CHECK_IN_FEE_TYPE_OPTIONS,
+  HOTEL_CHARGE_OPTION,
   SURCHARGE_TYPE_OPTIONS,
+  TIME_SLOTS_STANDARD,
+  TIME_SLOTS_WITH_NEXT_DAY,
 } from '@/lib/constants';
 import RadioForm from '@/components/radio-form';
 import { Input } from '@/components/ui/input';
@@ -41,7 +42,7 @@ const CheckInPolicy = ({ control, watch }: HotelPolicyProp) => {
               render={({ field }) => (
                 <SelectFieldForm
                   field={field}
-                  datas={selectTime}
+                  datas={TIME_SLOTS_STANDARD}
                   label="From"
                 />
               )}
@@ -52,7 +53,7 @@ const CheckInPolicy = ({ control, watch }: HotelPolicyProp) => {
               render={({ field }) => (
                 <SelectFieldForm
                   field={field}
-                  datas={timeNextDay}
+                  datas={TIME_SLOTS_WITH_NEXT_DAY}
                   label="To"
                   disabled={!!isOpen24Hours}
                 />
@@ -94,7 +95,7 @@ const CheckInPolicy = ({ control, watch }: HotelPolicyProp) => {
               render={({ field }) => (
                 <RadioForm
                   field={field}
-                  data={LATE_CHECK_IN_FEE_TYPE_OPTIONS}
+                  data={HOTEL_CHARGE_OPTION}
                   label="Late check-in cost"
                 />
               )}
@@ -137,7 +138,7 @@ const CheckInPolicy = ({ control, watch }: HotelPolicyProp) => {
                       render={({ field }) => (
                         <SelectFieldForm
                           field={field}
-                          datas={selectTime}
+                          datas={TIME_SLOTS_STANDARD}
                           label="From"
                         />
                       )}
@@ -148,7 +149,7 @@ const CheckInPolicy = ({ control, watch }: HotelPolicyProp) => {
                       render={({ field }) => (
                         <SelectFieldForm
                           field={field}
-                          datas={timeNextDay}
+                          datas={TIME_SLOTS_WITH_NEXT_DAY}
                           label="To"
                         />
                       )}
@@ -183,7 +184,7 @@ const CheckInPolicy = ({ control, watch }: HotelPolicyProp) => {
                       render={({ field }) => (
                         <SelectFieldForm
                           field={field}
-                          datas={selectTime}
+                          datas={TIME_SLOTS_STANDARD}
                           label="Advanced notice required after"
                         />
                       )}

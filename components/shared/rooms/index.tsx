@@ -24,10 +24,13 @@ const ShowRooms = ({ rooms, role, hotelId }: RoomProp) => {
   return (
     <section className="py-8 px-4 max-w-7xl mx-auto space-y-8">
       {rooms.length === 0 && role !== 'USER' && (
-        <Card className="border-2 border-dashed border-gray-300 hover:border-blue-400 hover:shadow-lg transition-all duration-300">
+        <Card className="border-2 border-dashed border-gray-300 hover:border-brand-secondary hover:shadow-lg transition-all duration-300">
           <CardContent className="pt-6 text-center h-full flex flex-col justify-center">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Plus size={32} className="text-blue-600" />
+            <div className="w-16 h-16 bg-brand-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+              <Plus
+                size={32}
+                className="text-brand-primary-border-brand-primary-200"
+              />
             </div>
             <h3 className="text-xl font-semibold  mb-2">No Rooms Added</h3>
           </CardContent>
@@ -35,9 +38,9 @@ const ShowRooms = ({ rooms, role, hotelId }: RoomProp) => {
           <CardFooter>
             <Button
               asChild
-              className="w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center group"
+              className="w-full bg-white border-2 border-brand-primary-200 text-brand-primary-border-brand-primary-200 hover:bg-brand-primary-border-brand-primary-200 hover:text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center group"
             >
-              <Link href={`/onboard/${role}/hotel/${hotelId}/rooms`}>
+              <Link href={`/onboard/hotel/${hotelId}/rooms`}>
                 <House size={16} className="mr-2" />
                 Add Your First Room
               </Link>
@@ -116,7 +119,7 @@ const ShowRooms = ({ rooms, role, hotelId }: RoomProp) => {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700 ">
+                      <Button className="w-full bg-brand-primary-100 border-brand-primary-200 hover:bg-glow">
                         <Link href={url} className="text-slate-50">
                           View Room Details
                         </Link>
@@ -130,7 +133,7 @@ const ShowRooms = ({ rooms, role, hotelId }: RoomProp) => {
                             className=""
                           >
                             <Link
-                              href={`/onboard/${role.toLowerCase()}/hotel/${
+                              href={`/onboard/hotel/${
                                 room.hotelId
                               }/rooms/${room.id}/rates`}
                             >

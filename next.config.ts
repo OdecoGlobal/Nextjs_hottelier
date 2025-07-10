@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  allowedDevOrigins: ['192.168.43.214', '*.192.168.43.214'],
+  crossOrigin: 'use-credentials',
 };
 
 export default nextConfig;

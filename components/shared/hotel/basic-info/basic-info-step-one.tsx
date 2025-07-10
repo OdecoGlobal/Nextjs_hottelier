@@ -1,3 +1,4 @@
+import { SelectFieldForm } from '@/components/select-field-form';
 import { Button } from '@/components/ui/button';
 import {
   FormControl,
@@ -7,13 +8,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Tooltip,
   TooltipContent,
@@ -39,29 +34,15 @@ const HotelBasicInfoStepOne = ({
 
       <FormField
         control={form.control}
-        name="name"
+        name="description"
         render={({ field }) => (
           <FormItem className="space-y-2">
-            <FormLabel>Property Name</FormLabel>
+            <FormLabel>Property Description</FormLabel>
             <FormControl>
-              <div className="flex justify-center items-center">
-                <Input {...field} />
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <Info />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="w-56">
-                    <p>
-                      Use the official name of your property, for example the
-                      one you use on your website. Avoid use of special
-                      characters. The name should ideally not be less than 35
-                      characters for search engine optimization.
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
+              <Textarea
+                {...field}
+                placeholder="Tell us a little about your property"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -72,24 +53,11 @@ const HotelBasicInfoStepOne = ({
         control={form.control}
         name="hotelType"
         render={({ field }) => (
-          <FormItem className="space-y-2">
-            <FormLabel>Property Type</FormLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
-              <FormControl>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Hotel type" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {HOTEL_TYPES_OPTIONS.map(type => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
+          <SelectFieldForm
+            field={field}
+            datas={HOTEL_TYPES_OPTIONS}
+            label="Property Type"
+          />
         )}
       />
 
@@ -123,26 +91,31 @@ const HotelBasicInfoStepOne = ({
 
       <FormField
         control={form.control}
-        name="acceptedCurrency"
+        name="website"
         render={({ field }) => (
           <FormItem className="space-y-2">
-            <FormLabel>Currency</FormLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
-              <FormControl>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select accepted currency" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {ACCEPTED_CURRENCIES.map(type => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <FormLabel>Official Website</FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                value={field.value ?? ''}
+                autoComplete="hotel-website"
+              />
+            </FormControl>
             <FormMessage />
           </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="acceptedCurrency"
+        render={({ field }) => (
+          <SelectFieldForm
+            field={field}
+            datas={ACCEPTED_CURRENCIES}
+            label="Accepted Currency"
+          />
         )}
       />
     </>

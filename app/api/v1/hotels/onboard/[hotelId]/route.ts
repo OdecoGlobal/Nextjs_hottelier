@@ -41,9 +41,9 @@ export const GET = async (
           },
         },
       },
-      cacheStrategy: {
-        ttl: 10 * 60,
-      },
+      // cacheStrategy: {
+      //   ttl: 10 * 60,
+      // },
     });
     if (!hotel) throw new AppError('Hotel not found', 404);
     return NextResponse.json(

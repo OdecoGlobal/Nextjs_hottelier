@@ -1,6 +1,7 @@
 import { AvailabilityType, GetRoomType } from '@/types';
 import { axiosInstance } from '../axios';
 import { formatError } from '@/utils/format-error';
+import { fetchClient } from '../fetch/client';
 
 export async function getRoomById(
   hotelId: string,
@@ -22,13 +23,36 @@ export async function getRoomById(
   }
 }
 
-export async function updateRoomAvailability(
-  data: AvailabilityType,
-  hotelId: string,
-  roomId: string,
-) {
+export type AddAvailabilityType = {
+  data: AvailabilityType;
+  hotelId: string;
+  roomId: string;
+};
+
+export async function addRoomAvailability({
+  data,
+  hotelId,
+  roomId,
+}: AddAvailabilityType) {
   try {
-    const res = await axiosInstance.put(
+    const res = await fetchClient.post(
+      `/hotels/${hotelId}/rooms/${roomId}/availability`,
+      data,
+    );
+    if (!res) throw new Error('No response from the server');
+
+    return { success: true, message: 'Hotel policies updated successfully' };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
+}
+export async function updateRoomAvailability({
+  data,
+  hotelId,
+  roomId,
+}: AddAvailabilityType) {
+  try {
+    const res = await fetchClient.put(
       `/hotels/${hotelId}/rooms/${roomId}/availability`,
       data,
     );

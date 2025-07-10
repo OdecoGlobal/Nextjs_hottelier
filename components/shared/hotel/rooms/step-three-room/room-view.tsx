@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormField } from '@/components/ui/form';
 import RadioForm from '@/components/radio-form';
-import { RADIO_BOOLEAN, ROOM_VIEW_OPTION } from '@/lib/constants';
+import { BOOLEAN_OPTIONS, ROOM_VIEW_OPTION } from '@/lib/constants';
 import { SelectFieldForm } from '@/components/select-field-form';
 import { AddRoomControl } from '..';
 
@@ -22,7 +22,7 @@ const RoomView = ({ control }: AddRoomControl) => {
               field={field}
               className="flex flex-col items-start"
               label="Does this room have view?"
-              data={RADIO_BOOLEAN}
+              data={BOOLEAN_OPTIONS}
               isBoolean={true}
               nestedOnValue="true"
               nestedElement={

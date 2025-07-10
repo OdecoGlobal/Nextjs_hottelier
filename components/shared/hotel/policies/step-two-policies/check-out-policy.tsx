@@ -1,8 +1,8 @@
 import { SelectTime } from '@/components/select-time';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { selectTime } from '@/lib/utils';
 import { HotelPolicyControl } from '..';
+import { TIME_SLOTS_STANDARD } from '@/lib/constants';
 
 const CheckOutPolicy = ({ control }: HotelPolicyControl) => {
   return (
@@ -19,7 +19,7 @@ const CheckOutPolicy = ({ control }: HotelPolicyControl) => {
               <SelectTime
                 field={field}
                 disabled={false}
-                selectTime={selectTime}
+                selectTime={TIME_SLOTS_STANDARD}
                 label="Check-out time"
               />
               <FormMessage />

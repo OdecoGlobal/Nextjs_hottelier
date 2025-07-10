@@ -11,10 +11,12 @@ const protectedPaths = [
   /\/user\/(.*)/,
   /\/admin/,
   /\/agent\/(.*)/,
+  /\/onboard\/(.*)/,
 ];
 
 const adminPaths = [/\/admin/];
 const agentPaths = [/\/agent/];
+const adminAgentPaths = [/^\/onboard/];
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 100;
 
@@ -52,10 +54,16 @@ export async function middleware(req: NextRequest) {
     );
   }
 
-  const decoded = await verifyTokenForEdge(token);
-
-  if (!decoded) {
+  let decoded;
+  try {
+    decoded = await verifyTokenForEdge(token);
+  } catch {
     return NextResponse.redirect(new URL('/login', req.url));
+  }
+  if (adminAgentPaths.some(path => path.test(pathname))) {
+    if (decoded.role !== 'ADMIN' && decoded.role !== 'AGENT') {
+      return NextResponse.redirect(new URL('/unauthorized', req.url));
+    }
   }
 
   if (adminPaths.some(path => path.test(pathname))) {
@@ -74,7 +82,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|login|signup|public).*)',
+    '/((?!api|_next/|favicon.ico|login|sign-up|unauthorized|public).*)',
     '/api/v1/',
   ],
 };

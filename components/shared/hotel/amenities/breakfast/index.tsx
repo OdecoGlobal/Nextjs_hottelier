@@ -17,11 +17,12 @@ import { HotelAmenitiesProps } from '..';
 import RadioForm from '@/components/radio-form';
 import {
   BREAKFAST_SCHEDULE_OPTIONS,
-  HOTEL_AMENITY_CHARGE_OPTION,
+  HOTEL_CHARGE_OPTION,
+  TIME_SLOTS_STANDARD,
+  TIME_SLOTS_WITH_NEXT_DAY,
 } from '@/lib/constants';
 import { Input } from '@/components/ui/input';
 import { SelectFieldForm } from '@/components/select-field-form';
-import { selectTime, timeNextDay } from '@/lib/utils';
 
 const BreakfastAmenities = ({ control, watch }: HotelAmenitiesProps) => {
   const isBreakfast = watch('isBreakfast');
@@ -46,7 +47,7 @@ const BreakfastAmenities = ({ control, watch }: HotelAmenitiesProps) => {
               name="breakfastChargeType"
               control={control}
               render={({ field }) => (
-                <RadioForm field={field} data={HOTEL_AMENITY_CHARGE_OPTION} />
+                <RadioForm field={field} data={HOTEL_CHARGE_OPTION} />
               )}
             />
             {breakfastChargeType === 'SURCHARGE' && (
@@ -80,7 +81,7 @@ const BreakfastAmenities = ({ control, watch }: HotelAmenitiesProps) => {
                 render={({ field }) => (
                   <SelectFieldForm
                     field={field}
-                    datas={selectTime}
+                    datas={TIME_SLOTS_STANDARD}
                     label="From"
                     className="w-full"
                   />
@@ -92,7 +93,7 @@ const BreakfastAmenities = ({ control, watch }: HotelAmenitiesProps) => {
                 render={({ field }) => (
                   <SelectFieldForm
                     field={field}
-                    datas={timeNextDay}
+                    datas={TIME_SLOTS_WITH_NEXT_DAY}
                     label="To"
                     className="w-full"
                   />

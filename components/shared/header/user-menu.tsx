@@ -1,32 +1,24 @@
-import { auth } from '@/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { Hotel, LayoutDashboard, UserCircle, UserIcon } from 'lucide-react';
+import { Hotel, LayoutDashboard, LogIn, Plus, UserCircle } from 'lucide-react';
 import Link from 'next/link';
 import LogoutButton from './logout-button';
+import { ModeToggle } from '../mode-toogle';
+import { getCurrentUser } from '@/auth-guard';
 
 const UserButton = async () => {
-  const session = await auth();
+  const user = await getCurrentUser();
 
-  if (!session) {
-    return (
-      <Button asChild>
-        <Link href="/login">
-          <UserIcon /> Login
-        </Link>
-      </Button>
-    );
-  }
-
-  const firstInitial = session.user.userName.charAt(0).toUpperCase() ?? 'O';
+  const firstInitial = user.userName.charAt(0).toUpperCase() ?? 'O';
 
   return (
     <nav className="flex gap-2 items-center">
@@ -38,47 +30,71 @@ const UserButton = async () => {
           </Avatar>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className="w-56" align="center">
+        <DropdownMenuContent className="w-56" align="start">
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">
-                {session.user.userName}
+                {user.userName}
               </p>
               <p className="text-sm text-muted-foreground leading-none">
-                {session.user.email}
+                {user.email}
               </p>
             </div>
           </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <ModeToggle />
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          {user && (
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <Link href="/#user/profile" className="w-full flex-start gap-2">
+                  <UserCircle /> User Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link
+                  href="/#user/bookings"
+                  className="w-full flex-start gap-2"
+                >
+                  <Hotel />
+                  Bookings
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/onboard" className="w-full flex-start gap-2">
+                  <Plus />
+                  List Your Hotel
+                </Link>
+              </DropdownMenuItem>
 
-          <DropdownMenuItem>
-            <Link href="/user/profile" className="w-full flex-start gap-2">
-              <UserCircle /> User Profile
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link href="/user/bookings" className="w-full flex-start gap-2">
-              <Hotel />
-              Bookings
-            </Link>
-          </DropdownMenuItem>
+              {user.role === 'ADMIN' && (
+                <DropdownMenuItem>
+                  <Link href="/admin" className="w-full flex-start gap-2">
+                    <LayoutDashboard /> Dashboard
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
-          {session.user.role === 'ADMIN' && (
-            <DropdownMenuItem>
-              <Link href="/admin" className="w-full flex-start gap-2">
-                <LayoutDashboard /> Dashboard
-              </Link>
-            </DropdownMenuItem>
+              {user.role === 'AGENT' && (
+                <DropdownMenuItem>
+                  <Link href="/agent" className="w-full flex-start gap-2">
+                    <LayoutDashboard /> Dashboard
+                  </Link>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuGroup>
           )}
-
-          {session.user.role === 'AGENT' && (
-            <DropdownMenuItem>
-              <Link href="/agent" className="w-full flex-start gap-2">
-                <LayoutDashboard /> Dashboard
-              </Link>
-            </DropdownMenuItem>
-          )}
+          <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <LogoutButton />
+            {user ? (
+              <LogoutButton />
+            ) : (
+              <Link href="/login">
+                <LogIn /> Login
+              </Link>
+            )}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

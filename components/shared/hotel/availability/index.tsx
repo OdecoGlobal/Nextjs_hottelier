@@ -10,12 +10,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import { updateRoomAvailability } from '@/lib/actions/room.actions';
+import { useAddRoomAvailability } from '@/hooks/use-onboard-hotels';
 import { availabilitySchema } from '@/lib/schemas/validator';
-import { AdminAgentRole, AvailabilityType, GetRoomType } from '@/types';
+import { AvailabilityType, GetRoomType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -23,7 +21,6 @@ type RoomAvailabilityProp = {
   room: GetRoomType;
   hotelId: string;
   roomId: string;
-  role: AdminAgentRole;
   initialData: AvailabilityType;
   onClose: () => void;
 };
@@ -32,12 +29,10 @@ const RoomAvailabilityForm = ({
   room,
   hotelId,
   roomId,
-  role,
   initialData,
   onClose,
 }: RoomAvailabilityProp) => {
-  const { toast } = useToast();
-  const router = useRouter();
+  const { mutateAsync, isPending } = useAddRoomAvailability();
   const maxRoomSchema = availabilitySchema.extend({
     inventory: z.coerce
       .number()
@@ -55,27 +50,11 @@ const RoomAvailabilityForm = ({
     },
   });
 
-  const { control, handleSubmit, formState } = form;
-  const isPending = formState.isSubmitting;
+  const { control, handleSubmit } = form;
 
-  const onSubmit = async (values: AvailabilityType) => {
-    console.log(values, role);
+  const onSubmit = async (data: AvailabilityType) => {
+    await mutateAsync({ data, hotelId, roomId });
 
-    const res = await updateRoomAvailability(values, hotelId, roomId);
-    if (!res.success) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: res.message,
-      });
-    } else {
-      toast({
-        title: 'Success',
-        description: res.message,
-        variant: 'default',
-      });
-      router.replace(`/onboard/${role.toLowerCase()}/hotel/${hotelId}/reviews`);
-    }
     onClose();
   };
   return (

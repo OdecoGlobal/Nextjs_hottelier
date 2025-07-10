@@ -41,7 +41,6 @@ export const GET = async (req: NextRequest) => {
         basicInfo: true,
         images: {
           select: {
-            imageType: true,
             imageUrl: true,
             public_id: true,
           },
@@ -52,6 +51,9 @@ export const GET = async (req: NextRequest) => {
         updatedAt: 'desc',
       },
       skip,
+      // cacheStrategy: {
+      //   ttl: 5 * 60,
+      // },
     });
 
     const totalCount = await prisma.hotel.count({

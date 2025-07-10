@@ -24,10 +24,11 @@ export const hotelPolicySchema = baseHotelPolicySchema.superRefine(
     }
 
     if (
-      data.cancellationPolicy === 'HOUR_24' ||
-      data.cancellationPolicy === 'HOUR_48' ||
-      (data.cancellationPolicy === 'HOUR_72' &&
-        (data.cancellationFeeType === undefined || !data.cancellationFeeType))
+      (data.cancellationPolicy === 'HOUR_24' ||
+        data.cancellationPolicy === 'HOUR_48' ||
+        data.cancellationPolicy === 'HOUR_72') &&
+      (data.cancellationFeeType === undefined ||
+        data.cancellationFeeType === null)
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

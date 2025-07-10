@@ -21,7 +21,8 @@ export function generateSlug(text: string) {
 }
 
 const padTime = (num: number) => num.toString().padStart(2, '0');
-const generateTimeSlots = (includeNextDay = false) => {
+
+export const generateTimeSlots = (includeNextDay = false) => {
   return Array.from({ length: 48 }, (_, i) => {
     const totalMinutes = (6 * 60 + i * 30) % (24 * 60);
     const hour24 = Math.floor(totalMinutes / 60);
@@ -52,11 +53,6 @@ const generateTimeSlots = (includeNextDay = false) => {
     };
   });
 };
-
-const timeNextDay = generateTimeSlots(true);
-const selectTime = generateTimeSlots();
-
-export { selectTime, timeNextDay };
 
 export const formatDateTime = (dateString: Date | string) => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
@@ -96,12 +92,6 @@ export const formatDateTime = (dateString: Date | string) => {
     timeOnly: formattedTime,
   };
 };
-
-// const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
-//   currency: 'USD',
-//   style: 'currency',
-//   minimumFractionDigits: 2,
-// });
 
 export function formatCurrency(
   amount: number | string | null | undefined,
@@ -185,6 +175,7 @@ export const formatValueString = (value: string) => {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 };
+
 export const createPricingOptions = <T extends readonly string[]>(
   constants: T,
 ): PricingOption<T[number]>[] => {
@@ -303,6 +294,7 @@ export function mapStringToLabel(
 ): string | undefined {
   return options.find(option => option.value === value)?.label;
 }
+
 export function mapArrayToLabels(
   values: string[],
   options: GeneratedTypes[],

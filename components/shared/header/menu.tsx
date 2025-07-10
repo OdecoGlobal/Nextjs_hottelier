@@ -21,7 +21,7 @@ const Menu = async () => {
             href={`${
               !user || (user.role !== 'AGENT' && user.role !== 'ADMIN')
                 ? '/signup-agent'
-                : `/onboard/${user.role.toLowerCase()}/hotel`
+                : `/onboard`
             }`}
           >
             <Hotel />
@@ -43,7 +43,7 @@ const Menu = async () => {
                 href={`${
                   !user || (user.role !== 'AGENT' && user.role !== 'ADMIN')
                     ? '/signup-agent'
-                    : `/onboard/${user.role.toLowerCase()}/hotel`
+                    : '/onboard'
                 }`}
               >
                 <Hotel />

@@ -1,6 +1,6 @@
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { axiosInstance } from '../axios';
-import { LoginInput, signUpInput, VeifyOTPType } from '@/types';
+import { LoginInput, signUpInput, User, VeifyOTPType } from '@/types';
 import { formatError } from '@/utils/format-error';
 
 export async function signUpUser(formData: signUpInput) {
@@ -23,8 +23,10 @@ export async function signupAgent(formData: signUpInput) {
   try {
     const res = await axiosInstance.post('/auth/signup-agent', formData);
     if (!res) throw new Error('An error occured while signing up');
+    const data = res.data;
+    const { message, token } = data;
 
-    return { success: true, message: 'User registered successfully' };
+    return { success: true, message, token };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
@@ -49,10 +51,14 @@ export async function verifyOtp(formData: VeifyOTPType) {
 
 export async function loginUser(formData: LoginInput) {
   try {
-    const res = await axiosInstance.post('/auth/login', formData);
+    const res = await axiosInstance.post<{ data: { user: User } }>(
+      '/auth/login',
+      formData,
+    );
     if (!res) throw new Error('An error occured while logging in');
-
-    return { success: true, message: 'User logged in successfully' };
+    const { user } = res.data.data;
+    console.log(user);
+    return { success: true, message: 'User logged in successfully', user };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;

@@ -17,7 +17,7 @@ export const POST = async (
     restrictTo('ADMIN', 'AGENT')(user);
 
     const { hotelId } = await params;
-    const hotel = await await validateHotelAcces(hotelId, user);
+    const hotel = await validateHotelAcces(hotelId, user);
 
     const formData = await req.formData();
 
@@ -109,7 +109,7 @@ export const POST = async (
       return images;
     });
 
-    await updateHotelProgress(hotelId, 'step4_hotel_images', result.count > 0);
+    await updateHotelProgress(hotelId, 'step4_images', result.count > 0);
 
     return NextResponse.json(
       {

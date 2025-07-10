@@ -5,7 +5,6 @@ import {
   SMOKING_POLICIES,
   DAYS,
   SELF_CHECK_IN,
-  LATE_CHECK_IN_FEE_TYPE,
   SURCHARGE_TYPE,
   PET_SURCHARGE_TYPE,
   PET_FEE_DURATION,
@@ -27,19 +26,19 @@ import {
   ROOM_LAYOUT_TYPES,
   ALLOWED_FILE_TYPES,
   BREAKFAST_SCHEDULE_TYPE,
-  HOTEL_AMENITY_CHARGE_TYPE,
+  HOTEL_CHARGE_TYPE,
   WIFI_SURCHARGE_DURATION_TYPE,
   WIFI_SPEED_TYPE,
   WIFI_AREA_TYPE,
   PRICING_MODEL_TYPE,
   ROLES,
   HotelStatus,
-  ImageType,
   CURRENCIES,
 } from '@/types';
 import z from 'zod';
 import { MAX_FILE_SIZE } from '../constants';
 
+export const userRoleSchema = z.enum(ROLES);
 export const userSchema = z.object({
   id: z.string().min(1, 'Id is required'),
   email: z.string().email('invalid email address'),
@@ -49,7 +48,7 @@ export const userSchema = z.object({
   image: z.string().nullish(),
   passwordChangedAt: z.date().nullish(),
   paymentMethod: z.enum(PAYMENT_METHODS).nullish(),
-  role: z.enum(ROLES),
+  role: userRoleSchema,
 });
 
 export const loginSchema = z.object({
@@ -69,11 +68,20 @@ export const signUpFormSchema = z
     message: "password don't match",
     path: ['confirmPassword'],
   });
-
 export const currencySchema = z.enum(CURRENCIES);
+
 // HOTELS ZOD SCHEMA
+export const createHotelSchema = z.object({
+  name: z.string().min(5, 'Hotel name must be at least 5 characters'),
+  officialEmail: z.string().email('A valid email is needed'),
+  phoneNumber: z.string().min(10, 'Phone number must be at least 10 digits'),
+  location: z.string().min(5, 'Location is required'),
+});
 export const baseHotelSchema = z.object({
-  name: z.string().min(4, 'Hotel name must be at least 4 characters'),
+  description: z
+    .string()
+    .min(10, 'Hotel description must be at least 10 characters'),
+  website: z.string().nullish(),
   address: z.string().min(3, 'Address must be at least 3 characters'),
   city: z.string().min(3, 'City must be at least 3 characters'),
   state: z.string().min(3, 'State must be at least 3 characters'),
@@ -107,12 +115,13 @@ export const basicInfoSchema = hotelBasicInfoSchema.extend({
   updatedAt: z.string().datetime(),
 });
 export const completionStepsSchema = z.object({
+  step0_init: z.boolean(),
   step1_basic_info: z.boolean(),
   step2_policies: z.boolean(),
   step3_amenities: z.boolean(),
-  step4_hotel_images: z.boolean(),
+  step4_images: z.boolean(),
   step5_rooms: z.boolean(),
-  step6_rate_and_availability: z.boolean(),
+  step6_rates_and_availability: z.boolean(),
   step7_review: z.boolean(),
 });
 
@@ -145,9 +154,9 @@ export const baseHotelPolicySchema = z.object({
 
   checkInStartTime: z.string().min(1, 'Check in start time is required'),
   checkInEndTime: z.string().optional(),
-  isOpen24Hours: z.boolean().optional(),
+  isOpen24Hours: z.boolean(),
   isLateCheckIn: z.boolean().optional(),
-  lateCheckInType: z.enum(LATE_CHECK_IN_FEE_TYPE).optional(),
+  lateCheckInType: z.enum(HOTEL_CHARGE_TYPE).optional(),
   surchargeType: z.enum(SURCHARGE_TYPE).optional(),
   surchargeAmount: z.coerce.number().optional(),
 
@@ -182,14 +191,14 @@ export const baseHotelPolicySchema = z.object({
 export const baseHotelAmenitiesSchema = z.object({
   isWifi: z.boolean(),
   wifiArea: z.array(z.enum(WIFI_AREA_TYPE)).optional(),
-  roomWifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).nullish(),
+  roomWifiChargeType: z.enum(HOTEL_CHARGE_TYPE).nullish(),
   roomWifiSpeed: z.enum(WIFI_SPEED_TYPE).nullish(),
   roomWifiSurchargeAmout: z.coerce.number().optional(),
   roomWifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).nullish(),
   roomDeviceLimited: z.boolean().optional(),
   roomDeviceLimitNumber: z.coerce.number().nullish(),
 
-  publicWifiChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).nullish(),
+  publicWifiChargeType: z.enum(HOTEL_CHARGE_TYPE).nullish(),
   publicWifiSpeed: z.enum(WIFI_SPEED_TYPE).nullish(),
   publicWifiSurchargeAmout: z.coerce.number().optional(),
   publicWifiSurchargeDuration: z.enum(WIFI_SURCHARGE_DURATION_TYPE).nullish(),
@@ -197,7 +206,7 @@ export const baseHotelAmenitiesSchema = z.object({
   publicDeviceLimitNumber: z.coerce.number().nullish(),
 
   isBreakfast: z.boolean(),
-  breakfastChargeType: z.enum(HOTEL_AMENITY_CHARGE_TYPE).nullish(),
+  breakfastChargeType: z.enum(HOTEL_CHARGE_TYPE).nullish(),
   breakfastSurchargeAmount: z.coerce.number().optional(),
   breakfastSchedule: z.enum(BREAKFAST_SCHEDULE_TYPE).nullish(),
   breakfastStartTime: z.string().nullish(),
@@ -211,7 +220,6 @@ export const cloudinaryImageSchema = z.object({
 export const HotelImageSchema = z.object({
   imageUrl: z.string(),
   public_id: z.string(),
-  imageType: ImageType,
 });
 
 export const ImageObjectArraySchema = z
@@ -220,16 +228,10 @@ export const ImageObjectArraySchema = z
 
 export const HotelImageUploadBodySchema = z
   .object({
-    coverImages: ImageObjectArraySchema,
-    exteriorImages: ImageObjectArraySchema,
-    interiorImages: ImageObjectArraySchema,
+    images: ImageObjectArraySchema,
   })
   .refine(data => {
-    const totalImages = [
-      ...data.coverImages,
-      ...data.exteriorImages,
-      ...data.interiorImages,
-    ].length;
+    const totalImages = [...data.images].length;
 
     return totalImages > 0;
   }, 'At least one image URL must be provided');
@@ -363,9 +365,8 @@ export const hotelImageUploadSchema = z.object({
   interior: z.array(imageFileSchema).min(1, 'Select at least one image'),
 });
 
-export const hotelSchema = z.object({
+export const hotelSchema = createHotelSchema.extend({
   id: z.string().uuid(),
-  name: z.string(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   status: z.enum(HotelStatus),

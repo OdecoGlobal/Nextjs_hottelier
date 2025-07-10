@@ -6,7 +6,8 @@ import {
 } from '@/types';
 
 export const defaultBasicInfo: HotelBasicInfoType = {
-  name: '',
+  description: '',
+  website: '',
   address: '',
   city: '',
   state: '',

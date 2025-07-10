@@ -1,17 +1,19 @@
 'use client';
 import { Control, useForm, UseFormWatch } from 'react-hook-form';
 import HotelCreationSteps from '../creation-steps';
-import { AdminAgentRole, HotelAmenitiesType } from '@/types';
+import { HotelAmenitiesType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { hotelAmenitiesSchema } from '@/lib/schemas/grouped-validators';
 import { Form } from '@/components/ui/form';
 import WifiAmenities from './wifi';
 import BreakfastAmenities from './breakfast';
-import { updateHotelAmenities } from '@/lib/actions/hotel.action';
-import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
 import SubmitFormButton from '@/components/submit-form-button';
 import { defaultHotelAmenities } from '@/lib/constants/hotel-default-values';
+import {
+  useAddAmenities,
+  useOnboardHotelById,
+} from '@/hooks/use-onboard-hotels';
+import LoadingComponent from '@/components/loading-state';
 export type HotelAmenitiesProps = {
   control: Control<HotelAmenitiesType>;
   watch: UseFormWatch<HotelAmenitiesType>;
@@ -19,45 +21,37 @@ export type HotelAmenitiesProps = {
 
 const MainAmenitiesForm = ({
   hotelId,
-  role,
   hotelAmenities,
 }: {
   hotelId: string;
-  role: AdminAgentRole;
   hotelAmenities: HotelAmenitiesType;
 }) => {
-  const { toast } = useToast();
-  const router = useRouter();
+  const { data, isPending: dataLoading } = useOnboardHotelById({ hotelId });
+  const { mutate, isPending } = useAddAmenities();
   const form = useForm<HotelAmenitiesType>({
     resolver: zodResolver(hotelAmenitiesSchema),
     defaultValues: hotelAmenities ?? defaultHotelAmenities,
   });
 
-  const onSubmit = async (values: HotelAmenitiesType) => {
-    const res = await updateHotelAmenities(values, hotelId);
-    if (!res.success) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: res.message,
-      });
-    } else {
-      toast({
-        title: 'Success',
-        description: res.message,
-        variant: 'default',
-      });
-      router.replace(`/onboard/${role.toLowerCase()}/hotel/${hotelId}/photos`);
-    }
+  if (dataLoading || !data) {
+    return <LoadingComponent />;
+  }
+  const { status, completionSteps } = data! ?? {};
+  const onSubmit = async (data: HotelAmenitiesType) => {
+    mutate({ data, hotelId });
   };
-  const { control, watch, formState } = form;
-  const isPending = formState.isSubmitting;
+  const { control, watch } = form;
 
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={2} role={role} hotelId={hotelId} />
+      <HotelCreationSteps
+        current={3}
+        hotelId={hotelId}
+        status={status}
+        completedSteps={completionSteps}
+      />
 
-      <div className=" flex-1 py-10 px-5">
+      <div className=" flex-1 wrapper">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

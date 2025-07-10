@@ -1,7 +1,6 @@
 'use client';
-import { AddRoomType, AdminAgentRole } from '@/types';
-
-import { useState, useTransition } from 'react';
+import { AddRoomType } from '@/types';
+import { useState } from 'react';
 import HotelCreationSteps from '../creation-steps';
 import StepOneRoom from './step-one-room';
 import {
@@ -22,10 +21,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { completeRoomSchema } from '@/lib/schemas/validator';
 import SubmitFormButton from '@/components/submit-form-button';
 import { pickKeys } from '@/lib/utils';
-import { addRoom } from '@/lib/actions/hotel.action';
-import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+
 import z from 'zod';
+import {
+  useAddNewRooms,
+  useOnboardHotelById,
+} from '@/hooks/use-onboard-hotels';
+import LoadingComponent from '@/components/loading-state';
 
 const stepFields = [
   pickKeys(StepOneAddRoomSchema),
@@ -46,19 +48,16 @@ const AddRoomComponent = ({
   hotelTotalRooms,
   hotelId,
   userName,
-  role,
   roomsAssigned,
 }: {
   hotelId: string;
   userName: string;
-  role: AdminAgentRole;
   hotelTotalRooms: number;
   roomsAssigned: number;
 }) => {
   const [step, setStep] = useState(0);
-  const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
+  const { data, isPending: dataLoading } = useOnboardHotelById({ hotelId });
+  const { isPending, mutateAsync } = useAddNewRooms();
 
   const [isUploading, setIsUploading] = useState(false);
 
@@ -78,29 +77,13 @@ const AddRoomComponent = ({
   });
 
   const { getValues } = form;
+
+  if (dataLoading || !data) {
+    return <LoadingComponent />;
+  }
   const onSubmit = async () => {
-    const formData = getValues();
-    startTransition(async () => {
-      const response = await addRoom(formData, hotelId);
-      if (!response?.success) {
-        toast({
-          title: 'Error',
-          variant: 'destructive',
-          description: response.message,
-        });
-      } else {
-        toast({
-          title: 'Success',
-          description: response.message,
-          variant: 'default',
-        });
-        router.replace(
-          `/onboard/${role.toLowerCase()}/hotel/${hotelId}/rooms/${
-            response?.room?.id
-          }/rates`,
-        );
-      }
-    });
+    const data = getValues();
+    await mutateAsync({ data, hotelId });
   };
 
   const handleNext = async () => {
@@ -116,16 +99,23 @@ const AddRoomComponent = ({
   const handlePrevious = () => {
     if (step > 0) setStep(prevStep => prevStep - 1);
   };
-  // const isPending = formState.isSubmitting;
 
   const isLastStep = step === stepFields.length - 1;
+  const { status, completionSteps } = data! ?? {};
+  // console.log(completionSteps);
 
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={4} role={role} hotelId={hotelId} />
+      <HotelCreationSteps
+        current={5}
+        hotelId={hotelId}
+        completedSteps={completionSteps}
+        status={status}
+      />
       <Form {...form}>
+        {/* <div style={{ display: step === 1 ? 'block' : 'none' }}><StepOne /></div> */}
         <form
-          className="flex-1 my-5 px-5 w-full max-w-3xl mx-auto space-y-4"
+          className="flex-1 wrapper space-y-4"
           onSubmit={e => {
             e.preventDefault();
             handleNext();

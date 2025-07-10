@@ -7,10 +7,12 @@ export const PolicyRow = ({
   label: string;
   value: string | number | React.ReactNode;
 }) => (
-  <p>
-    {label}:{' '}
-    <Badge className="brand-badge">
-      {typeof value === 'string' || typeof value === 'number' ? value : value}
-    </Badge>
-  </p>
+  <div className="dialog-div ">
+    <p>
+      {label}:{' '}
+      <Badge className="brand-badge">
+        {typeof value === 'string' || typeof value === 'number' ? value : value}
+      </Badge>
+    </p>
+  </div>
 );

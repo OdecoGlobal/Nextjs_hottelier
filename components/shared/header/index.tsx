@@ -1,7 +1,6 @@
 import { APP_NAME } from '@/lib/constants';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ModeToggle } from './mode-toggle';
 import Menu from './menu';
 import UserButton from './user-menu';
 
@@ -25,7 +24,6 @@ const Header = () => {
         </div>
         <div className="flex-center gap-3">
           <UserButton />
-          <ModeToggle />
           <Menu />
         </div>
       </div>
