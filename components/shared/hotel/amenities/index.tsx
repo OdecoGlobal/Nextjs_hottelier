@@ -7,11 +7,13 @@ import { hotelAmenitiesSchema } from '@/lib/schemas/grouped-validators';
 import { Form } from '@/components/ui/form';
 import WifiAmenities from './wifi';
 import BreakfastAmenities from './breakfast';
-import { updateHotelAmenities } from '@/lib/actions/hotel.action';
-import { useRouter } from 'next/navigation';
 import SubmitFormButton from '@/components/submit-form-button';
 import { defaultHotelAmenities } from '@/lib/constants/hotel-default-values';
-import { useOnboardHotelById } from '@/hooks/use-onboard-hotels';
+import {
+  useAddAmenities,
+  useOnboardHotelById,
+} from '@/hooks/use-onboard-hotels';
+import LoadingComponent from '@/components/loading-state';
 export type HotelAmenitiesProps = {
   control: Control<HotelAmenitiesType>;
   watch: UseFormWatch<HotelAmenitiesType>;
@@ -25,23 +27,20 @@ const MainAmenitiesForm = ({
   hotelAmenities: HotelAmenitiesType;
 }) => {
   const { data, isPending: dataLoading } = useOnboardHotelById({ hotelId });
-  const router = useRouter();
+  const { mutate, isPending } = useAddAmenities();
   const form = useForm<HotelAmenitiesType>({
     resolver: zodResolver(hotelAmenitiesSchema),
     defaultValues: hotelAmenities ?? defaultHotelAmenities,
   });
 
   if (dataLoading || !data) {
-    return <>Loading</>;
+    return <LoadingComponent />;
   }
   const { status, completionSteps } = data! ?? {};
-  const onSubmit = async (values: HotelAmenitiesType) => {
-    await updateHotelAmenities(values, hotelId);
-
-    router.replace(`/onboard//hotel/${hotelId}/photos`);
+  const onSubmit = async (data: HotelAmenitiesType) => {
+    mutate({ data, hotelId });
   };
-  const { control, watch, formState } = form;
-  const isPending = formState.isSubmitting;
+  const { control, watch } = form;
 
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">

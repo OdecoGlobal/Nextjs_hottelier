@@ -148,7 +148,6 @@ model HotelPolicy {
 model HotelImages {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   hotelId     String    @db.Uuid
-  imageType   ImageType
   imageUrl    String
   isCompleted Boolean   @default(false)
   completedAt DateTime?

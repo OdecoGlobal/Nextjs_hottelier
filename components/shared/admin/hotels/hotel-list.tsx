@@ -84,10 +84,8 @@ const AdminHotelListComponent = () => {
             <TableBody>
               {hotels.map(hotel => {
                 const { location, id, status, updatedAt, images, name } = hotel;
-                const coverImage = images.find(
-                  img => img.imageType === 'COVER',
-                );
-                const img = coverImage?.imageUrl;
+
+                const img = images[0]?.imageUrl;
 
                 return (
                   <TableRow

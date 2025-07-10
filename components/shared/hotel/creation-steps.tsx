@@ -36,6 +36,7 @@ const HotelCreationSteps = ({
             `step${i}_${slugify(step, { lower: true, strict: true, replacement: '_' })}` as StepKey;
 
           const isCompleted = completedSteps?.[stepSlug] ?? false;
+
           return (
             <div key={step} className="relative">
               <div className="flex gap-2 items-start">

@@ -2,8 +2,8 @@ export const dynamic = 'force-dynamic';
 
 import { requireAdminOrAgent } from '@/auth-guard';
 import AddRoomComponent from '@/components/shared/hotel/rooms';
-import { getHotelById } from '@/lib/actions/hotel.action';
-import { AdminAgentRole } from '@/types';
+import MissingStepNotice from '@/components/shared/missing-info';
+import { getServerOnboardHotelById } from '@/lib/actions/hotel.action';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 export const metadata: Metadata = {
@@ -13,20 +13,30 @@ export const metadata: Metadata = {
 const RoomsAndRatePage = async ({
   params,
 }: {
-  params: Promise<{ role: AdminAgentRole; hotelId: string }>;
+  params: Promise<{ hotelId: string }>;
 }) => {
-  const { hotelId, role } = await params;
-  const session = await requireAdminOrAgent(role);
-  const { hotel } = await getHotelById(hotelId);
+  const { hotelId } = await params;
+  const session = await requireAdminOrAgent();
+  const hotel = await getServerOnboardHotelById(hotelId);
   if (!hotel) notFound();
   const { rooms, basicInfo } = hotel;
-  const roomAssigned = rooms.reduce((sum, room) => sum + room.totalRooms, 0);
+  const { roomUnitTotal } = basicInfo;
+  if (!basicInfo && !roomUnitTotal) {
+    return (
+      <MissingStepNotice
+        step="basic info"
+        message="You have not completed the basic info step. please complete it to continue with this steps"
+      />
+    );
+  }
+  const roomAssigned = rooms
+    ? rooms.reduce((sum, room) => sum + room.totalRooms, 0)
+    : 0;
   return (
     <AddRoomComponent
       hotelId={hotelId}
       userName={session.user.userName}
-      role={session.user.role as AdminAgentRole}
-      hotelTotalRooms={basicInfo.roomUnitTotal}
+      hotelTotalRooms={roomUnitTotal}
       roomsAssigned={roomAssigned}
     />
   );

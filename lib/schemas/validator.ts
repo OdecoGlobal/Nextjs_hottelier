@@ -33,7 +33,6 @@ import {
   PRICING_MODEL_TYPE,
   ROLES,
   HotelStatus,
-  ImageType,
   CURRENCIES,
 } from '@/types';
 import z from 'zod';
@@ -119,7 +118,7 @@ export const completionStepsSchema = z.object({
   step1_basic_info: z.boolean(),
   step2_policies: z.boolean(),
   step3_amenities: z.boolean(),
-  step4_hotel_images: z.boolean(),
+  step4_images: z.boolean(),
   step5_rooms: z.boolean(),
   step6_rates_and_availability: z.boolean(),
   step7_review: z.boolean(),
@@ -220,7 +219,6 @@ export const cloudinaryImageSchema = z.object({
 export const HotelImageSchema = z.object({
   imageUrl: z.string(),
   public_id: z.string(),
-  imageType: ImageType,
 });
 
 export const ImageObjectArraySchema = z
@@ -229,16 +227,10 @@ export const ImageObjectArraySchema = z
 
 export const HotelImageUploadBodySchema = z
   .object({
-    coverImages: ImageObjectArraySchema,
-    exteriorImages: ImageObjectArraySchema,
-    interiorImages: ImageObjectArraySchema,
+    images: ImageObjectArraySchema,
   })
   .refine(data => {
-    const totalImages = [
-      ...data.coverImages,
-      ...data.exteriorImages,
-      ...data.interiorImages,
-    ].length;
+    const totalImages = [...data.images].length;
 
     return totalImages > 0;
   }, 'At least one image URL must be provided');

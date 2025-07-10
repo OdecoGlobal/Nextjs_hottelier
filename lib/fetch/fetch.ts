@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_URL } from '../constants';
 import { FetchClient } from './core';
 
-// Environment detection
 const isServer = typeof window === 'undefined';
 
 async function getServerAuth(): Promise<{ token?: string; cookies?: string }> {

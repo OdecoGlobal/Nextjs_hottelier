@@ -22,6 +22,7 @@ export async function requireAdmin(): Promise<Session> {
   }
   return session as Session & { user: { role: 'ADMIN' } };
 }
+
 export async function requireAdminOrAgent(): Promise<Session> {
   const session = await auth();
 
@@ -71,7 +72,9 @@ export async function isAuthenticated(): Promise<boolean> {
   return !!session;
 }
 
-export async function getCurrentUser(): Promise<User | null> {
+export async function getCurrentUser(): Promise<User> {
   const session = await auth();
-  return session?.user || null;
+  if (!session) redirect('/login');
+
+  return session.user;
 }

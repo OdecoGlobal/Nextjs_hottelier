@@ -77,7 +77,7 @@ export const steps = [
   'Basic Info',
   'Policies',
   'Amenities',
-  'Photos',
+  'Images',
   'Rooms',
   'Rates and Availability',
   'Review',

@@ -28,7 +28,7 @@ import {
 import { useUserStore } from '@/stores/use-user-store';
 import Link from 'next/link';
 import LogoutButton from '../header/logout-button';
-import { SidebarModeToggle } from './sidebar-mode-toogle';
+import { ModeToggle } from '../mode-toogle';
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -78,7 +78,7 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <SidebarModeToggle />
+              <ModeToggle />
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
 

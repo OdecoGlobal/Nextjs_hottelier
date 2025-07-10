@@ -7,98 +7,89 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { submitHotel } from '@/lib/actions/hotel.action';
 import { AlertCircle, CheckCircle2, Loader } from 'lucide-react';
 import HotelCreationSteps from '../creation-steps';
 import OnboardReviewCard from './onboard-review-card';
-import { AdminAgentRole, HotelType } from '@/types';
 import { generateSlug } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { useTransition } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+import {
+  useOnboardHotelById,
+  useSubmitNewHotel,
+} from '@/hooks/use-onboard-hotels';
+import LoadingComponent from '@/components/loading-state';
 
-const OnboardingReviewComponent = ({
-  hotel,
-  role,
-}: {
-  hotel: HotelType;
-  role: AdminAgentRole;
-}) => {
-  const { completionSteps, basicInfo, isFullyCompleted, currentStep, id } =
-    hotel;
-  const { toast } = useToast();
-  const router = useRouter();
+const onboardingSteps = [
+  {
+    title: 'Initial',
+    key: 'step0_init',
+    description: 'Hotel name, location, category, and contact details...',
+  },
+  {
+    title: 'Basic Info',
+    key: 'step1_basic_info',
+    description: 'Hotel name, location, category, and contact details...',
+  },
+  {
+    title: 'Policies',
+    key: 'step2_policies',
+    description:
+      'Payment policy,check-in/out times, cancellation policy, house rules...',
+  },
+  {
+    title: 'Amenities',
+    key: 'step3_amenities',
+    description: 'Facilities and services offered by the hotel',
+  },
+  {
+    title: 'Images',
+    key: 'step4_images',
+    description: 'Property photos and visual content',
+  },
+  {
+    title: 'Rooms',
+    key: 'step5_rooms',
+    description: 'Room types, descriptions, and amenities',
+  },
+  {
+    title: 'Rates and Availability',
+    key: 'step6_rates_and_availability',
+    description: 'Pricing structure and availability calendar',
+  },
+] as const;
+
+const OnboardingReviewComponent = ({ hotelId }: { hotelId: string }) => {
+  const { data, isPending: dataLoading } = useOnboardHotelById({ hotelId });
+  const { mutate, isPending } = useSubmitNewHotel();
+
+  if (dataLoading || !data) {
+    return <LoadingComponent />;
+  }
+  const { status, completionSteps, isFullyCompleted, currentStep, id, name } =
+    data! ?? {};
 
   const { step7_review, ...steps } = completionSteps;
   void step7_review;
   const completedSteps = Object.values(steps).filter(step => step).length;
   const totalSteps = Object.keys(steps).length;
   const progress = Math.round((completedSteps / totalSteps) * 100);
-  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = () => {
-    startTransition(async () => {
-      const res = await submitHotel(hotel.id);
-      if (!res.success) {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: res.message,
-        });
-      } else {
-        toast({
-          title: 'Success',
-          description: res.message,
-          variant: 'default',
-        });
-        router.replace(`/onboard/${role.toLowerCase()}`);
-      }
-    });
+    mutate(hotelId);
   };
-
-  const onboardingSteps = [
-    {
-      title: 'Basic Info',
-      key: 'step1_basic_info',
-      description: 'Hotel name, location, category, and contact details...',
-    },
-    {
-      title: 'Policies',
-      key: 'step2_policies',
-      description:
-        'Payment policy,check-in/out times, cancellation policy, house rules...',
-    },
-    {
-      title: 'Amenities',
-      key: 'step3_amenities',
-      description: 'Facilities and services offered by the hotel',
-    },
-    {
-      title: 'Photos',
-      key: 'step4_hotel_images',
-      description: 'Property photos and visual content',
-    },
-    {
-      title: 'Rooms',
-      key: 'step5_rooms',
-      description: 'Room types, descriptions, and amenities',
-    },
-    {
-      title: 'Rates and Availability',
-      key: 'step6_rate_and_availability',
-      description: 'Pricing structure and availability calendar',
-    },
-  ] as const;
 
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={currentStep} role={role} hotelId={id} />
-      <main className=" flex-1 py-10 px-5 space-y-4 max-w-4xl mx-auto">
+      <HotelCreationSteps
+        current={currentStep}
+        hotelId={id}
+        completedSteps={completionSteps}
+        status={status}
+      />
+      <main className="flex-1 wrapper space-y-4">
         <Card>
           <CardHeader className="flex md:flex-row md:items-center justify-between gap-2 ">
             <div className="space-y-2">
-              <CardTitle>Review and Submit - {basicInfo.name}</CardTitle>
+              <CardTitle>Review and Submit - {name}</CardTitle>
               <CardDescription>
                 Review all sections before submiting to admin
               </CardDescription>
@@ -157,14 +148,16 @@ const OnboardingReviewComponent = ({
         )}
         {onboardingSteps.map(step => {
           const { title, key, description } = step;
+          const hideEdit = key === 'step0_init';
           return (
             <OnboardReviewCard
               key={key}
+              hideEdit={hideEdit}
               title={title}
               description={description}
               isCompleted={completionSteps[key]}
               isFullyCompleted={isFullyCompleted}
-              url={`/${role.toLowerCase()}/onboarding/${id}/${generateSlug(title)}`}
+              url={`/onboard/hotel/${id}/${generateSlug(title)}`}
             />
           );
         })}
@@ -183,7 +176,7 @@ const OnboardingReviewComponent = ({
               disabled={isPending || isFullyCompleted}
               className={` font-medium transition-all self-end ${
                 !isFullyCompleted
-                  ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                  ? 'bg-brand-primary-200 hover:bg-glow text-white'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
             >

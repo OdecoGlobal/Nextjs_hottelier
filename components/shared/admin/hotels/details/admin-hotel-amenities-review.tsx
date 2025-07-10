@@ -11,7 +11,7 @@ import {
   TIME_SLOTS_STANDARD,
   TIME_SLOTS_WITH_NEXT_DAY,
 } from '@/lib/constants';
-import MissingStepNotice from './admin-missing-step-notice';
+import MissingStepNotice from '../../../missing-info';
 
 const AdminReviewAmenities = () => {
   const { hotel } = useOnboardHotelByIdStore();

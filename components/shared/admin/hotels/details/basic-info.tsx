@@ -5,7 +5,7 @@ import AdminDialogCard from './dialog-card';
 import { ACCEPTED_CURRENCIES, HOTEL_TYPES_OPTIONS } from '@/lib/constants';
 import { mapStringToLabel } from '@/lib/utils';
 import { useOnboardHotelByIdStore } from '@/stores/use-onboard-hotel-store';
-import MissingStepNotice from './admin-missing-step-notice';
+import MissingStepNotice from '../../../missing-info';
 
 const AdminOnboardBasicInfo = () => {
   const { hotel } = useOnboardHotelByIdStore();

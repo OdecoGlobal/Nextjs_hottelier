@@ -1,14 +1,14 @@
+export const dynamic = 'force-dynamic';
 import { requireAdminOrAgent } from '@/auth-guard';
-import ShowRooms from '@/components/shared/rooms';
+import UploadHotelPhotoForm from '@/components/shared/hotel/photos';
 import { getServerOnboardHotelById } from '@/lib/actions/hotel.action';
-import { AdminAgentRole } from '@/types';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 export const metadata: Metadata = {
-  title: 'All Rooms',
+  title: 'Hotel Images',
 };
 
-const RatesAndAvailability = async ({
+const AddPhotosPage = async ({
   params,
 }: {
   params: Promise<{ hotelId: string }>;
@@ -16,16 +16,10 @@ const RatesAndAvailability = async ({
   const { hotelId } = await params;
   const session = await requireAdminOrAgent();
   const hotel = await getServerOnboardHotelById(hotelId);
-  if (!hotel) {
-    notFound();
-  }
-  const { rooms } = hotel;
+  if (!hotel) notFound();
   return (
-    <ShowRooms
-      role={session.user.role as AdminAgentRole}
-      rooms={rooms}
-      hotelId={hotelId}
-    />
+    <UploadHotelPhotoForm hotelId={hotelId} userName={session.user.userName} />
   );
 };
-export default RatesAndAvailability;
+
+export default AddPhotosPage;

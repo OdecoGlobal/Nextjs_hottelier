@@ -14,7 +14,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useOnboardHotelByIdStore } from '@/stores/use-onboard-hotel-store';
 import { PolicyRow } from './policy-row';
-import MissingStepNotice from './admin-missing-step-notice';
+import MissingStepNotice from '../../../missing-info';
 import AdminFrontDeskReview from './admin-policy-review/admin-front-policy';
 import AdminSectionWrapper from './admin-policy-review/policy-section-wrapper';
 import AdminPetPolicyReview from './admin-policy-review/admin-pet-policy-review';

@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { cn } from '@/lib/utils';
-import { GetRoomType, AdminAgentRole, AvailabilityType } from '@/types';
+import { GetRoomType, AvailabilityType } from '@/types';
 import { formatDisplayDate, generateDateRange } from '@/utils/date-utils';
 import { Check, ChevronLeft, ChevronRight, X } from 'lucide-react';
 
@@ -17,21 +17,22 @@ import { useState } from 'react';
 import RoomAvailabilityForm from '.';
 import { useRangeSize } from '@/hooks/use-range';
 import HotelCreationSteps from '../creation-steps';
+import { useOnboardHotelById } from '@/hooks/use-onboard-hotels';
+import LoadingComponent from '@/components/loading-state';
 
 type RoomAvailabilityProp = {
   room: GetRoomType;
   hotelId: string;
   roomId: string;
-  role: AdminAgentRole;
 };
 
 const AvailabilityRoomSetter = ({
   room,
   hotelId,
   roomId,
-  role,
 }: RoomAvailabilityProp) => {
   const range = useRangeSize();
+  const { data, isPending: dataLoading } = useOnboardHotelById({ hotelId });
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const [selectedAvailability, setSelectedAvailability] =
@@ -71,9 +72,21 @@ const AvailabilityRoomSetter = ({
     5: 'grid-cols-[minmax(100px,1fr)_repeat(5,minmax(60px,1fr))]',
     7: 'grid-cols-[minmax(100px,1fr)_repeat(7,minmax(60px,1fr))]',
   }[range];
+
+  if (dataLoading || !data) {
+    return <LoadingComponent />;
+  }
+
+  const { status, completionSteps } = data! ?? {};
+
   return (
     <section className="flex flex-col md:flex-row md:min-h-screen">
-      <HotelCreationSteps current={5} role={role} hotelId={hotelId} />
+      <HotelCreationSteps
+        current={6}
+        status={status}
+        completedSteps={completionSteps}
+        hotelId={hotelId}
+      />
       <div className=" flex-1 py-10 px-5">
         <Card className="w-full  mx-auto mt-4 p-4">
           <div className="flex justify-between items-center mb-4">
@@ -186,7 +199,6 @@ const AvailabilityRoomSetter = ({
               room={room}
               hotelId={hotelId}
               roomId={roomId}
-              role={role}
               initialData={selectedAvailability}
               onClose={() => setSelectedAvailability(null)}
             />

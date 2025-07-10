@@ -7,7 +7,7 @@ const steps: StepKey[] = [
   'step1_basic_info',
   'step2_policies',
   'step3_amenities',
-  'step4_hotel_images',
+  'step4_images',
   'step5_rooms',
   'step6_rates_and_availability',
   'step7_review',

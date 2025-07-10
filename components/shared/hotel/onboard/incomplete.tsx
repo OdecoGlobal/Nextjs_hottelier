@@ -49,7 +49,7 @@ const IncompleteHotelComponent = ({
             updatedAt,
           } = hotel;
           const progress = getHotelCompletionProgress(completionSteps);
-          const nextStep = getStepName(currentStep);
+          const nextStep = getStepName(currentStep - 1);
 
           const deleteAction = async () => {
             'use server';
@@ -69,7 +69,11 @@ const IncompleteHotelComponent = ({
                     {location && (
                       <CardDescription className="flex items-center">
                         <MapPin size={14} className="mr-1" />
-                        <span className="capitalize">{location}</span>
+                        <span className="capitalize">
+                          {location.length > 20
+                            ? `${location.substring(0, 20)}...`
+                            : location}
+                        </span>
                       </CardDescription>
                     )}
                   </div>
@@ -91,7 +95,7 @@ const IncompleteHotelComponent = ({
                 </div>
                 <div className="flex items-center text-xs text-muted-foreground">
                   <Calendar size={12} className="mr-1" />
-                  <span>Updated {formatDateTime(updatedAt).dateOnly}</span>
+                  <span>Updated {formatDateTime(updatedAt).dateTime}</span>
                 </div>
               </CardContent>
               <CardFooter>

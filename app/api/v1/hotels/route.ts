@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
           step1_basic_info: false,
           step2_policies: false,
           step3_amenities: false,
-          step4_hotel_images: false,
+          step4_images: false,
           step5_rooms: false,
           step6_rates_and_availability: false,
           step7_review: false,

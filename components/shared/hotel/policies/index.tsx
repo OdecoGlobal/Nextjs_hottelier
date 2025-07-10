@@ -112,6 +112,7 @@ const MainPolicyForm = ({
 
   const handleSubmit = async () => {
     const data = form.getValues();
+    console.log(data);
     mutate({ data, hotelId });
   };
 
